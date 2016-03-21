@@ -23,8 +23,9 @@ class Request
     {
         $this->_request = $request;
         $this->_server  = $server;
-        $this->_get     = $get;
         $this->_post    = $post;
+        $this->_get     = $get;
+        unset($this->_get['url']);
 
         // override html type with json
         if ($this->_server['HTTP_ACCEPT'] !== '*/*' && strpos($this->_server['HTTP_ACCEPT'], 'application/json') !== false) {

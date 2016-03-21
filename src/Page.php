@@ -52,6 +52,11 @@ class Page implements Response
         }
     }
 
+    public function request() : Request
+    {
+        return $this->_request;
+    }
+
     // @TODO refactor, and cache
     private function head() : string
     {
