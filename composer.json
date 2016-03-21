@@ -1,0 +1,24 @@
+{
+    "name": "alkemann/h2l",
+    "description": "A micro framework for websites and apis for small projects. This is a sequel of h.l, made for PHP 7",
+    "version": "0.1.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Morland",
+            "homepage": "https://github.com/alkemann"
+        }
+    ],
+    "require": {
+        "php": "^7.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "alkemann\\h2l\\": "src/"
+        }
+    }
+}
