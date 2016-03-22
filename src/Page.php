@@ -107,8 +107,8 @@ class Page implements Response
     {
         $file = CONTENT_PATH . 'pages' . DS . $view . '.php';
         if (!file_exists($file)) {
-            // throw new \alkemann\hl\core\exceptions\InvalidUrlException($file);
-            dd("view file does not exist", $file, $view, $this);
+            if (DEBUG) dd("View file does not exist for view: " . $view, $file, $this);
+            throw new \alkemann\h2l\exceptions\InvalidUrl($file);
         }
         ob_start();
         (function($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
