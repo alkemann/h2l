@@ -23,7 +23,7 @@ class Page implements Response
     {
         $this->_request = $request;
         $this->_type    = $request->type();
-        $this->_url     = $request->url();
+        $this->_url     = $request->route()->url;
 
         // @TODO find a different way to do this
         $parts = \explode('/', $this->_url);
