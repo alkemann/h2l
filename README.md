@@ -22,3 +22,8 @@ Get started quickly with static pages and small apis
 ## Usage
 
 ..
+
+
+## Tests
+
+To run tests you must require dev and run `./bin/runtests` in the same folder as this README.md
