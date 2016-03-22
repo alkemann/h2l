@@ -5,26 +5,32 @@ namespace alkemann\h2l;
 class Error implements Response
 {
 
-    protected $_error;
-    protected $_message;
+    public $code;
+    public $message;
+    protected $_header_func;
 
-    public function __construct($errorCode, $message = null)
+    public function __construct(int $errorCode, string $message = null, $header_func = 'header')
     {
-        $this->_error = $errorCode;
-        $this->_message = $message;
+        $this->code = $errorCode;
+        $this->message = $message;
+        $this->_header_func = $header_func;
     }
 
     public function render()
     {
-        switch ($this->_error) {
+        $h = $this->_header_func;
+        if (is_callable($h) == false) {
+            throw new \Error("Header function injected to Error is not callable");
+        }
+        switch ($this->code) {
             case 404:
-                header("HTTP/1.0 404 Not Found");
+                $h("HTTP/1.0 404 Not Found");
                 break;
             case 400:
-                header("HTTP/1.0 400 {$this->_message}");
+                $h("HTTP/1.0 400 {$this->message}");
                 break;
             default:
-                header("HTTP/1.0 {$this->_error} Bad request");
+                $h("HTTP/1.0 {$this->code} Bad request");
                 break;
         }
     }
