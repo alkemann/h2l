@@ -12,6 +12,7 @@ class Request
 
     private $_request;
     private $_server;
+    private $_parameters;
     private $_get;
     private $_post;
     private $_url;
@@ -26,9 +27,11 @@ class Request
         $this->_post    = $post;
         $this->_get     = $get;
         unset($this->_get['url']);
+        $this->_parameters = [];
 
         // override html type with json
-        if ($this->_server['HTTP_ACCEPT'] !== '*/*' && strpos($this->_server['HTTP_ACCEPT'], 'application/json') !== false) {
+        $httaccept = $this->_server['HTTP_ACCEPT'] ?? '*/*';
+        if ($httaccept !== '*/*' && strpos($this->_server['HTTP_ACCEPT'], 'application/json') !== false) {
             $this->_type = 'json';
         }
 
@@ -42,6 +45,16 @@ class Request
     public function url():string { return $this->_url; }
     public function method():string { return $this->_method; }
     public function type():string { return $this->_type; }
+
+    public function param($name) {
+        if (isset($this->_parameters[$name]))
+            return $this->_parameters[$name];
+        if (isset($this->_get[$name]))
+            return $this->_get[$name];
+        if (isset($this->_post[$name]))
+            return $this->_post[$name];
+        return null;
+    }
 
     public function response() : Response
     {
