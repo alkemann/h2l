@@ -29,7 +29,7 @@ class Result implements Response
         if ($echo == false) {
             return $content;
         }
-        $e = $this->_config['echoFunc'] ?? 'echo';
+        $e = $this->_config['echoFunc'] ?? function($o) { echo $o; };
         $e($content);
     }
 
