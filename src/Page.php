@@ -120,7 +120,7 @@ class Page implements Response
         return $ret;
     }
 
-    public function render()
+    public function render(bool $echo = true)
     {
         $contentType = $this->contentType();
         header("Content-type: $contentType");

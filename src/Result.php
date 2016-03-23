@@ -5,35 +5,43 @@ namespace alkemann\h2l;
 class Result implements Response
 {
 
-    protected $_request;
-    protected $_content;
-    protected $_format;
+    private $_request;
+    private $_content;
+    private $_format;
+    private $_config;
 
-    protected $_validTypes = ['html','json', 'xml'];
-    protected $_contentTypes = ['html' => 'text/html', 'json' => 'application/json', 'xml' => 'application/xml'];
+    private $_validTypes = ['html','json', 'xml'];
+    private $_contentTypes = ['html' => 'text/html', 'json' => 'application/json', 'xml' => 'application/xml'];
 
-    public function __construct($content = null, string $format = "json")
+    public function __construct($content = null, string $format = "json", array $config = [])
     {
-        $this->_format  = $format;
-        $this->setContent($content);
+        $this->_config = $config;
+        $this->_content = $content;
+        $this->_format = $format;
     }
 
-    public function render()
+    public function render(bool $echo = true)
     {
         $contentType = $this->contentType($this->_format);
-        header("Content-type: $contentType");
-        echo $this->_content;
+        $h = $this->_config['headerFunc'] ?? 'header';
+        $h("Content-type: $contentType");
+        $content = $this->setContent($this->_content);
+        if ($echo == false) {
+            return $content;
+        }
+        $e = $this->_config['echoFunc'] ?? 'echo';
+        $e($content);
     }
 
     private function setContent($content)
     {
         switch ($this->_format) {
             case 'json':
-                $this->_content = json_encode($content);
+                return json_encode($content);
                 break;
             // TODO XML
             default:
-                $this->_content = $content;
+                return $content;
                 break;
         }
     }

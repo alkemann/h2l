@@ -16,7 +16,7 @@ class Error implements Response
         $this->_header_func = $header_func;
     }
 
-    public function render()
+    public function render(bool $echo = true)
     {
         $h = $this->_header_func;
         if (is_callable($h) == false) {

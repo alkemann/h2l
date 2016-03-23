@@ -35,5 +35,13 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
 	}
 
+    /**
+     * @expectedException Error
+     */
+	public function testException()
+	{
+		$e = new Error(400, "This is message", 8);
+		$e->render();
+	}
 
 }
