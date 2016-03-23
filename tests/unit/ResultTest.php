@@ -9,6 +9,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $r = new Result(['id' => 12, 'title' => 'Hello there']);
+        $this->assertTrue($r instanceof Response);
         $this->assertTrue($r instanceof Result);
     }
 

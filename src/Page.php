@@ -18,10 +18,12 @@ class Page implements Response
         'json' => 'application/json',
         'xml' => 'application/xml'
     ];
+    protected $_config = [];
 
-    public function __construct(Request $request)
+    public function __construct(Request $request, array $config = [])
     {
         $this->_request = $request;
+        $this->_config  = $config;
         $this->_type    = $request->type();
         $this->_url     = $request->route()->url;
 
@@ -61,17 +63,14 @@ class Page implements Response
     private function head() : string
     {
         ob_start();
-        $render = $this;
-        $type = $this->_type;
-
-        $headfile = LAYOUT_PATH . $this->layout . DS . 'head.' . $type . '.php';
+        $headfile = $this->getLayoutFile('head');
         if (file_exists($headfile))
             (function($sldkfjlksejflskjflskdjflskdfj) {
                 extract($this->_data);
                 include $sldkfjlksejflskjflskdjflskdfj;
             })($headfile);
 
-        $neckfile = LAYOUT_PATH . $this->layout . DS . 'neck.' . $type . '.php';
+        $neckfile = $this->getLayoutFile('neck');
         if (file_exists($neckfile))
             (function($lidsinqjhsdfytqkwjkasjdksadsdg) {
                 extract($this->_data);
@@ -83,12 +82,16 @@ class Page implements Response
         return $ret;
     }
 
+    private function getLayoutFile(string $name)
+    {
+        $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
+        return $path . $this->layout . DS . $name . '.' . $this->_type . '.php';
+    }
+
     // @TODO refactor, and cache
     private function foot() : string
     {
-        $type = $this->_type;
-
-        $footfile = LAYOUT_PATH .  $this->layout . DS . 'foot.' . $type . '.php';
+        $footfile = $this->getLayoutFile('foot');
         if (!file_exists($footfile))
             return '';
 
@@ -105,7 +108,7 @@ class Page implements Response
     // @TODO refactor, and cache
     public function view($view) : string
     {
-        $file = CONTENT_PATH . 'pages' . DS . $view . '.php';
+        $file = $this->getContentFile($view);
         if (!file_exists($file)) {
             if (DEBUG) dd("View file does not exist for view: " . $view, $file, $this);
             throw new \alkemann\h2l\exceptions\InvalidUrl($file);
@@ -120,6 +123,12 @@ class Page implements Response
         return $ret;
     }
 
+    private function getContentFile($view)
+    {
+        $path = $this->_config['content_path'] ?? CONTENT_PATH;
+        return $path . 'pages' . DS . $view . '.php';
+    }
+
     public function render(bool $echo = true)
     {
         $contentType = $this->contentType();
@@ -127,7 +136,10 @@ class Page implements Response
         $response = $this->head();
         $response .= $this->view($this->viewToRender());
         $response .= $this->foot();
-        echo $response;
+        if ($echo)
+            echo $response;
+        else
+            return $response;
     }
 
     private function contentType()
