@@ -40,9 +40,6 @@ class Router
         if (isset(static::$_routes[$method]) == false)
             return null;
 
-        if (isset(static::$_routes[$method][$url]))
-            return new Route($url, static::$_routes[$method][$url]);
-
         foreach (static::$_routes[$method] as $route => $cb) {
             if ($url === $route) return $cb;
             $result = preg_match($route, $url, $matches);

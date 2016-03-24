@@ -79,10 +79,6 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
-    // @TODO test rendering view with data extracted
-    // @TODO test rendering different layouts
-    // @TODO test rendering head and foot and embedding view
-
     public function testRenderingSimple()
     {
         $config = $this->_setupFolder();
@@ -105,15 +101,29 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $page = new Page($request, $config);
 
         $expected = '<html><body><div><h1>Win!</h1></div></body></html>';
-        $result = $page->render(false);        
+        $result = $page->render(false);
         $this->assertEquals($expected, $result);
 
         $page->layout = 'spicy';
         $expected = '<html><title>Spice</title><body><h1>Win!</h1></body></html>';
-        $result = $page->render(false);        
+        $result = $page->render(false);
+        $this->assertEquals($expected, $result);
+
+        $page->layout = 'doesntexist';
+        $expected = '<h1>Win!</h1>';
+        $result = $page->render(false);
         $this->assertEquals($expected, $result);
 
         $this->_cleanupViewFiles();
+
+        $caught = false; // invalid url;
+        try {
+            $result = $page->render(false);
+        } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
+            $caught = true;
+        }
+        $this->assertTrue($caught, 'Exception was not thrown for missing page');
+
     }
 
     private function _setupFolder()

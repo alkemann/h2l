@@ -17,8 +17,8 @@ class Request
     private $_post;
     private $_url;
     private $_method;
-    private $_route;
     private $_type = 'html';
+    protected $_route;
 
     public function __construct(array $request = [], array $server = [], array $get = [], array $post = [])
     {
