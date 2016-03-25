@@ -38,6 +38,8 @@ class Request
         $this->_url     = $this->_request['url'] ?? '/';
         $this->_method  = $this->_server['REQUEST_METHOD'] ?? Request::GET;
         $this->_route   = Router::match($this->_url, $this->_method);
+        Log::info(" ***  new request *** ");
+        Log::info($this->_route->url);
     }
 
     public function getPostBody():string { return file_get_contents('php://input'); }
