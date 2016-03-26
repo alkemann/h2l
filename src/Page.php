@@ -154,7 +154,6 @@ class Page implements Response
         $response .= $this->foot();
         return $response;
     }
-    }
 
     private function contentType()
     {
