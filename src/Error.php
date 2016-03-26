@@ -22,16 +22,30 @@ class Error implements Response
         if (is_callable($h) == false) {
             throw new \Error("Header function injected to Error is not callable");
         }
+        $errorPage = null;
         switch ($this->code) {
             case 404:
                 $h("HTTP/1.0 404 Not Found");
+                $errorPage = new Page(new Request(['url' => '404']), $this->_config);
                 break;
             case 400:
                 $h("HTTP/1.0 400 {$this->message}");
                 break;
             default:
                 $h("HTTP/1.0 {$this->code} Bad request");
+                $errorPage = new Page(new Request(['url' => '500']), $this->_config);
                 break;
+        }
+        if ($errorPage) {
+            // TODO only do this if request accepts html?
+            try {
+                $errorPage->setData('message', $this->message);
+                echo $errorPage->render();
+            } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
+                if (DEBUG) {
+                    echo "No error page made at " . $e->getMessage();
+                }
+            }
         }
     }
 }

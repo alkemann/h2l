@@ -6,7 +6,8 @@ require_once 'internals/functions.php';
 
 function handleError(\Throwable $e) {
     if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
-        return (new Error(404, $e->getMessage()))->render();
+        echo (new Error(404, $e->getMessage()))->render();
+        return;
     }
 
     if (DEBUG && isset($e->xdebug_message)) {

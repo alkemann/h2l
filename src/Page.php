@@ -120,7 +120,6 @@ class Page implements Response
     {
         $file = $this->getContentFile($view);
         if (!file_exists($file)) {
-            if (DEBUG) dd("View file does not exist for view: " . $view, $file, $this);
             throw new \alkemann\h2l\exceptions\InvalidUrl($file);
         }
         ob_start();
