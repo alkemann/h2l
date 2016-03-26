@@ -18,12 +18,11 @@ require_once(VENDOR_PATH . 'alkemann/h2l/src/bootstrap.php');
 
 define('DEBUG', 0);
 
-$request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
-
 try {
+    $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
     $response = $request->response();
     if ($response)
         echo $response->render();
 } catch (Exception $e) {
-   alkemann\h2l\handleError($e, $request);
+   alkemann\h2l\handleError($e);
 }

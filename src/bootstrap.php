@@ -4,7 +4,7 @@ namespace alkemann\h2l;
 
 require_once 'internals/functions.php';
 
-function handleError(\Exception $e, Request $request) {
+function handleError(\Exception $e) {
     if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
         return (new Error(404, $e->getMessage()))->render();
     }
