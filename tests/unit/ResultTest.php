@@ -16,7 +16,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     public function testRender()
     {
         $data = ['id' => 12, 'title' => 'Hello there'];
-        $r = new Result(['id' => 12, 'title' => 'Hello there'], 'json', ['header' => function($h) {}]);
+        $r = new Result(['id' => 12, 'title' => 'Hello there'], 'json', ['header_func' => function($h) {}]);
 
         $expected = json_encode($data);
         $result = $r->render();
@@ -28,7 +28,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $html   = "<h1>hello</h1>";
         $header = null;
         $r = new Result($html, 'text', [
-            'headerFunc' => function($h) use (&$header) { $header = $h; },
+            'header_func' => function($h) use (&$header) { $header = $h; }
         ]);
 
         $result = $r->render();

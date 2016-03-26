@@ -23,7 +23,7 @@ class Result implements Response
     public function render()
     {
         $contentType = $this->contentType($this->_format);
-        $h = $this->_config['headerFunc'] ?? 'header';
+        $h = $this->_config['header_func'] ?? 'header';
         $h("Content-type: $contentType");
         $content = $this->setContent($this->_content);
         return $content;
