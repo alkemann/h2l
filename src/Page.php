@@ -63,22 +63,27 @@ class Page implements Response
     private function head() : string
     {
         ob_start();
-        $headfile = $this->getLayoutFile('head');
-        if (file_exists($headfile))
-            (function($sldkfjlksejflskjflskdjflskdfj) {
-                extract($this->_data);
-                include $sldkfjlksejflskjflskdjflskdfj;
-            })($headfile);
+        try {
+            $headfile = $this->getLayoutFile('head');
+            if (file_exists($headfile))
+                (function($sldkfjlksejflskjflskdjflskdfj) {
+                    extract($this->_data);
+                    include $sldkfjlksejflskjflskdjflskdfj;
+                })($headfile);
 
-        $neckfile = $this->getLayoutFile('neck');
-        if (file_exists($neckfile))
-            (function($lidsinqjhsdfytqkwjkasjdksadsdg) {
-                extract($this->_data);
-                include $lidsinqjhsdfytqkwjkasjdksadsdg;
-            })($neckfile);
+            $neckfile = $this->getLayoutFile('neck');
+            if (file_exists($neckfile))
+                (function($lidsinqjhsdfytqkwjkasjdksadsdg) {
+                    extract($this->_data);
+                    include $lidsinqjhsdfytqkwjkasjdksadsdg;
+                })($neckfile);
 
-        $ret = ob_get_contents();
-        ob_end_clean();
+        } catch (\Throwable $t) {
+            throw $t;
+        } finally {
+            $ret = ob_get_contents();
+            ob_end_clean();
+        }
         return $ret;
     }
 
@@ -96,12 +101,17 @@ class Page implements Response
             return '';
 
         ob_start();
-        (function($ldkfoskdfosjicyvutwehkshfskjdf) {
-            extract($this->_data);
-            include $ldkfoskdfosjicyvutwehkshfskjdf;
-        })($footfile);
-        $ret = ob_get_contents();
-        ob_end_clean();
+        try {
+            (function($ldkfoskdfosjicyvutwehkshfskjdf) {
+                extract($this->_data);
+                include $ldkfoskdfosjicyvutwehkshfskjdf;
+            })($footfile);
+        } catch (\Throwable $t) {
+            throw $t;
+        } finally {
+            $ret = ob_get_contents();
+            ob_end_clean();
+        }
         return $ret;
     }
 
@@ -114,12 +124,17 @@ class Page implements Response
             throw new \alkemann\h2l\exceptions\InvalidUrl($file);
         }
         ob_start();
-        (function($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
-            extract($this->_data);
-            include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
-        })($file);
-        $ret = ob_get_contents();
-        ob_end_clean();
+        try {
+            (function($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
+                extract($this->_data);
+                include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
+            })($file);
+        } catch (\Throwable $t) {
+            throw $t;
+        } finally {
+            $ret = ob_get_contents();
+            ob_end_clean();
+        }
         return $ret;
     }
 
