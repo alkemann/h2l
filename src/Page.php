@@ -148,8 +148,9 @@ class Page implements Response
     {
         $contentType = $this->contentType();
         header("Content-type: $contentType");
+        $view = $this->view($this->viewToRender());
         $response = $this->head();
-        $response .= $this->view($this->viewToRender());
+        $response .= $view;
         $response .= $this->foot();
         return $response;
     }
