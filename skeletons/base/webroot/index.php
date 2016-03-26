@@ -25,7 +25,7 @@ $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
 try {
     $response = $request->response();
     if ($response)
-    	$response->render();
+        echo $response->render();
 } catch (Exception $e) {
    alkemann\h2l\handleError($e, $request);
 }
