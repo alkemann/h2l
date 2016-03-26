@@ -23,6 +23,7 @@ set_exception_handler ( 'alkemann\h2l\handleError' );
 
 
 $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
+alkemann\h2l\Log::debug("== Request: " . $request->route()->url);
 $response = $request->response();
 if ($response)
     echo $response->render();

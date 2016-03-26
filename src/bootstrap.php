@@ -6,8 +6,14 @@ require_once 'internals/functions.php';
 
 function handleError(\Throwable $e) {
     if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
+        Log::info("InvalidUrl: " . $e->getMessage());
         echo (new Error(404, $e->getMessage()))->render();
         return;
+    }
+    if ($e instanceof \Exception) {
+        Log::error(get_class($e) . ": " . $e->getMessage());
+    } elseif ($e instanceof \Error) {
+        Log::alert(get_class($e) . ": " . $e->getMessage());
     }
 
     if (DEBUG && isset($e->xdebug_message)) {
