@@ -23,7 +23,7 @@ $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
 try {
     $response = $request->response();
     if ($response)
-        echo $response; // result objects should implement __toString()
+    	$response->render();
 } catch (Exception $e) {
    alkemann\h2l\handleError($e, $request);
 }

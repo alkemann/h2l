@@ -29,11 +29,6 @@ class Result implements Response
         return $content;
     }
 
-    public function __toString()
-    {
-        return $this->render();
-    }
-
     private function setContent($content)
     {
         switch ($this->_format) {
