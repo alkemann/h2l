@@ -21,11 +21,11 @@ include_once(CONFIG_PATH . 'defines.php');
 include_once(CONFIG_PATH . 'routes.php');
 
 
-try {
-    $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
-    $response = $request->response();
-    if ($response)
-        echo $response->render();
-} catch (Exception $e) {
-   alkemann\h2l\handleError($e);
-}
+// Default error handler
+set_exception_handler ( 'alkemann\h2l\handleError' );
+
+
+$request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
+$response = $request->response();
+if ($response)
+    echo $response->render();
