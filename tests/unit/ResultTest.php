@@ -19,7 +19,7 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $r = new Result(['id' => 12, 'title' => 'Hello there'], 'json', ['header' => function($h) {}]);
 
         $expected = json_encode($data);
-        $result = $r->render(false);
+        $result = $r->render();
         $this->assertEquals($expected, $result);
     }
 
@@ -27,14 +27,12 @@ class ResultTest extends \PHPUnit_Framework_TestCase
     {
         $html   = "<h1>hello</h1>";
         $header = null;
-        $output = null;
         $r = new Result($html, 'text', [
             'headerFunc' => function($h) use (&$header) { $header = $h; },
-            'echoFunc'   => function($o) use (&$output) { $output = $o; }
         ]);
 
-        $r->render();
-        $this->assertEquals($html, $output);
+        $result = $r->render();
+        $this->assertEquals($html, $result);
         $this->assertEquals("Content-type: text/html", $header);
 
 

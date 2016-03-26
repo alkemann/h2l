@@ -101,24 +101,24 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $page = new Page($request, $config);
 
         $expected = '<html><body><div><h1>Win!</h1></div></body></html>';
-        $result = $page->render(false);
+        $result = $page->render();
         $this->assertEquals($expected, $result);
 
         $page->layout = 'spicy';
         $expected = '<html><title>Spice</title><body><h1>Win!</h1></body></html>';
-        $result = $page->render(false);
+        $result = $page->render();
         $this->assertEquals($expected, $result);
 
         $page->layout = 'doesntexist';
         $expected = '<h1>Win!</h1>';
-        $result = $page->render(false);
+        $result = $page->render();
         $this->assertEquals($expected, $result);
 
         $this->_cleanupViewFiles();
 
         $caught = false; // invalid url;
         try {
-            $result = $page->render(false);
+            $result = $page->render();
         } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
             $caught = true;
         }

@@ -20,17 +20,13 @@ class Result implements Response
         $this->_format = $format;
     }
 
-    public function render(bool $echo = true)
+    public function render()
     {
         $contentType = $this->contentType($this->_format);
         $h = $this->_config['headerFunc'] ?? 'header';
         $h("Content-type: $contentType");
         $content = $this->setContent($this->_content);
-        if ($echo == false) {
-            return $content;
-        }
-        $e = $this->_config['echoFunc'] ?? function($o) { echo $o; };
-        $e($content);
+        return $content;
     }
 
     private function setContent($content)

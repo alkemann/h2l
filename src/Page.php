@@ -129,17 +129,15 @@ class Page implements Response
         return $path . 'pages' . DS . $view . '.php';
     }
 
-    public function render(bool $echo = true)
+    public function render()
     {
         $contentType = $this->contentType();
         header("Content-type: $contentType");
         $response = $this->head();
         $response .= $this->view($this->viewToRender());
         $response .= $this->foot();
-        if ($echo)
-            echo $response;
-        else
-            return $response;
+        return $response;
+    }
     }
 
     private function contentType()

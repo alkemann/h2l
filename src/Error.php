@@ -7,18 +7,18 @@ class Error implements Response
 
     public $code;
     public $message;
-    protected $_header_func;
+    protected $_config;
 
-    public function __construct(int $errorCode, string $message = null, $header_func = 'header')
+    public function __construct(int $errorCode, string $message = null, array $config = [])
     {
         $this->code = $errorCode;
         $this->message = $message;
-        $this->_header_func = $header_func;
+        $this->_config = $config;
     }
 
-    public function render(bool $echo = true)
+    public function render()
     {
-        $h = $this->_header_func;
+        $h = $this->_config['header_func'] ?? 'header';
         if (is_callable($h) == false) {
             throw new \Error("Header function injected to Error is not callable");
         }
