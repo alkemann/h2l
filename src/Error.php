@@ -34,4 +34,10 @@ class Error implements Response
                 break;
         }
     }
+
+    public function __toString()
+    {
+        return $this->render();
+    }
+
 }

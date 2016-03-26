@@ -138,6 +138,10 @@ class Page implements Response
         $response .= $this->foot();
         return $response;
     }
+
+    public function __toString()
+    {
+        return $this->render();
     }
 
     private function contentType()
