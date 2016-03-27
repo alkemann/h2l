@@ -5,7 +5,12 @@ namespace alkemann\h2l;
 trait Entity
 {
 
-    protected $data = ['id' => 55];
+    protected $data = [];
+
+    public function __construct(array $data = [])
+    {
+        $this->data = $data;
+    }
 
     public function __get($name)
     {
@@ -15,5 +20,10 @@ trait Entity
     public function __set($name, $value)
     {
         $this->data[$name] = $value;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->data;
     }
 }

@@ -29,3 +29,17 @@ function handleError(\Throwable $e) {
         (new Error(500, $e->getMessage()))->render();
     }
 }
+
+function connection($config = []) {
+    if (is_string($config)) {
+        $config = (require $config);
+    }
+
+    $defaults = [
+        'host'          => 'localhost',
+        'username'      => 'root',
+        'password'      => '',
+    ];
+    $config += $defaults;
+    return $config;
+}

@@ -31,6 +31,9 @@ class Result implements Response
 
     private function setContent($content)
     {
+        if ($content instanceof \Generator) {
+            $content = iterator_to_array($content);
+        }
         switch ($this->_format) {
             case 'json':
                 return json_encode($content);

@@ -56,6 +56,11 @@ class Request
         return null;
     }
 
+    public function query(): array
+    {
+        return $this->_get;
+    }
+
     public function response() : Response
     {
         $cb = $this->_route->callback;
