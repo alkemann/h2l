@@ -22,6 +22,34 @@ trait Entity
         $this->data[$name] = $value;
     }
 
+    public function __isset($name)
+    {
+        return isset($this->data[$name]);
+    }
+
+    public function data(array $data = null)
+    {
+        if (is_null($data)) {
+            return $this->data;
+        }
+        foreach ($data as $key => $value) {
+            $this->data[$key] = $value;
+        }
+        return $this->data;
+    }
+
+    public function reset()
+    {
+        $this->data = [];
+    }
+
+    public function exists()
+    {
+        // @TODO set a "read from db" property?
+        $pk = static::pk();
+        return isset($this->$pk) && $this->$pk;
+    }
+
     public function jsonSerialize()
     {
         return $this->data;
