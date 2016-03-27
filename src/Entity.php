@@ -7,6 +7,11 @@ trait Entity
 
     protected $data = [];
 
+    private static function pk(): string
+    {
+        return isset(static::$pk) ? static::$pk : 'id';
+    }
+
     public function __construct(array $data = [])
     {
         $this->data = $data;
