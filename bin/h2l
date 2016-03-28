@@ -1,0 +1,56 @@
+#!/usr/bin/php
+<?php
+
+$version = "v0.1";
+$script = array_shift($argv);
+out("PHP " . $script . " " . $version);
+
+$command = array_shift($argv);
+
+function out() { foreach (func_get_args() as $s) echo $s, PHP_EOL; }
+$help = function($error = false) use ($script) {
+    if ($error) out('', " ERROR: $error");
+    out('', ' Usage: ' . $script . ' <task> [<args>]','');
+    out('  Tasks:');
+    out('    - skeleton <name>');
+    out('','');
+};
+
+if (empty($command) || $command == 'help') {
+    return $help();
+}
+
+// out('', 'Command: ' . $command);
+switch ($command) {
+    case 'skeleton':
+        $name = array_shift($argv);
+        if (empty($name)) return $help("Missing <name> parameter");
+
+        $ds = DIRECTORY_SEPARATOR;
+        $dest = dirname(__FILE__, 3);
+        $path = $dest.$ds.'vendor'.$ds.'alkemann'.$ds.'h2l'.$ds.'skeletons'.$ds.$name;
+        $source = realpath($path);
+
+        if (!$source) return $help("Source doesn't exist at: $path");
+
+        out('',
+            "  Applying `$name` skeleton", '',
+            "   Copying $source to $dest");
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            if ($item->isDir()) {
+                @mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            } else {
+                @copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+            }
+        }
+
+        break;
+    default:
+        return $help("Unknown command `$command`");
+}
