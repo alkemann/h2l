@@ -67,4 +67,22 @@ class Request
         $this->_parameters = $this->_route->parameters;
         return call_user_func_array($cb, [$this]);
     }
+
+    public function session($name = null)
+    {
+        // TODO dependency injection
+        // TODO add support for dot notation
+        if (session_status() != PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        if ($name && isset($_SESSION[$name]))
+            return $_SESSION[$name];
+    }
+
+    public function redirect($url)
+    {
+        // TODO add support for reverse route match
+        header( "Location: " . $url);
+        exit;
+    }
 }
