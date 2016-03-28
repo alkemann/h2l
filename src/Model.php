@@ -2,23 +2,17 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\internals\data\Mysql;
-
 /**
  * Depends on alkemann\h2l\Entity trait
  *
  * Use this for prototyping only, use a real ORM for production studd
  */
-trait Sql
+trait Model
 {
-    private static $db;
-
-    public static function db(): Mysql
+    public static function db(): data\Source
     {
-        if (!static::$db) {
-            static::$db = new Mysql();
-        }
-        return static::$db;
+        $name = isset(static::$connection) ? static::$connection : 'default';
+        return Connections::get($name);
     }
 
     private static function pk(): string
@@ -33,14 +27,13 @@ trait Sql
         return isset($this->$pk) && $this->$pk;
     }
 
-    private static function tablename(): string
+    private static function table(): string
     {
-        if (!isset(static::$tablename)) {
-            throw new \alkemann\h2l\exceptions\ConfigMissing(get_called_class() . ' is missing static::$tablename');
+        if (!isset(static::$table)) {
+            throw new \alkemann\h2l\exceptions\ConfigMissing(get_called_class() . ' is missing static::$table');
         }
-        return static::$tablename;
+        return static::$table;
     }
-
 
     public static function get($id, array $conditions = [], array $options = [])
     {
@@ -49,7 +42,7 @@ trait Sql
         }
         $pk = static::pk();
         $conditions[$pk] = $id;
-        $result = static::db()->find(static::tablename(), $conditions, $options);
+        $result = static::db()->find(static::table(), $conditions, $options);
         if ($result && $result->num_rows == 1) {
             return new static($result->fetch_assoc());
         }
@@ -59,7 +52,7 @@ trait Sql
     public static function find(array $conditions = [], array $options = [])
     {
         $conditions = self::filterByFields($conditions);
-        $result = static::db()->find(static::tablename(), $conditions, $options);
+        $result = static::db()->find(static::table(), $conditions, $options);
         while ($row = $result->fetch_assoc()) {
             yield new static($row);
         }
@@ -89,7 +82,7 @@ trait Sql
     {
         $pk     = static::pk();
         $db     = static::db();
-        $table  = static::tablename();
+        $table  = static::table();
 
         if ($this->exists()) {
             $id   = $this->$pk;
@@ -113,6 +106,6 @@ trait Sql
     public function delete(Entity $entity, array $options = [])
     {
         $pk = static::pk();
-        return static::db()->delete(static::tablename(), [$pk => $this->$pk]);
+        return static::db()->delete(static::table(), [$pk => $this->$pk]);
     }
 }

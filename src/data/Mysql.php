@@ -1,13 +1,12 @@
 <?php
 
-namespace alkemann\h2l\internals\data;
+namespace alkemann\h2l\data;
 
 use Exception;
-use mysqli;
 use alkemann\h2l\Log;
 use alkemann\h2l\Connections;
 
-class Mysql {
+class Mysql implements Source {
 
     protected $_config = [];
 
@@ -17,28 +16,19 @@ class Mysql {
     {
 
         $defaults = [
-            'name' => 'default',
-            'auto_connect' => true
+            'mysqli' => null,
         ];
         $this->_config = $config + $defaults;
 
-        if ($this->_config['auto_connect']) {
-            $this->connect();
-        }
-    }
-
-    public function connect()
-    {
-        $name = $this->_config['name'];
-        $this->mysql = Connections::get($name);
+        $this->mysql = $this->_config['mysqli'];
+        unset($this->_config['mysqli']);
     }
 
     public function close() {
-        $name = $this->_config['name'];
-        $this->mysql = Connections::close($name);
+        $this->mysql->close();
     }
 
-    public function db($database) {
+    private function db($database) {
         $result = $this->mysql->select_db($database);
         if (!$result) {
             die($this->mysql->error . " \n Can't select database [$database]");
@@ -46,11 +36,11 @@ class Mysql {
         return $this;
     }
 
-    public function escape($value) {
+    private function escape($value) {
         return "'" . $this->mysql->escape_string($value) . "'";
     }
 
-    public function q($query, array $params = []) {
+    public function query($query, array $options = []) {
         Log::debug("Query: " . $query);
         $result = $this->mysql->query($query);
         $last_error = $this->mysql->error;
@@ -69,7 +59,7 @@ class Mysql {
             . $this->where($conditions)
             . $this->options($options);
 
-        return $this->q($query);
+        return $this->query($query);
     }
 
     private function fields($fields) {
@@ -116,7 +106,7 @@ class Mysql {
     }
 
 
-    public function update($table, array $conditions,  array $data) {
+    public function update($table, array $conditions,  array $data, array $options = []) {
         if (!$conditions || !$data) return false;
 
         $values = [];
@@ -132,14 +122,14 @@ class Mysql {
             return false;
         }
         $query = "UPDATE `$table` SET " . join(', ', $values). $where;
-        $result = $this->q($query);
+        $result = $this->query($query);
         if ($result !== true) {
             return false;
         }
         return $this->mysql->affected_rows;
     }
 
-    public function insert($table, array $data) {
+    public function insert($table, array $data, array $options = []) {
         if (!$data) return false;
         $fields = join('`,`', array_keys($data));
         $fields = "`$fields`,`updated`,`created`";
@@ -150,21 +140,21 @@ class Mysql {
         $values = join("','", $values);
         $values = "'$values',NOW(),NOW()";
         $query  = "INSERT INTO `$table` ($fields) VALUES ($values);";
-        $result = $this->q($query);
+        $result = $this->query($query);
         if ($result !== true) {
             return false;
         }
         return $this->mysql->insert_id;
     }
 
-    public function delete($table, array $conditions) {
+    public function delete($table, array $conditions, array $options = []) {
         $where = $this->where($conditions);
         if (!$where) {
             Log::error("No where conditions for delete!");
             return false;
         }
         $query = "DELETE FROM `$table`" . $where;
-        $result = $this->q($query);
+        $result = $this->query($query);
         if ($result !== true) {
             return false;
         }

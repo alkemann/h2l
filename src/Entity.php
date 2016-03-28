@@ -43,6 +43,19 @@ trait Entity
         $this->data = [];
     }
 
+    public function to($type)
+    {
+        switch ($type) {
+            case 'array':
+                return $this->data;
+            case 'json':
+                return json_encode($this->data);
+            default:
+                throw new \InvalidArgumentException("Unkown type $type");
+                break;
+        }
+    }
+
     public function jsonSerialize()
     {
         return $this->data;
