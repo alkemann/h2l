@@ -31,7 +31,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $ref_viewToRender->setAccessible(true);
 
         $this->assertEquals('text/html', $ref_contentType->invoke($page));
-        $this->assertEquals('places' . DS . 'norway.html', $ref_viewToRender->invoke($page));
+        $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_viewToRender->invoke($page));
     }
 
     public function testJsonFormat()
@@ -129,32 +129,32 @@ class PageTest extends \PHPUnit_Framework_TestCase
     private function _setupFolder()
     {
         $path = sys_get_temp_dir();
-        $h2l = $path . DS . 'h2l';
+        $h2l = $path . DIRECTORY_SEPARATOR . 'h2l';
         if (file_exists($h2l))
             $this->recursiveDelete($h2l);
-        $cpath = $path . DS . 'h2l' . DS . 'content' . DS . 'pages';
+        $cpath = $path . DIRECTORY_SEPARATOR . 'h2l' . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . 'pages';
         mkdir($cpath, 777, true);
-        $lpath = $path . DS . 'h2l' . DS . 'layouts';
+        $lpath = $path . DIRECTORY_SEPARATOR . 'h2l' . DIRECTORY_SEPARATOR . 'layouts';
         mkdir($lpath, 777, true);
-        mkdir($lpath . DS . 'default', 777, true);
-        mkdir($lpath . DS . 'spicy', 777, true);
-        return ['content_path' => $cpath . DS, 'layout_path' => $lpath . DS];
+        mkdir($lpath . DIRECTORY_SEPARATOR . 'default', 777, true);
+        mkdir($lpath . DIRECTORY_SEPARATOR . 'spicy', 777, true);
+        return ['content_path' => $cpath . DIRECTORY_SEPARATOR, 'layout_path' => $lpath . DIRECTORY_SEPARATOR];
     }
 
     private function _setupViewFiles(array $config)
     {
         // view file
-        $f = $config['content_path'] . DS . 'place.html.php';
+        $f = $config['content_path'] . DIRECTORY_SEPARATOR . 'place.html.php';
         file_put_contents($f, '<h1>Win!</h1>');
-        $f = $config['content_path'] . DS . 'task.json.php';
+        $f = $config['content_path'] . DIRECTORY_SEPARATOR . 'task.json.php';
         file_put_contents($f, '{"id": 12, "title": "Win"}');
         // layout one folder with head, neck and foot
-        $lp = $config['layout_path'] . DS . 'default' . DS;
+        $lp = $config['layout_path'] . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR;
         file_put_contents($lp.'head.html.php', '<html><body>');
         file_put_contents($lp.'neck.html.php', '<div>');
         file_put_contents($lp.'foot.html.php', '</div></body></html>');
         // layout two folder with head, and foot
-        $lp = $config['layout_path'] . DS . 'spicy' . DS;
+        $lp = $config['layout_path'] . DIRECTORY_SEPARATOR . 'spicy' . DIRECTORY_SEPARATOR;
         file_put_contents($lp.'head.html.php', '<html><title>Spice</title><body>');
         file_put_contents($lp.'foot.html.php', '</body></html>');
     }
@@ -162,7 +162,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
     private function _cleanupViewFiles()
     {
         $path = sys_get_temp_dir();
-        $h2l = $path . DS . 'h2l';
+        $h2l = $path . DIRECTORY_SEPARATOR . 'h2l';
         if (file_exists($h2l))
             $this->recursiveDelete($h2l);
     }

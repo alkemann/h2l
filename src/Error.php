@@ -42,7 +42,7 @@ class Error implements Response
                 $errorPage->setData('message', $this->message);
                 echo $errorPage->render();
             } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
-                if (DEBUG) {
+                if (defined('DEBUG') && DEBUG) {
                     echo "No error page made at " . $e->getMessage();
                 }
             }

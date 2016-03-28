@@ -90,7 +90,7 @@ class Page implements Response
     private function getLayoutFile(string $name)
     {
         $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
-        return $path . $this->layout . DS . $name . '.' . $this->_type . '.php';
+        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->_type . '.php';
     }
 
     // @TODO refactor, and cache
@@ -140,7 +140,7 @@ class Page implements Response
     private function getContentFile($view)
     {
         $path = $this->_config['content_path'] ?? CONTENT_PATH;
-        return $path . 'pages' . DS . $view . '.php';
+        return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
     public function render()
@@ -165,7 +165,7 @@ class Page implements Response
 
     private function viewToRender()
     {
-        $ret = join(DS, $this->_path) . DS . $this->_view . '.' . $this->_type;
-        return trim($ret, DS);
+        $ret = join(DIRECTORY_SEPARATOR, $this->_path) . DIRECTORY_SEPARATOR . $this->_view . '.' . $this->_type;
+        return trim($ret, DIRECTORY_SEPARATOR);
     }
 }
