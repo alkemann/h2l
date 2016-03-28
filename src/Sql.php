@@ -4,11 +4,16 @@ namespace alkemann\h2l;
 
 use alkemann\h2l\internals\data\Mysql;
 
+/**
+ * Depends on alkemann\h2l\Entity trait
+ *
+ * Use this for prototyping only, use a real ORM for production studd
+ */
 trait Sql
 {
     private static $db;
 
-    private static function db(): Mysql
+    public static function db(): Mysql
     {
         if (!static::$db) {
             $config = connection(CONFIG_PATH . 'connection.php');
@@ -20,6 +25,13 @@ trait Sql
     private static function pk(): string
     {
         return isset(static::$pk) ? static::$pk : 'id';
+    }
+
+    public function exists()
+    {
+        // @TODO set a "read from db" property?
+        $pk = static::pk();
+        return isset($this->$pk) && $this->$pk;
     }
 
     private static function tablename(): string

@@ -34,7 +34,24 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $result = $r->render();
         $this->assertEquals($html, $result);
         $this->assertEquals("Content-type: text/html", $header);
+    }
 
+    private function mock_gen()
+    {
+        for ($i=0; $i < 3; $i++) {
+            yield ['id' => $i];
+        }
+    }
 
+    public function testContentIsGenerator()
+    {
+        $data = $this->mock_gen();
+        $r = new Result($data, 'json', [
+            'header_func' => function($h) use (&$header) { $header = $h; }
+        ]);
+
+        $expected = json_encode([["id"=>0],["id"=>1],["id"=>2]]);
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
     }
 }

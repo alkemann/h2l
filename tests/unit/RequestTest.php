@@ -63,6 +63,10 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $result = $r->response();
         $this->assertTrue($result instanceof Response);
         $this->assertEquals("New Title", $r->param('title'));
+
+        $expected = ['filter' => 'all'];
+        $result = $r->query();
+        $this->assertEquals($expected, $result);
     }
 
     public function testParameters()

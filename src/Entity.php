@@ -7,11 +7,6 @@ trait Entity
 
     protected $data = [];
 
-    private static function pk(): string
-    {
-        return isset(static::$pk) ? static::$pk : 'id';
-    }
-
     public function __construct(array $data = [])
     {
         $this->data = $data;
@@ -46,13 +41,6 @@ trait Entity
     public function reset()
     {
         $this->data = [];
-    }
-
-    public function exists()
-    {
-        // @TODO set a "read from db" property?
-        $pk = static::pk();
-        return isset($this->$pk) && $this->$pk;
     }
 
     public function jsonSerialize()

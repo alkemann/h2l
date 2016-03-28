@@ -27,8 +27,6 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $class = get_class($e);
 
-        $this->assertFalse($e->exists());
-
         $e2 = new $class(['id' => 2, 'title' => 'New title']);
         $this->assertEquals("New title", $e2->title);
     }
