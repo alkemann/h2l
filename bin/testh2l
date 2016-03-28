@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ $0 == '/'* ]]; then
+    SCRIPT_PATH="`dirname $0`"
+else
+    SCRIPT_PATH="`pwd`"/"`dirname $0`"
+fi
+
+vendor/bin/phpunit -d memory_limit=512M --colors --stop-on-error --exclude-group disabled --verbose -c vendor/alkemann/h2l/tests/phpunit.xml --stderr $@

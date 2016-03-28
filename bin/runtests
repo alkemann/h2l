@@ -1,13 +1,9 @@
 #!/bin/bash
 
-
 if [[ $0 == '/'* ]]; then
     SCRIPT_PATH="`dirname $0`"
 else
     SCRIPT_PATH="`pwd`"/"`dirname $0`"
 fi
-
-
-# Nice option: --testdox
 
 vendor/bin/phpunit -d memory_limit=512M --colors --stop-on-error --exclude-group disabled --verbose -c tests/phpunit.xml --stderr $@
