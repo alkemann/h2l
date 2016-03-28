@@ -16,8 +16,7 @@ trait Sql
     public static function db(): Mysql
     {
         if (!static::$db) {
-            $config = connection(CONFIG_PATH . 'connection.php');
-            static::$db = new Mysql($config);
+            static::$db = new Mysql();
         }
         return static::$db;
     }

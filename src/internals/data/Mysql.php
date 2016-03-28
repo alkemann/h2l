@@ -5,6 +5,7 @@ namespace alkemann\h2l\internals\data;
 use Exception;
 use mysqli;
 use alkemann\h2l\Log;
+use alkemann\h2l\Connections;
 
 class Mysql {
 
@@ -16,7 +17,7 @@ class Mysql {
     {
 
         $defaults = [
-            'host' => 'localhost',
+            'name' => 'default',
             'auto_connect' => true
         ];
         $this->_config = $config + $defaults;
@@ -28,18 +29,13 @@ class Mysql {
 
     public function connect()
     {
-        $host = $this->_config['host'];
-        $user = $this->_config['username'] ?? '';
-        $pass = $this->_config['password'] ?? '';
-        if ($database = $this->_config['database']) {
-            $this->mysql = new mysqli($host, $user, $pass, $database);
-        } else {
-            $this->mysql = new mysqli($host, $user, $pass);
-        }
+        $name = $this->_config['name'];
+        $this->mysql = Connections::get($name);
     }
 
     public function close() {
-        $this->mysql->close();
+        $name = $this->_config['name'];
+        $this->mysql = Connections::close($name);
     }
 
     public function db($database) {
