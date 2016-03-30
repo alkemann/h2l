@@ -1,7 +1,9 @@
 {
     "name": "alkemann/h2l",
-    "description": "A micro framework for websites and apis for small projects. This is a sequel of h.l, made for PHP 7",
     "type": "library",
+    "description": "A micro framework for websites and apis. This is a sequel of h.l, made for PHP 7",
+    "keywords": ["framework", "microframework", "router", "routing", "php7"],
+    "homepage": "https://github.com/alkemann/h2l",
     "license": "MIT",
     "authors": [
         {
