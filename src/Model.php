@@ -3,12 +3,20 @@
 namespace alkemann\h2l;
 
 /**
- * Depends on alkemann\h2l\Entity trait
+ * Class Model
  *
  * Use this for prototyping only, use a real ORM for production studd
+ *
+ * Depends on alkemann\h2l\Entity trait
+ *
+ * @package alkemann\h2l
  */
 trait Model
 {
+    /**
+     * @return data\Source
+     * @throws exceptions\ConfigMissing
+     */
     public static function db(): data\Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
@@ -20,6 +28,9 @@ trait Model
         return isset(static::$pk) ? static::$pk : 'id';
     }
 
+    /**
+     * @return bool
+     */
     public function exists()
     {
         // @TODO set a "read from db" property?
@@ -35,6 +46,14 @@ trait Model
         return static::$table;
     }
 
+    /**
+     * @param $id
+     * @param array $conditions
+     * @param array $options
+     * @return bool|static
+     * @throws exceptions\ConfigMissing
+     * @throws \InvalidArgumentException
+     */
     public static function get($id, array $conditions = [], array $options = [])
     {
         if ($conditions) {
@@ -49,6 +68,12 @@ trait Model
         return false;
     }
 
+    /**
+     * @param array $conditions
+     * @param array $options
+     * @return \Generator
+     * @throws exceptions\ConfigMissing
+     */
     public static function find(array $conditions = [], array $options = [])
     {
         $conditions = self::filterByFields($conditions);
@@ -78,7 +103,13 @@ trait Model
         return $data;
     }
 
-    public function save(array $data = [], array $options = [])
+    /**
+     * @param array $data
+     * @param array $options
+     * @return bool
+     * @throws exceptions\ConfigMissing
+     */
+    public function save(array $data = [], array $options = []): bool
     {
         $pk     = static::pk();
         $db     = static::db();
@@ -103,7 +134,12 @@ trait Model
         return true;
     }
 
-    public function delete(Entity $entity, array $options = [])
+    /**
+     * @param array $options
+     * @return bool
+     * @throws exceptions\ConfigMissing
+     */
+    public function delete(array $options = []): bool
     {
         $pk = static::pk();
         return static::db()->delete(static::table(), [$pk => $this->$pk]);

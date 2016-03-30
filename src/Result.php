@@ -2,17 +2,27 @@
 
 namespace alkemann\h2l;
 
+/**
+ * Class Result
+ *
+ * @package alkemann\h2l
+ */
 class Result implements Response
 {
 
-    private $_request;
     private $_content;
     private $_format;
     private $_config;
-
     private $_validTypes = ['html','json', 'xml'];
     private $_contentTypes = ['html' => 'text/html', 'json' => 'application/json', 'xml' => 'application/xml'];
 
+    /**
+     * Result constructor.
+     *
+     * @param mixed $content The content in raw format to render, i.e. an object that implements \JsonSerializable
+     * @param string $format 'html', 'json' or 'xml'
+     * @param array $config Inject
+     */
     public function __construct($content = null, string $format = "json", array $config = [])
     {
         $this->_config = $config;
@@ -20,6 +30,13 @@ class Result implements Response
         $this->_format = $format;
     }
 
+    /**
+     * Set header and return a string rendered and ready to be echo'ed as response
+     *
+     * Header 'Content-type:' will be set using `header` or an injeced 'header_func' through constructor
+     *
+     * @return string
+     */
     public function render()
     {
         $contentType = $this->contentType($this->_format);

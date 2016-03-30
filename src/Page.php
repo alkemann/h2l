@@ -2,12 +2,25 @@
 
 namespace alkemann\h2l;
 
+/**
+ * Class Page
+ *
+ * @package alkemann\h2l
+ */
 class Page implements Response
 {
+    /**
+     * Overwrite this in view templates to set layout, i.e. `$this->layout = 'slim';`
+     *
+     * @var string
+     */
     public $layout = 'default';
 
-    protected $_data = [];
+    /**
+     * @var Request
+     */
     protected $_request;
+    protected $_data = [];
     protected $_url;
     protected $_path;
     protected $_view;
@@ -20,6 +33,14 @@ class Page implements Response
     ];
     protected $_config = [];
 
+    /**
+     * Page constructor.
+     *
+     * Analyze the request url to convert to a view template
+     *
+     * @param Request $request
+     * @param array $config
+     */
     public function __construct(Request $request, array $config = [])
     {
         $this->_request = $request;
@@ -43,6 +64,12 @@ class Page implements Response
         }
     }
 
+    /**
+     * Provide data (variables) that are to be extracted into the view (and layout) templates
+     *
+     * @param string/array $key an array of data or the name for $value
+     * @param null $value if $key is a string, this can be the value of that var
+     */
     public function setData($key, $value = null)
     {
         if (is_array($key)) {
@@ -54,6 +81,9 @@ class Page implements Response
         }
     }
 
+    /**
+     * @return Request
+     */
     public function request() : Request
     {
         return $this->_request;
@@ -143,6 +173,13 @@ class Page implements Response
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
+    /**
+     * Set header type, render the view, then optionally render layouts and wrap the template
+     *
+     * @TODO injectable header function
+     * @return string fully rendered string, ready to be echo'ed
+     * @throws exceptions\InvalidUrl if the view template does not exist
+     */
     public function render()
     {
         $contentType = $this->contentType();

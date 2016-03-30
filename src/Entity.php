@@ -2,31 +2,60 @@
 
 namespace alkemann\h2l;
 
+/**
+ * Class Entity
+ *
+ * @package alkemann\h2l
+ */
 trait Entity
 {
 
+    /**
+     * @var array
+     */
     protected $data = [];
 
+    /**
+     * Entity constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data = [])
     {
         $this->data = $data;
     }
 
-    public function __get($name)
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function __get(string $name)
     {
         return array_key_exists($name, $this->data) ? $this->data[$name] : null;
     }
 
-    public function __set($name, $value)
+    /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set(string $name, $value)
     {
         $this->data[$name] = $value;
     }
 
-    public function __isset($name)
+    /**
+     * @param $name
+     * @return bool
+     */
+    public function __isset(string $name)
     {
         return isset($this->data[$name]);
     }
 
+    /**
+     * @param array|null $data
+     * @return array
+     */
     public function data(array $data = null)
     {
         if (is_null($data)) {
@@ -38,12 +67,21 @@ trait Entity
         return $this->data;
     }
 
+    /**
+     * Reset object by removing all data
+     */
     public function reset()
     {
         $this->data = [];
     }
 
-    public function to($type)
+    /**
+     * Cast the data array to $type and return this
+     *
+     * @param $type 'json', 'array'
+     * @return mixed
+     */
+    public function to(string $type)
     {
         switch ($type) {
             case 'array':
@@ -56,6 +94,9 @@ trait Entity
         }
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return $this->data;

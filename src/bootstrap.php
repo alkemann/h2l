@@ -4,6 +4,11 @@ namespace alkemann\h2l;
 
 require_once 'internals/functions.php';
 
+/**
+ * May be set as exception handler, i.e. set_exception_handler('alkemann\h2l\handleError');
+ *
+ * @param \Throwable $e
+ */
 function handleError(\Throwable $e) {
     if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
         Log::info("InvalidUrl: " . $e->getMessage());

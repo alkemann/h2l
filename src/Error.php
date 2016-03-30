@@ -2,13 +2,34 @@
 
 namespace alkemann\h2l;
 
+/**
+ * Class Error
+ *
+ * @package alkemann\h2l
+ */
 class Error implements Response
 {
 
+    /**
+     * @var int
+     */
     public $code;
+    /**
+     * @var string
+     */
     public $message;
+    /**
+     * @var array
+     */
     protected $_config;
 
+    /**
+     * Error constructor.
+     *
+     * @param int $errorCode
+     * @param string|null $message
+     * @param array $config
+     */
     public function __construct(int $errorCode, string $message = null, array $config = [])
     {
         $this->code = $errorCode;
@@ -16,6 +37,9 @@ class Error implements Response
         $this->_config = $config;
     }
 
+    /**
+     * @throws \Error
+     */
     public function render()
     {
         $h = $this->_config['header_func'] ?? 'header';

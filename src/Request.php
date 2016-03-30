@@ -2,6 +2,11 @@
 
 namespace alkemann\h2l;
 
+/**
+ * Class Request
+ *
+ * @package alkemann\h2l
+ */
 class Request
 {
     const GET    = 'GET';
@@ -18,8 +23,23 @@ class Request
     private $_url;
     private $_method;
     private $_type = 'html';
+
+    /**
+     * @var Route
+     */
     protected $_route;
 
+    /**
+     * Analyze request, provided $_REQUESt, $_SERVER [, $_GET, $_POST] and identifu Route
+     *
+     * Response type can be set from HTTP_ACCEPT header. the Route object will be set by a call
+     * to Router::match
+     *
+     * @param array $request $_REQUEST
+     * @param array $server $_SERVER
+     * @param array $get $_GET
+     * @param array $post $_POST
+     */
     public function __construct(array $request = [], array $server = [], array $get = [], array $post = [])
     {
         $this->_request = $request;
@@ -40,12 +60,37 @@ class Request
         $this->_route   = Router::match($this->_url, $this->_method);
     }
 
+    /**
+     * @return string the raw 'php://input' post
+     */
     public function getPostBody():string { return file_get_contents('php://input'); }
+
+    /**
+     * @return Route identified for request
+     */
     public function route():Route { return $this->_route; }
+
+    /**
+     * @return string the requested url
+     */
     public function url():string { return $this->_url; }
+
+    /**
+     * @return string Request::GET, Request::POST, Request::PATCH, Request::PATCH etc
+     */
     public function method():string { return $this->_method; }
+
+    /**
+     * @return string 'html', 'json', 'xml' etc
+     */
     public function type():string { return $this->_type; }
 
+    /**
+     * Get request parameters from url as url parats, get queries or post, in that order
+     *
+     * @param $name the name of the parameter
+     * @return mixed|null the value or null if not set
+     */
     public function param($name) {
         if (isset($this->_parameters[$name]))
             return $this->_parameters[$name];
@@ -56,11 +101,19 @@ class Request
         return null;
     }
 
+    /**
+     * @return array $_GET
+     */
     public function query(): array
     {
         return $this->_get;
     }
 
+    /**
+     * Execute the Route's callback and return the Response object that the callback is required to return
+     *
+     * @return Response
+     */
     public function response() : Response
     {
         $cb = $this->_route->callback;
@@ -68,10 +121,18 @@ class Request
         return call_user_func_array($cb, [$this]);
     }
 
+    /**
+     * Returns the session var at $name
+     *
+     * First call to this method will initiate the session
+     *
+     * @TODO Implment dependency injection
+     * @TODO add support for dot notation
+     * @param null $name
+     * @return mixed
+     */
     public function session($name = null)
     {
-        // TODO dependency injection
-        // TODO add support for dot notation
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -79,6 +140,11 @@ class Request
             return $_SESSION[$name];
     }
 
+    /**
+     * Redirect NOW the request to $url
+     *
+     * @param $url
+     */
     public function redirect($url)
     {
         // TODO add support for reverse route match
