@@ -17,7 +17,7 @@ Get started quickly with static pages and small apis
    Thirdly there is an "example" version that contains some more illustative example pages
    and dynamic routes. install by simply copying the skeleton folder contents of choice down
    to the root of your app (presumably the same folder that contains the "vendor" composer):
-   `cp -r vendor/alkemann/skeletons/base/* .`
+   `vendor/bin/h2l skeleton base`
 
 ## Usage
 
