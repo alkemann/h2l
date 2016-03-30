@@ -1,7 +1,6 @@
 {
     "name": "alkemann/h2l",
     "description": "A micro framework for websites and apis for small projects. This is a sequel of h.l, made for PHP 7",
-    "version": "0.8.5",
     "type": "library",
     "license": "MIT",
     "authors": [
