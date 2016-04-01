@@ -11,7 +11,6 @@
             "homepage": "https://github.com/alkemann"
         }
     ],
-    "replace": {"alkemann/h.l": "*", "alkemann/h.l.app": "*"},
     "suggest": {
         "monolog/monolog": "Advanced logging that can be plugged into the logger"
     },
