@@ -30,7 +30,7 @@ class Request
     protected $_route;
 
     /**
-     * Analyze request, provided $_REQUESt, $_SERVER [, $_GET, $_POST] and identifu Route
+     * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] and identified Route
      *
      * Response type can be set from HTTP_ACCEPT header. the Route object will be set by a call
      * to Router::match
@@ -104,7 +104,7 @@ class Request
     /**
      * @return array $_GET
      */
-    public function query(): array
+    public function query():array
     {
         return $this->_get;
     }
@@ -114,7 +114,7 @@ class Request
      *
      * @return Response
      */
-    public function response() : Response
+    public function response():Response
     {
         $cb = $this->_route->callback;
         $this->_parameters = $this->_route->parameters;

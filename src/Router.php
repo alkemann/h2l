@@ -47,7 +47,7 @@ class Router
      * @param string $method Request::<GET/POST/PATCH/PUT/DELETE>
      * @return Route
      */
-    public static function match(string $url, string $method = Request::GET) : Route
+    public static function match(string $url, string $method = Request::GET):Route
     {
         $url = static::$_aliases[$url] ?? $url;
 
