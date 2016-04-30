@@ -22,8 +22,7 @@ class Page implements Response
     protected $_request;
     protected $_data = [];
     protected $_url;
-    protected $_path;
-    protected $_view;
+    protected $_template;
     protected $_type = 'html';
     protected $_validTypes = ['html','json', 'xml'];
     protected $_contentTypes = [
@@ -43,25 +42,11 @@ class Page implements Response
      */
     public function __construct(Request $request, array $config = [])
     {
-        $this->_request = $request;
-        $this->_config  = $config;
-        $this->_type    = $request->type();
-        $this->_url     = $request->route()->url;
-
-        // @TODO find a different way to do this
-        $parts = \explode('/', $this->_url);
-        $last = \array_slice($parts, -1, 1, true);
-        unset($parts[key($last)]);
-        $this->_path = $parts;
-        $this->_view = current($last);
-        $period = strrpos($this->_view , '.');
-        if ($period) {
-            $type = substr($this->_view , $period + 1);
-            if (in_array($type, $this->_validTypes)) {
-                $this->_type = $type;
-                $this->_view = substr($this->_view , 0, $period);
-            }
-        }
+        $this->_request  = $request;
+        $this->_config   = $config;
+        $this->_type     = $request->type();
+        $this->_url      = $request->route()->url;
+        $this->_template = $config['template'] ?? $this->templateFromUrl();
     }
 
     /**
@@ -184,7 +169,7 @@ class Page implements Response
     {
         $contentType = $this->contentType();
         header("Content-type: $contentType");
-        $view = $this->view($this->viewToRender());
+        $view = $this->view($this->_template);
         $response = $this->head();
         $response .= $view;
         $response .= $this->foot();
@@ -200,9 +185,22 @@ class Page implements Response
         return "text/html";
     }
 
-    private function viewToRender()
+    private function templateFromUrl()
     {
-        $ret = join(DIRECTORY_SEPARATOR, $this->_path) . DIRECTORY_SEPARATOR . $this->_view . '.' . $this->_type;
+        $parts = \explode('/', $this->_url);
+        $last = \array_slice($parts, -1, 1, true);
+        unset($parts[key($last)]);
+        $view = current($last);
+        $period = strrpos($view , '.');
+        if ($period) {
+            $type = substr($view , $period + 1);
+            if (in_array($type, $this->_validTypes)) {
+                $this->_type = $type;
+                $view = substr($view , 0, $period);
+            }
+        }
+
+        $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $this->_type;
         return trim($ret, DIRECTORY_SEPARATOR);
     }
 }

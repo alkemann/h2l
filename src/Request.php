@@ -71,6 +71,11 @@ class Request
     public function route():Route { return $this->_route; }
 
     /**
+     * @param Route $route
+     */
+    public function setRoute(Route $route) { $this->_route = $route; }
+
+    /**
      * @return string the requested url
      */
     public function url():string { return $this->_url; }
