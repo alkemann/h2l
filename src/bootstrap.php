@@ -28,7 +28,9 @@ function handleError(\Throwable $e) {
         d($e);
     } elseif (DEBUG) {
         header("Content-type: text/html");
-        echo '<h1>' . $e->getMessage() . '</h1>';
+        echo '<h1 style="color:red;">' . $e->getMessage() . '</h1>';
+        echo '<h3>' . $e->getFile() . ' :: ' . $e->getLine() . '</h3>';
+        echo '<pre>' . $e->getTraceAsString() . '</pre><br>';
         d($e);
     } else {
         (new Error(500, $e->getMessage()))->render();
