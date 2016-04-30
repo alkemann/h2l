@@ -4,12 +4,18 @@ Features:
  ☐ Cache
  ☐ Session
  ☐ Debug
+ ☐ Model relation
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
+
+Model relation:
+ ☐ use magic method
+ ☐ with(..$namesOfRelated)
 
 Cache:
  ☐ Cached routes
  ☐ Cached templates
+ ☐ Join templates
 
 Debug:
  ☐ Refactored to PHP7
@@ -28,6 +34,7 @@ Documentation:
  ☐ Logger
  ☐ Model/Entity & Connections
  ☐ Example app & Skeletons
+ ☐ Cache
 
 Tests:
  ☐ Coverage
