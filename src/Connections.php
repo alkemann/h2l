@@ -2,9 +2,10 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\exceptions;
+use alkemann\h2l\exceptions\ConfigMissing;
 use Closure;
 use InvalidArgumentException;
+use UnderflowException;
 
 /**
  * Class Connections
@@ -42,11 +43,11 @@ class Connections
      *
      * @param string $name name of of connection
      * @return mixed an instanced and open connection
-     * @throws exceptions\ConfigMissing if connection $name is not added
+     * @throws alkemann\h2l\exceptions\ConfigMissing if connection $name is not added
      */
     public static function get(string $name)
     {
-        if (!isset(self::$open[$name])) throw new exceptions\ConfigMissing("Connection $name is not configured");
+        if (!isset(self::$open[$name])) throw new ConfigMissing("Connection $name is not configured");
 
         if (self::$connections[$name] === false) {
             $open = self::$open[$name];
@@ -57,7 +58,7 @@ class Connections
 
     /**
      * @param string $name name of of connection
-     * @throws \Exception when connection is already closed
+     * @throws UnderflowException when connection is already closed
      * @throws InvalidArgumentException if connection does not exist
      */
     public static function close(string $name)
@@ -65,7 +66,7 @@ class Connections
         if (!isset(self::$open[$name])) throw new InvalidArgumentException("Connection $name does not exists");
 
         if (self::$connections[$name] === false)
-            throw new \Exception("Already closed");
+            throw new UnderflowException("Already closed");
 
         if (!isset(self::$close[$name]))
             return; // Closing is option, no error

@@ -148,7 +148,7 @@ class Request
             $keys = explode('.', $key);
             try {
                 return $this->_getArrayValue($keys, $_SESSION);
-            } catch (\Exception $e) {
+            } catch (\OutOfBoundsException $e) {
                 if ($e->getCode() == 999) {
                     return null;
                 } else {
@@ -169,7 +169,7 @@ class Request
      * @param  mixed $keys
      * @param  mixed $data
      * @return mixed
-     * @throws Exception if the key does not exist in data
+     * @throws OutOfBoundsException if the key does not exist in data
      */
     private function _getArrayValue($keys, &$data) {
         $key = array_shift($keys);
@@ -181,11 +181,11 @@ class Request
                 return $data[$key];
             } else {
                 array_unshift($keys, $key);
-                throw new \Exception("Key [" . join('.', $keys) . "] not set in " . print_r($data,true), 999);
+                throw new \OutOfBoundsException("Key [" . join('.', $keys) . "] not set in " . print_r($data,true));
             }
         } else {
             if (!array_key_exists($key, $data)) {
-                throw new \Exception("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data,true), 999);
+                throw new \OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data,true));
             }
             return $this->_getArrayValue($keys, $data[$key]);
         }
