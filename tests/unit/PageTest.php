@@ -27,11 +27,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $ref_contentType = new \ReflectionMethod($page, 'contentType');
         $ref_contentType->setAccessible(true);
-        $ref_viewToRender = new \ReflectionMethod($page, 'viewToRender');
-        $ref_viewToRender->setAccessible(true);
+        $ref_templateFromUrl = new \ReflectionMethod($page, 'templateFromUrl');
+        $ref_templateFromUrl->setAccessible(true);
 
         $this->assertEquals('text/html', $ref_contentType->invoke($page));
-        $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_viewToRender->invoke($page));
+        $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_templateFromUrl->invoke($page));
     }
 
     public function testJsonFormat()
