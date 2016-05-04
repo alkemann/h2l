@@ -42,11 +42,10 @@ class Result implements Response
         $contentType = $this->contentType($this->_format);
         $h = $this->_config['header_func'] ?? 'header';
         $h("Content-type: $contentType");
-        $content = $this->setContent($this->_content);
-        return $content;
+        return $this->formattedContent($this->_content);
     }
 
-    private function setContent($content)
+    private function formattedContent($content)
     {
         if ($content instanceof \Generator) {
             $content = iterator_to_array($content);

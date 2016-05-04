@@ -30,7 +30,7 @@ class Request
     protected $_route;
 
     /**
-     * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] and identified Route
+     * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
      *
      * Response type can be set from HTTP_ACCEPT header. the Route object will be set by a call
      * to Router::match
@@ -46,12 +46,12 @@ class Request
         $this->_server  = $server;
         $this->_post    = $post;
         $this->_get     = $get;
-        unset($this->_get['url']);
+        unset($this->_get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
         $this->_parameters = [];
 
         // override html type with json
         $httaccept = $this->_server['HTTP_ACCEPT'] ?? '*/*';
-        if ($httaccept !== '*/*' && strpos($this->_server['HTTP_ACCEPT'], 'application/json') !== false) {
+        if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
             $this->_type = 'json';
         }
 
@@ -127,22 +127,68 @@ class Request
     }
 
     /**
-     * Returns the session var at $name
+     * Returns the session var at $key
      *
      * First call to this method will initiate the session
      *
      * @TODO Implment dependency injection
-     * @TODO add support for dot notation
-     * @param null $name
-     * @return mixed
+     * @param string $key Dot notation for deeper values, i.e. `user.email`
+     * @return mixed/null
      */
-    public function session($name = null)
+    public function session($key = null)
     {
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
-        if ($name && isset($_SESSION[$name]))
-            return $_SESSION[$name];
+        if ($key && isset($_SESSION[$key])) {
+            return $_SESSION[$key];
+        }
+
+        if ($key && is_string($key) && strpos($key, '.') !== false) {
+            $keys = explode('.', $key);
+            try {
+                return $this->_getArrayValue($keys, $_SESSION);
+            } catch (\Exception $e) {
+                if ($e->getCode() == 999) {
+                    return null;
+                } else {
+                    throw $e;
+                }
+            }
+        }
+    }
+
+    /**
+     * Look for a deep value in a data array.
+     *
+     * Given $data = ['one' => ['two' => ['three' => 55)), 'four' => [];
+     *
+     * _getArrayValue(['one','two','three'], $data) will return 55
+     * _getArrayValue(['four','five'], $data) will throw exception with code 999
+     *
+     * @param  mixed $keys
+     * @param  mixed $data
+     * @return mixed
+     * @throws Exception if the key does not exist in data
+     */
+    private function _getArrayValue($keys, &$data) {
+        $key = array_shift($keys);
+        if (!is_array($data) || empty($key)) {
+            return $data;
+        }
+        if (empty($keys)) {
+            if (array_key_exists($key, $data)) {
+                return $data[$key];
+            } else {
+                array_unshift($keys, $key);
+                throw new \Exception("Key [" . join('.', $keys) . "] not set in " . print_r($data,true), 999);
+            }
+        } else {
+            if (!array_key_exists($key, $data)) {
+                throw new \Exception("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data,true), 999);
+            }
+            return $this->_getArrayValue($keys, $data[$key]);
+        }
     }
 
     /**
