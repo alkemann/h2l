@@ -6,7 +6,8 @@ use Exception;
 use alkemann\h2l\Log;
 use alkemann\h2l\Connections;
 
-class Mysql implements Source {
+class Mysql implements Source
+{
 
     protected $_config = [];
 
@@ -29,7 +30,8 @@ class Mysql implements Source {
         $this->mysql->close();
     }
 
-    private function db($database) {
+    private function db($database)
+    {
         $result = $this->mysql->select_db($database);
         if (!$result) {
             die($this->mysql->error . " \n Can't select database [$database]");

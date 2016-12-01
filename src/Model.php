@@ -17,13 +17,13 @@ trait Model
      * @return data\Source
      * @throws exceptions\ConfigMissing
      */
-    public static function db(): data\Source
+    public static function db() : data\Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
         return Connections::get($name);
     }
 
-    private static function pk(): string
+    private static function pk() : string
     {
         return isset(static::$pk) ? static::$pk : 'id';
     }
@@ -38,7 +38,7 @@ trait Model
         return isset($this->$pk) && $this->$pk;
     }
 
-    private static function table(): string
+    private static function table() : string
     {
         if (!isset(static::$table)) {
             throw new \alkemann\h2l\exceptions\ConfigMissing(get_called_class() . ' is missing static::$table');
@@ -109,7 +109,7 @@ trait Model
      * @return bool
      * @throws exceptions\ConfigMissing
      */
-    public function save(array $data = [], array $options = []): bool
+    public function save(array $data = [], array $options = []) : bool
     {
         $pk     = static::pk();
         $db     = static::db();
@@ -139,7 +139,7 @@ trait Model
      * @return bool
      * @throws exceptions\ConfigMissing
      */
-    public function delete(array $options = []): bool
+    public function delete(array $options = []) : bool
     {
         $pk = static::pk();
         return static::db()->delete(static::table(), [$pk => $this->$pk]);

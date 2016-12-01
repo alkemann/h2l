@@ -4,7 +4,8 @@
  */
 namespace alkemann\h2l\internals\debug;
 
-class Debug {
+class Debug
+{
 
     public static $defaults = array(
         'echo' => true,

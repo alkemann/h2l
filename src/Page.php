@@ -75,7 +75,7 @@ class Page implements Response
     }
 
     // @TODO refactor, and cache
-    private function head():string
+    private function head() : string
     {
         ob_start();
         try {
@@ -109,7 +109,7 @@ class Page implements Response
     }
 
     // @TODO refactor, and cache
-    private function foot():string
+    private function foot() : string
     {
         $footfile = $this->getLayoutFile('foot');
         if (!file_exists($footfile))
@@ -131,7 +131,7 @@ class Page implements Response
     }
 
     // @TODO refactor, and cache
-    public function view($view):string
+    public function view($view) : string
     {
         $file = $this->getContentFile($view);
         if (!file_exists($file)) {

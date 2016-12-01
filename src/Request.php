@@ -110,7 +110,7 @@ class Request
     /**
      * @return array $_GET
      */
-    public function query():array
+    public function query() : array
     {
         return $this->_get;
     }
@@ -120,7 +120,7 @@ class Request
      *
      * @return Response
      */
-    public function response():Response
+    public function response() : Response
     {
         $cb = $this->_route->callback;
         $this->_parameters = $this->_route->parameters;
