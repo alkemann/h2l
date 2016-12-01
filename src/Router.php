@@ -17,7 +17,7 @@ class Router
      * @param string $alias
      * @param string $real
      */
-    public static function alias(string $alias, string $real)
+    public static function alias(string $alias, string $real) : void
     {
         static::$_aliases[$alias] = $real;
     }
@@ -31,7 +31,7 @@ class Router
      * @param \Closure $closure Code to run on this match
      * @param mixed $methods a single Request::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
      */
-    public static function add(string $url, \Closure $closure, $methods = [Request::GET])
+    public static function add(string $url, \Closure $closure, $methods = [Request::GET]) : void
     {
         // @TODO change from closure to just callable?
         foreach ((array) $methods as $method)
@@ -61,7 +61,7 @@ class Router
         });
     }
 
-    private static function matchDynamicRoute(string $url, string $method = Request::GET)
+    private static function matchDynamicRoute(string $url, string $method = Request::GET) : ?Route
     {
         if (isset(static::$_routes[$method]) == false)
             return null;

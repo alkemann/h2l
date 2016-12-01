@@ -47,14 +47,14 @@ trait Model
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @param array $conditions
      * @param array $options
      * @return bool|static
      * @throws exceptions\ConfigMissing
      * @throws \InvalidArgumentException
      */
-    public static function get($id, array $conditions = [], array $options = [])
+    public static function get($id, array $conditions = [], array $options = []) : ?Model
     {
         if ($conditions) {
             throw new \InvalidArgumentException("Conditions is not implmenented on get");
@@ -74,7 +74,7 @@ trait Model
      * @return \Generator
      * @throws exceptions\ConfigMissing
      */
-    public static function find(array $conditions = [], array $options = [])
+    public static function find(array $conditions = [], array $options = []) : \Generator
     {
         $conditions = self::filterByFields($conditions);
         $result = static::db()->find(static::table(), $conditions, $options);
@@ -83,12 +83,12 @@ trait Model
         }
     }
 
-    protected static function fields()
+    protected static function fields() : ?array
     {
         return isset(static::$fields) ? static::$fields : false;
     }
 
-    private static function filterByFields(array $data)
+    private static function filterByFields(array $data) : array
     {
         $fields = static::fields();
         if ($fields) {

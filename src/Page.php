@@ -55,7 +55,7 @@ class Page implements Response
      * @param string/array $key an array of data or the name for $value
      * @param null $value if $key is a string, this can be the value of that var
      */
-    public function setData($key, $value = null)
+    public function setData($key, $value = null) : void
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -102,7 +102,7 @@ class Page implements Response
         return $ret;
     }
 
-    private function getLayoutFile(string $name)
+    private function getLayoutFile(string $name) : string
     {
         $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->_type . '.php';
@@ -152,7 +152,7 @@ class Page implements Response
         return $ret;
     }
 
-    private function getContentFile($view)
+    private function getContentFile($view) : string
     {
         $path = $this->_config['content_path'] ?? CONTENT_PATH;
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
@@ -165,7 +165,7 @@ class Page implements Response
      * @return string fully rendered string, ready to be echo'ed
      * @throws alkemann\h2l\exceptions\InvalidUrl if the view template does not exist
      */
-    public function render()
+    public function render() : string
     {
         $contentType = $this->contentType();
         header("Content-type: $contentType");
@@ -176,7 +176,7 @@ class Page implements Response
         return $response;
     }
 
-    private function contentType()
+    private function contentType() : string
     {
         $format = $this->_type;
         if (in_array($format, $this->_validTypes)) {
@@ -185,7 +185,7 @@ class Page implements Response
         return "text/html";
     }
 
-    private function templateFromUrl()
+    private function templateFromUrl() : string
     {
         $parts = \explode('/', $this->_url);
         $last = \array_slice($parts, -1, 1, true);

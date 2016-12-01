@@ -32,7 +32,7 @@ class Route
      * @param Closure|null $cb
      * @param array $parameters
      */
-    public function __construct(string $url, Closure $cb = null, array $parameters = [])
+    public function __construct(string $url, ?Closure $cb = null, array $parameters = [])
     {
         $this->url = $url;
         $this->callback = $cb;

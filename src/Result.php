@@ -37,7 +37,7 @@ class Result implements Response
      *
      * @return string
      */
-    public function render()
+    public function render() : string
     {
         $contentType = $this->contentType($this->_format);
         $h = $this->_config['header_func'] ?? 'header';
@@ -45,7 +45,7 @@ class Result implements Response
         return $this->formattedContent($this->_content);
     }
 
-    private function formattedContent($content)
+    private function formattedContent($content) : string
     {
         if ($content instanceof \Generator) {
             $content = iterator_to_array($content);
@@ -61,7 +61,7 @@ class Result implements Response
         }
     }
 
-    private function contentType(string $format)
+    private function contentType(string $format) : string
     {
         if (in_array($format, $this->_validTypes)) {
             return $this->_contentTypes[$format];

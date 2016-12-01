@@ -30,7 +30,7 @@ class Connections
      * @param Closure|null $close an optional anonymous function that takes the connection as arguments and closes it
      * @throws InvalidArgumentException if connection $name already exists
      */
-    public static function add(string $name, Closure $open, Closure $close = null)
+    public static function add(string $name, Closure $open, ?Closure $close = null) : void
     {
         if (isset(self::$open[$name])) throw new InvalidArgumentException("Connection $name already exists");
         self::$open[$name] = $open;
@@ -61,7 +61,7 @@ class Connections
      * @throws UnderflowException when connection is already closed
      * @throws InvalidArgumentException if connection does not exist
      */
-    public static function close(string $name)
+    public static function close(string $name) : void
     {
         if (!isset(self::$open[$name])) throw new InvalidArgumentException("Connection $name does not exists");
 

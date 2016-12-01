@@ -73,7 +73,7 @@ class Request
     /**
      * @param Route $route
      */
-    public function setRoute(Route $route) { $this->_route = $route; }
+    public function setRoute(Route $route):void { $this->_route = $route; }
 
     /**
      * @return string the requested url
@@ -96,7 +96,8 @@ class Request
      * @param $name the name of the parameter
      * @return mixed|null the value or null if not set
      */
-    public function param($name) {
+    public function param(string $name)
+    {
         if (isset($this->_parameters[$name]))
             return $this->_parameters[$name];
         if (isset($this->_get[$name]))
@@ -135,7 +136,7 @@ class Request
      * @param string $key Dot notation for deeper values, i.e. `user.email`
      * @return mixed/null
      */
-    public function session($key = null)
+    public function session(?string $key = null)
     {
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
