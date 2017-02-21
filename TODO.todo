@@ -1,0 +1,49 @@
+# Task list on the road to 1.0 
+
+Features:
+ ☐ Cache
+ ☐ Session
+ ☐ Debug
+ ☐ Model relation
+ ☐ Canonical meta tag (at least for removing the /webroot/ url part)
+ ☐ Wrap layout parts into one template that echos view in it
+
+Model relation:
+ ☐ use magic method
+ ☐ with(..$namesOfRelated)
+
+Cache:
+ ☐ Cached routes
+ ☐ Cached templates
+ ☐ Join templates
+
+Debug:
+ ☐ Refactored to PHP7
+ ☐ Loose depend on alkemann/debug as require-dev instead?
+
+Session:
+ ☐ Implement dependency injection for Request class
+
+Documentation:
+ ☐ Templates
+ ☐ Layouts
+ ☐ Dynamic Routes
+ ☐ Response interface & Page, Result and Error
+ ☐ Config
+ ☐ Request interface
+ ☐ Logger
+ ☐ Model/Entity & Connections
+ ☐ Example app & Skeletons
+ ☐ Cache
+
+Tests:
+ ☐ Coverage
+
+Packaging:
+ ☐ Add .gitattributes
+ ☐ Add CHANGES (To be used only after 1.0)
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+ ✔ Clean up prereleases @done (16-03-30 17:42) @project(Packaging)
+ ✔ Add to packagist @done (16-03-30 18:41) @project(Packaging)

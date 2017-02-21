@@ -44,10 +44,10 @@ class Log
     /**
      * Support the log levels of debug, info, notice, warning, error, critical, alert, emergency
      *
-     * @param $method
+     * @param string $method
      * @param array $args
      */
-    public static function __callStatic($method, array $args = [])
+    public static function __callStatic(string $method, array $args = []) : void
     {
         /*
         if (!in_array($method, ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'])) {
@@ -65,7 +65,7 @@ class Log
      * @param $message
      * @param array $context
      */
-    public static function log($level, $message, array $context = [])
+    public static function log($level, $message, array $context = []) : void
     {
         foreach (static::$handlers as $handlerName => $handler) {
             if (is_callable($handler)) { // avoid this?
@@ -79,11 +79,11 @@ class Log
     /**
      * A default naive file handler that can be used initially, but should be replaced for prod
      *
-     * @param $level
-     * @param $message
+     * @param string $level
+     * @param string $message
      * @param array $context
      */
-    private static function file($level, $message, array $context = [])
+    private static function file(string $level, string $message, array $context = []) : void
     {
         $file = LOGS_PATH . 'app.log';
         $fileHandler = fopen($file, 'a');

@@ -13,7 +13,8 @@ use alkemann\h2l\internals\debug\Debug;
  * 
  * @param mixed any amount
  */
-function d() {
+function d()
+{
     $debug = Debug::get_instance();
     $args = func_get_args();
     $trace = debug_backtrace();
@@ -30,7 +31,8 @@ function d() {
  *
  * @param mixed any amount
  */
-function dt() {
+function dt()
+{
     $debug = Debug::get_instance();
     $args = func_get_args();
     $trace = debug_backtrace();
@@ -46,7 +48,8 @@ function dt() {
 };
 
 // Debug dump any amount of variables and then die()
-function dd() {
+function dd()
+{
     $debug = Debug::get_instance();
     $args = func_get_args();
     $trace = debug_backtrace();
@@ -64,7 +67,8 @@ function dd() {
     die('<div style="margin-top: 25px;font-size: 10px;color: #500;">-Debug die-</div>');
 }
 
-function ddt() {
+function ddt()
+{
     $debug = Debug::get_instance();
     $args = func_get_args();
     $trace = debug_backtrace();
@@ -88,7 +92,8 @@ function ddt() {
  *
  * @param object $classOrObject
  */
-function dapi($classOrObject) {
+function dapi($classOrObject)
+{
     $debug = Debug::get_instance();
     dd($debug->api($classOrObject));
 }
@@ -98,7 +103,8 @@ function dapi($classOrObject) {
  * @param string $setting Name/Key of Debug config/setting to set
  * @param mixed $value Value
  */
-function ds($setting, $value) {
+function ds($setting, $value)
+{
     Debug::$defaults[$setting] = $value;
 }
 
@@ -109,7 +115,8 @@ function ds($setting, $value) {
  * @param mixed $value Value add to specified blacklist category or array to set the entire category
  * @param string $category Name of category of blacklist that is being modified, 'property' by default
  */
-function dsb($value, $category = 'property') {
+function dsb($value, $category = 'property')
+{
     if (is_array($value)) {
         Debug::$defaults['blacklist'][$category] = $value;
         return;
@@ -122,7 +129,8 @@ function dsb($value, $category = 'property') {
  *
  * @param mixed $value Name of array key to black list, or array of
  */
-function dbk($value) {
+function dbk($value)
+{
     $category = 'key';
     dsb($value, $category);
 }
@@ -132,7 +140,8 @@ function dbk($value) {
  * 
  * @param mixed $value Name of object property to blacklist, or array of
  */
-function dbp($value) {
+function dbp($value)
+{
     $category = 'property';
     dsb($value, $category);
 }
@@ -142,7 +151,8 @@ function dbp($value) {
  *
  * @param mixed $value Name of class, of which objects will be blacklisted, or array of
  */
-function dbc($value) {
+function dbc($value)
+{
     $category = 'class';
     dsb($value, $category);
 }
@@ -153,7 +163,8 @@ function dbc($value) {
  * @param string $method Name of method to call on the Debug obect
  * @param boolean $echo True will echo, false will return result
  */
-function dw($method) {
+function dw($method)
+{
     $args = func_get_args();
     $trace = debug_backtrace();
     $split = true;
@@ -171,7 +182,8 @@ function dw($method) {
  *
  * @param int $key array key of the output to put out
  */
-function dout($key = null, $incStyle = true) {
+function dout($key = null, $incStyle = true)
+{
     $debug = Debug::get_instance();
 	if ($key && $incStyle) {
 		$debug->out(0);
@@ -187,7 +199,8 @@ function dout($key = null, $incStyle = true) {
  * @param string $key
  * @return string
  */
-function daout($key = null) {
+function daout($key = null)
+{
     $debug = Debug::get_instance();
 	return $debug->array_out($key);
 }

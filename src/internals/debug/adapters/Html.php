@@ -4,9 +4,12 @@
  */
 namespace alkemann\h2l\internals\debug\adapters;
 
+use alkemann\h2l\internals\debug\Debug;
+
 class Html {
 
-    public static function dump_array(array $array, $debug) {
+    public static function dump_array(array $array, Debug $debug) : string
+    {
         $debug->current_depth++;
         $count = count($array);
         $ret = ' <span class="class">array</span>';
@@ -36,7 +39,8 @@ class Html {
         return $ret;
     }
 
-    public static function dump_object($obj, $debug) {
+    public static function dump_object($obj, Debug $debug) : string
+    {
         $debug->current_depth++;
         $hash = spl_object_hash($obj);
         $id = substr($hash, 9, 7);
@@ -77,7 +81,8 @@ class Html {
         return  $ret;
     }
 
-    public static function dump_properties($reflection, $obj, $type, $rule, $debug) {
+    public static function dump_properties(\ReflectionObject $reflection, $obj, string $type, string $rule, Debug $debug) : string
+    {
         $vars = $reflection->getProperties($rule);
         $i = 0; $ret = '';
         foreach ($vars as $refProp) {
@@ -96,7 +101,8 @@ class Html {
         return $i ? $ret : '';
     }
 
-    public static function dump_other($var) {
+    public static function dump_other($var) : string
+    {
         $type = gettype($var);
         switch ($type) {
             case 'boolean': $var = $var ? 'true' : 'false'; break;
@@ -113,7 +119,8 @@ class Html {
         return $ret;
     }
 
-    public static function locationString($location) {
+    public static function locationString(array $location) : string
+    {
         extract($location);
         $ret = "line: <span>$line</span> &nbsp;".
                "file: <span>$file</span> &nbsp;";
@@ -122,7 +129,8 @@ class Html {
         return $ret;
     }
 
-    public static function top(array $outputs, $key = null) {
+    public static function top(array $outputs, ?string $key = null) : void
+    {
             if (empty($outputs)) return;
             echo '<div id="debugger">';
             if ($key !== null) {

@@ -17,13 +17,13 @@ trait Model
      * @return data\Source
      * @throws exceptions\ConfigMissing
      */
-    public static function db(): data\Source
+    public static function db() : data\Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
         return Connections::get($name);
     }
 
-    private static function pk(): string
+    private static function pk() : string
     {
         return isset(static::$pk) ? static::$pk : 'id';
     }
@@ -38,7 +38,7 @@ trait Model
         return isset($this->$pk) && $this->$pk;
     }
 
-    private static function table(): string
+    private static function table() : string
     {
         if (!isset(static::$table)) {
             throw new \alkemann\h2l\exceptions\ConfigMissing(get_called_class() . ' is missing static::$table');
@@ -47,14 +47,14 @@ trait Model
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @param array $conditions
      * @param array $options
      * @return bool|static
      * @throws exceptions\ConfigMissing
      * @throws \InvalidArgumentException
      */
-    public static function get($id, array $conditions = [], array $options = [])
+    public static function get($id, array $conditions = [], array $options = []) : ?Model
     {
         if ($conditions) {
             throw new \InvalidArgumentException("Conditions is not implmenented on get");
@@ -74,7 +74,7 @@ trait Model
      * @return \Generator
      * @throws exceptions\ConfigMissing
      */
-    public static function find(array $conditions = [], array $options = [])
+    public static function find(array $conditions = [], array $options = []) : \Generator
     {
         $conditions = self::filterByFields($conditions);
         $result = static::db()->find(static::table(), $conditions, $options);
@@ -83,12 +83,12 @@ trait Model
         }
     }
 
-    protected static function fields()
+    protected static function fields() : ?array
     {
         return isset(static::$fields) ? static::$fields : false;
     }
 
-    private static function filterByFields(array $data)
+    private static function filterByFields(array $data) : array
     {
         $fields = static::fields();
         if ($fields) {
@@ -109,7 +109,7 @@ trait Model
      * @return bool
      * @throws exceptions\ConfigMissing
      */
-    public function save(array $data = [], array $options = []): bool
+    public function save(array $data = [], array $options = []) : bool
     {
         $pk     = static::pk();
         $db     = static::db();
@@ -139,7 +139,7 @@ trait Model
      * @return bool
      * @throws exceptions\ConfigMissing
      */
-    public function delete(array $options = []): bool
+    public function delete(array $options = []) : bool
     {
         $pk = static::pk();
         return static::db()->delete(static::table(), [$pk => $this->$pk]);

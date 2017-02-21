@@ -92,4 +92,9 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals("Oslo", $request->param('place'));
         $this->assertNull($request->param('paris'));
     }
+
+    public function testSession()
+    {
+        $this->markTestSkipped('Session does not have DI yet!');
+    }
 }

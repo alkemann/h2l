@@ -22,8 +22,7 @@ class Page implements Response
     protected $_request;
     protected $_data = [];
     protected $_url;
-    protected $_path;
-    protected $_view;
+    protected $_template;
     protected $_type = 'html';
     protected $_validTypes = ['html','json', 'xml'];
     protected $_contentTypes = [
@@ -43,25 +42,11 @@ class Page implements Response
      */
     public function __construct(Request $request, array $config = [])
     {
-        $this->_request = $request;
-        $this->_config  = $config;
-        $this->_type    = $request->type();
-        $this->_url     = $request->route()->url;
-
-        // @TODO find a different way to do this
-        $parts = \explode('/', $this->_url);
-        $last = \array_slice($parts, -1, 1, true);
-        unset($parts[key($last)]);
-        $this->_path = $parts;
-        $this->_view = current($last);
-        $period = strrpos($this->_view , '.');
-        if ($period) {
-            $type = substr($this->_view , $period + 1);
-            if (in_array($type, $this->_validTypes)) {
-                $this->_type = $type;
-                $this->_view = substr($this->_view , 0, $period);
-            }
-        }
+        $this->_request  = $request;
+        $this->_config   = $config;
+        $this->_type     = $request->type();
+        $this->_url      = $request->route()->url;
+        $this->_template = $config['template'] ?? $this->templateFromUrl();
     }
 
     /**
@@ -70,7 +55,7 @@ class Page implements Response
      * @param string/array $key an array of data or the name for $value
      * @param null $value if $key is a string, this can be the value of that var
      */
-    public function setData($key, $value = null)
+    public function setData($key, $value = null) : void
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -117,7 +102,7 @@ class Page implements Response
         return $ret;
     }
 
-    private function getLayoutFile(string $name)
+    private function getLayoutFile(string $name) : string
     {
         $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->_type . '.php';
@@ -167,7 +152,7 @@ class Page implements Response
         return $ret;
     }
 
-    private function getContentFile($view)
+    private function getContentFile($view) : string
     {
         $path = $this->_config['content_path'] ?? CONTENT_PATH;
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
@@ -178,20 +163,20 @@ class Page implements Response
      *
      * @TODO injectable header function
      * @return string fully rendered string, ready to be echo'ed
-     * @throws exceptions\InvalidUrl if the view template does not exist
+     * @throws alkemann\h2l\exceptions\InvalidUrl if the view template does not exist
      */
-    public function render()
+    public function render() : string
     {
         $contentType = $this->contentType();
         header("Content-type: $contentType");
-        $view = $this->view($this->viewToRender());
+        $view = $this->view($this->_template);
         $response = $this->head();
         $response .= $view;
         $response .= $this->foot();
         return $response;
     }
 
-    private function contentType()
+    private function contentType() : string
     {
         $format = $this->_type;
         if (in_array($format, $this->_validTypes)) {
@@ -200,9 +185,22 @@ class Page implements Response
         return "text/html";
     }
 
-    private function viewToRender()
+    private function templateFromUrl() : string
     {
-        $ret = join(DIRECTORY_SEPARATOR, $this->_path) . DIRECTORY_SEPARATOR . $this->_view . '.' . $this->_type;
+        $parts = \explode('/', $this->_url);
+        $last = \array_slice($parts, -1, 1, true);
+        unset($parts[key($last)]);
+        $view = current($last);
+        $period = strrpos($view , '.');
+        if ($period) {
+            $type = substr($view , $period + 1);
+            if (in_array($type, $this->_validTypes)) {
+                $this->_type = $type;
+                $view = substr($view , 0, $period);
+            }
+        }
+
+        $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $this->_type;
         return trim($ret, DIRECTORY_SEPARATOR);
     }
 }

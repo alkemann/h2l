@@ -40,7 +40,7 @@ class Error implements Response
     /**
      * @throws \Error
      */
-    public function render()
+    public function render() : string
     {
         $h = $this->_config['header_func'] ?? 'header';
         if (is_callable($h) == false) {
@@ -64,12 +64,13 @@ class Error implements Response
             // TODO only do this if request accepts html?
             try {
                 $errorPage->setData('message', $this->message);
-                echo $errorPage->render();
+                echo $errorPage->render(); // @TODO should return??
             } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
                 if (defined('DEBUG') && DEBUG) {
                     echo "No error page made at " . $e->getMessage();
                 }
             }
         }
+        return '';
     }
 }

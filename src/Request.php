@@ -30,7 +30,7 @@ class Request
     protected $_route;
 
     /**
-     * Analyze request, provided $_REQUESt, $_SERVER [, $_GET, $_POST] and identifu Route
+     * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
      *
      * Response type can be set from HTTP_ACCEPT header. the Route object will be set by a call
      * to Router::match
@@ -46,12 +46,12 @@ class Request
         $this->_server  = $server;
         $this->_post    = $post;
         $this->_get     = $get;
-        unset($this->_get['url']);
+        unset($this->_get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
         $this->_parameters = [];
 
         // override html type with json
         $httaccept = $this->_server['HTTP_ACCEPT'] ?? '*/*';
-        if ($httaccept !== '*/*' && strpos($this->_server['HTTP_ACCEPT'], 'application/json') !== false) {
+        if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
             $this->_type = 'json';
         }
 
@@ -69,6 +69,11 @@ class Request
      * @return Route identified for request
      */
     public function route():Route { return $this->_route; }
+
+    /**
+     * @param Route $route
+     */
+    public function setRoute(Route $route):void { $this->_route = $route; }
 
     /**
      * @return string the requested url
@@ -91,7 +96,8 @@ class Request
      * @param $name the name of the parameter
      * @return mixed|null the value or null if not set
      */
-    public function param($name) {
+    public function param(string $name)
+    {
         if (isset($this->_parameters[$name]))
             return $this->_parameters[$name];
         if (isset($this->_get[$name]))
@@ -104,7 +110,7 @@ class Request
     /**
      * @return array $_GET
      */
-    public function query(): array
+    public function query() : array
     {
         return $this->_get;
     }
@@ -122,22 +128,68 @@ class Request
     }
 
     /**
-     * Returns the session var at $name
+     * Returns the session var at $key
      *
      * First call to this method will initiate the session
      *
      * @TODO Implment dependency injection
-     * @TODO add support for dot notation
-     * @param null $name
-     * @return mixed
+     * @param string $key Dot notation for deeper values, i.e. `user.email`
+     * @return mixed/null
      */
-    public function session($name = null)
+    public function session(?string $key = null)
     {
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
-        if ($name && isset($_SESSION[$name]))
-            return $_SESSION[$name];
+        if ($key && isset($_SESSION[$key])) {
+            return $_SESSION[$key];
+        }
+
+        if ($key && is_string($key) && strpos($key, '.') !== false) {
+            $keys = explode('.', $key);
+            try {
+                return $this->_getArrayValue($keys, $_SESSION);
+            } catch (\OutOfBoundsException $e) {
+                if ($e->getCode() == 999) {
+                    return null;
+                } else {
+                    throw $e;
+                }
+            }
+        }
+    }
+
+    /**
+     * Look for a deep value in a data array.
+     *
+     * Given $data = ['one' => ['two' => ['three' => 55)), 'four' => [];
+     *
+     * _getArrayValue(['one','two','three'], $data) will return 55
+     * _getArrayValue(['four','five'], $data) will throw exception with code 999
+     *
+     * @param  mixed $keys
+     * @param  mixed $data
+     * @return mixed
+     * @throws OutOfBoundsException if the key does not exist in data
+     */
+    private function _getArrayValue($keys, &$data) {
+        $key = array_shift($keys);
+        if (!is_array($data) || empty($key)) {
+            return $data;
+        }
+        if (empty($keys)) {
+            if (array_key_exists($key, $data)) {
+                return $data[$key];
+            } else {
+                array_unshift($keys, $key);
+                throw new \OutOfBoundsException("Key [" . join('.', $keys) . "] not set in " . print_r($data,true));
+            }
+        } else {
+            if (!array_key_exists($key, $data)) {
+                throw new \OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data,true));
+            }
+            return $this->_getArrayValue($keys, $data[$key]);
+        }
     }
 
     /**
@@ -147,7 +199,7 @@ class Request
      */
     public function redirect($url)
     {
-        // TODO add support for reverse route match
+        // @TODO add support for reverse route match
         header( "Location: " . $url);
         exit;
     }

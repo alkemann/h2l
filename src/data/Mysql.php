@@ -6,13 +6,14 @@ use Exception;
 use alkemann\h2l\Log;
 use alkemann\h2l\Connections;
 
-class Mysql implements Source {
+class Mysql implements Source
+{
 
     protected $_config = [];
 
     private $mysql;
 
-    public function __construct(array $config = [])
+    public function __construct(array $config = []) : void
     {
 
         $defaults = [
@@ -24,11 +25,13 @@ class Mysql implements Source {
         unset($this->_config['mysqli']);
     }
 
-    public function close() {
+    public function close() : void
+    {
         $this->mysql->close();
     }
 
-    private function db($database) {
+    private function db($database)
+    {
         $result = $this->mysql->select_db($database);
         if (!$result) {
             die($this->mysql->error . " \n Can't select database [$database]");
@@ -36,11 +39,13 @@ class Mysql implements Source {
         return $this;
     }
 
-    private function escape($value) {
+    private function escape($value) : string
+    {
         return "'" . $this->mysql->escape_string($value) . "'";
     }
 
-    public function query($query, array $options = []) {
+    public function query(string $query, array $options = []) : string
+    {
         Log::debug("Query: " . $query);
         $result = $this->mysql->query($query);
         $last_error = $this->mysql->error;
@@ -50,7 +55,8 @@ class Mysql implements Source {
         return $result;
     }
 
-    public function find($table, array $conditions, array $options = []) {
+    public function find(string $table, array $conditions, array $options = [])
+    {
         $options += ['limit' => 99, 'array' => true, 'fields' => false, 'pk' => false];
 
         $query = "SELECT "
@@ -62,7 +68,8 @@ class Mysql implements Source {
         return $this->query($query);
     }
 
-    private function fields($fields) {
+    private function fields(?array $fields) : string
+    {
         if (!$fields) return '*';
         foreach ($fields as &$field) {
             $field = "`" . $this->mysql->escape_string($field) . "`";
@@ -70,7 +77,8 @@ class Mysql implements Source {
         return join(',', $fields);
     }
 
-    private function where(array $conditions) {
+    private function where(array $conditions) : string
+    {
         $where = [];
         foreach ($conditions as $field => $value) {
             $field = $this->mysql->escape_string($field);
@@ -80,7 +88,8 @@ class Mysql implements Source {
        return $where ? " WHERE " . join(' AND ', $where) : "";
     }
 
-    private function options(array $options) {
+    private function options(array $options) : string
+    {
         if (!$options) return '';
 
         $query = '';
@@ -105,8 +114,8 @@ class Mysql implements Source {
         return $query;
     }
 
-
-    public function update($table, array $conditions,  array $data, array $options = []) {
+    public function update(string $table, array $conditions,  array $data, array $options = []) : ?int
+    {
         if (!$conditions || !$data) return false;
 
         $values = [];
@@ -129,7 +138,8 @@ class Mysql implements Source {
         return $this->mysql->affected_rows;
     }
 
-    public function insert($table, array $data, array $options = []) {
+    public function insert(string $table, array $data, array $options = []) : int
+    {
         if (!$data) return false;
         $fields = join('`,`', array_keys($data));
         $fields = "`$fields`,`updated`,`created`";
@@ -147,7 +157,8 @@ class Mysql implements Source {
         return $this->mysql->insert_id;
     }
 
-    public function delete($table, array $conditions, array $options = []) {
+    public function delete(string $table, array $conditions, array $options = []) : int
+    {
         $where = $this->where($conditions);
         if (!$where) {
             Log::error("No where conditions for delete!");

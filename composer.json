@@ -11,6 +11,9 @@
             "homepage": "https://github.com/alkemann"
         }
     ],
+    "suggest": {
+        "monolog/monolog": "Advanced logging that can be plugged into the logger"
+    },
     "require": {
         "php": "^7.0.0"
     },

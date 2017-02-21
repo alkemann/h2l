@@ -4,7 +4,8 @@
  */
 namespace alkemann\h2l\internals\debug;
 
-class Debug {
+class Debug
+{
 
     public static $defaults = array(
         'echo' => true,
@@ -31,7 +32,8 @@ class Debug {
 	 *
 	 * @return alkemann\hl\debug\util\Debug
 	 */
-    public static function get_instance() {
+    public static function get_instance() : Debug
+    {
         if (!static::$__instance) {
             $class = __CLASS__;
             static::$__instance = new $class();
@@ -45,7 +47,8 @@ class Debug {
 	 * @param mixed $var
 	 * @param array $options
 	 */
-    public function dump($var, $options = array()) {
+    public function dump($var, $options = array()) : void
+    {
         $options += self::$defaults + array('split' => false, 'trace' => false);
         $this->options = $options;
         $this->current_depth = 0;
@@ -83,9 +86,10 @@ class Debug {
 	 * @param string $key
 	 * @return array
 	 */
-	public function array_out($key = null) {
+	public function array_out($key = null) : array
+    {
 		if (count($this->output) < 2 || ($key && !isset($this->output[$key]))) {
-			return array();
+			return [];
 		}
 		if ($key) {
 			return $this->output[$key];
@@ -99,7 +103,8 @@ class Debug {
 	 *
 	 * @param int $key
 	 */
-	public function out($key = null) {
+	public function out($key = null) : void
+    {
 		if ($this->options['mode'] == 'Html') {
 			\alkemann\h2l\internals\debug\adapters\Html::top($this->output, $key);
 			return;
@@ -107,7 +112,8 @@ class Debug {
 		$this->__out($key);
 	}
 
-	private function __out($key = null) {
+	private function __out($key = null) : void
+    {
 		if ($key !== null) {
 			if (!isset($this->output[$key])) {
 				throw new Exception('DEBUG: Not that many outputs in buffer');
@@ -124,9 +130,10 @@ class Debug {
 	/**
 	 * Grab global defines, will start at 'FIRST_APP_CONSTANT', if defined
 	 *
-	 * @return type
+	 * @return array
 	 */
-    public function defines() {
+    public function defines() : array
+    {
         $defines = get_defined_constants();
         $ret = array(); $offset = -1;
         while ($def = array_slice($defines, $offset--, 1)) {
@@ -144,7 +151,8 @@ class Debug {
 	 * @param mixed $var
 	 * @return string
 	 */
-    public function dump_it($var) {
+    public function dump_it($var) : string
+    {
 		$adapter = '\alkemann\h2l\internals\debug\adapters\\'. $this->options['mode'];
         if (is_array($var))
             return $adapter::dump_array($var, $this);
@@ -160,7 +168,8 @@ class Debug {
 	 * @param string $trace
 	 * @return array
 	 */
-    public function location($trace) {
+    public function location($trace) : array
+    {
         $root = substr($_SERVER['DOCUMENT_ROOT'], 0 , strlen(static::$defaults['docroot']) * -1);
         $file = implode('/', array_diff(explode('/', $trace[0]['file']), explode('/', $root)));
         $ret = array(
@@ -172,7 +181,8 @@ class Debug {
         return $ret;
     }
 
-    public function trace() {
+    public function trace() : array
+    {
         $root = substr($_SERVER['DOCUMENT_ROOT'], 0 , strlen(static::$defaults['docroot']) * -1);
         $trace = debug_backtrace();
         array_unshift($trace, array());
@@ -192,7 +202,8 @@ class Debug {
         return $arr;
     }
 
-    public function api($var) {
+    public function api(mixed $var) : array
+    {
         if (is_object($var)) {
             $class = get_class($var);
             $obj = $var;
