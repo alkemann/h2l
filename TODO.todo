@@ -40,7 +40,7 @@ Tests:
  ☐ Coverage
 
 Packaging:
- ☐ Add .gitattributes
+ ✔ Add .gitattributes @done (17-02-22 00:35)
  ☐ Add CHANGES (To be used only after 1.0)
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
