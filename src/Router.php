@@ -67,7 +67,7 @@ class Router
             return null;
 
         foreach (static::$_routes[$method] as $route => $cb) {
-            if ($url === $route) return $cb;
+            if ($url === $route) return new Route($url, $cb);
             $result = preg_match($route, $url, $matches);
             if (!$result) continue;
 
