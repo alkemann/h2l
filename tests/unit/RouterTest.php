@@ -42,10 +42,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $id = null;
         $name = null;
-        Router::add('|^api/\w+/(?<name>\w+)/(?<id>\d+)$|', function($r) use (&$id, &$name) { 
+        Router::add('|^api/\w+/(?<name>\w+)/(?<id>\d+)$|', function($r) use (&$id, &$name) {
             $id = (int) $r->param('id');
             $name = $r->param('name');
-            return new Result(['id' => $id]); 
+            return new Result(['id' => $id, 'name' => $name]);
         });
 
         $reflection = new \ReflectionMethod('alkemann\h2l\Router', 'matchDynamicRoute');
@@ -53,5 +53,21 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $route = $reflection->invoke(null, 'api/doesntmatter/tasks/12');
         $this->assertTrue($route instanceof Route);
         $this->assertEquals(['id' => '12', 'name' => 'tasks'], $route->parameters);
+
+        // ResponseMock
+        $r = new class($route) {
+            private $route;
+            public function __construct(Route $route) {
+                $this->route = $route;
+            }
+            public function param(string $name) {
+                return $this->route->parameters[$name] ?? null;
+            }
+        };
+
+        $response = call_user_func_array($route->callback, [$r]);
+        $this->assertEquals(12, $id);
+        $this->assertEquals("tasks", $name);
+        $this->assertEquals('{"id":12,"name":"tasks"}', $response->render());
     }
 }
