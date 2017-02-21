@@ -36,3 +36,15 @@ function handleError(\Throwable $e) {
         (new Error(500, $e->getMessage()))->render();
     }
 }
+
+function handleWarning($errno, $message, $file, $line, $meta) {
+    if (DEBUG) {
+        header("Content-type: text/html");
+        echo '<h1 style="color:red;">' . $message . '</h1>';
+        echo '<h3>' . $file. ' :: ' . $line . '</h3>';
+        d($meta);
+        die();
+    } else {
+        error_log("WARNING: {$file}::{$line} : $message : " . preg_replace("|\s+|", " ", print_r($meta, true)));
+    }
+}
