@@ -4,7 +4,7 @@ namespace alkemann\h2l\data;
 
 interface Source
 {
-    public function __construct(array $config = []):void;
+    public function __construct(array $config = []);
     public function query($query, array $params = []);
     public function find(string $table, array $conditions, array $options = []);
     public function update(string $table, array $conditions, array $data, array $options = []):int;

@@ -9,7 +9,8 @@ require_once 'internals/functions.php';
  *
  * @param \Throwable $e
  */
-function handleError(\Throwable $e) {
+function handleError(\Throwable $e) : void
+{
     if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
         Log::info("InvalidUrl: " . $e->getMessage());
         echo (new Error(404, $e->getMessage()))->render();
@@ -37,7 +38,15 @@ function handleError(\Throwable $e) {
     }
 }
 
-function handleWarning($errno, $message, $file, $line, $meta) {
+/**
+ * @param $errno
+ * @param $message
+ * @param $file
+ * @param $line
+ * @param $meta
+ */
+function handleWarning($errno, $message, $file, $line, $meta) : void
+{
     if (DEBUG) {
         header("Content-type: text/html");
         echo '<h1 style="color:red;">' . $message . '</h1>';
@@ -45,6 +54,6 @@ function handleWarning($errno, $message, $file, $line, $meta) {
         d($meta);
         die();
     } else {
-        error_log("WARNING: {$file}::{$line} : $message : " . preg_replace("|\s+|", " ", print_r($meta, true)));
+        error_log("WARNING: {$file}::{$line} : $errno : $message : " . preg_replace("|\s+|", " ", print_r($meta, true)));
     }
 }

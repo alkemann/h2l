@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\exceptions\ConfigMissing;
+
 /**
  * Class Model
  *
@@ -31,7 +33,7 @@ trait Model
     /**
      * @return bool
      */
-    public function exists()
+    public function exists() : bool
     {
         // @TODO set a "read from db" property?
         $pk = static::pk();
@@ -41,7 +43,7 @@ trait Model
     private static function table() : string
     {
         if (!isset(static::$table)) {
-            throw new \alkemann\h2l\exceptions\ConfigMissing(get_called_class() . ' is missing static::$table');
+            throw new ConfigMissing(get_called_class() . ' is missing static::$table');
         }
         return static::$table;
     }
@@ -50,8 +52,8 @@ trait Model
      * @param mixed $id
      * @param array $conditions
      * @param array $options
-     * @return bool|static
-     * @throws exceptions\ConfigMissing
+     * @return bool|Model
+     * @throws ConfigMissing
      * @throws \InvalidArgumentException
      */
     public static function get($id, array $conditions = [], array $options = []) : ?Model

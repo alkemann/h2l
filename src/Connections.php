@@ -43,7 +43,7 @@ class Connections
      *
      * @param string $name name of of connection
      * @return mixed an instanced and open connection
-     * @throws alkemann\h2l\exceptions\ConfigMissing if connection $name is not added
+     * @throws ConfigMissing
      */
     public static function get(string $name)
     {
