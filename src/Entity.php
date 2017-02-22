@@ -80,7 +80,7 @@ trait Entity
      *
      * @param $type 'json', 'array'
      * @return mixed
-     * @throws InvalidArgumentException on unsupported type
+     * @throws \InvalidArgumentException on unsupported type
      */
     public function to(string $type)
     {

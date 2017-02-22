@@ -163,7 +163,7 @@ class Page implements Response
      *
      * @TODO injectable header function
      * @return string fully rendered string, ready to be echo'ed
-     * @throws alkemann\h2l\exceptions\InvalidUrl if the view template does not exist
+     * @throws \alkemann\h2l\exceptions\InvalidUrl if the view template does not exist
      */
     public function render() : string
     {

@@ -2,18 +2,30 @@
 
 namespace alkemann\h2l\data;
 
-use Exception;
 use alkemann\h2l\Log;
-use alkemann\h2l\Connections;
 
+/**
+ * Class Mysql
+ * @package alkemann\h2l\data
+ */
 class Mysql implements Source
 {
 
+    /**
+     * @var array
+     */
     protected $_config = [];
 
+    /**
+     * @var mixed
+     */
     private $mysql;
 
-    public function __construct(array $config = []) : void
+    /**
+     * Mysql constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = [])
     {
 
         $defaults = [
@@ -25,12 +37,21 @@ class Mysql implements Source
         unset($this->_config['mysqli']);
     }
 
+    /**
+     * Close the database connections
+     */
     public function close() : void
     {
         $this->mysql->close();
     }
 
-    private function db($database)
+    /**
+     * Select the databaase
+     *
+     * @param $database
+     * @return Mysql ($this)
+     */
+    private function db($database) : Mysql
     {
         $result = $this->mysql->select_db($database);
         if (!$result) {
@@ -39,12 +60,23 @@ class Mysql implements Source
         return $this;
     }
 
+    /**
+     * Escapes values
+     *
+     * @param $value
+     * @return string
+     */
     private function escape($value) : string
     {
         return "'" . $this->mysql->escape_string($value) . "'";
     }
 
-    public function query(string $query, array $options = []) : string
+    /**
+     * @param string $query
+     * @param array $options
+     * @return mixed
+     */
+    public function query($query, array $options = [])
     {
         Log::debug("Query: " . $query);
         $result = $this->mysql->query($query);
@@ -55,6 +87,12 @@ class Mysql implements Source
         return $result;
     }
 
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $options
+     * @return string
+     */
     public function find(string $table, array $conditions, array $options = [])
     {
         $options += ['limit' => 99, 'array' => true, 'fields' => false, 'pk' => false];
@@ -68,6 +106,10 @@ class Mysql implements Source
         return $this->query($query);
     }
 
+    /**
+     * @param array|null $fields
+     * @return string
+     */
     private function fields(?array $fields) : string
     {
         if (!$fields) return '*';
@@ -77,6 +119,10 @@ class Mysql implements Source
         return join(',', $fields);
     }
 
+    /**
+     * @param array $conditions
+     * @return string
+     */
     private function where(array $conditions) : string
     {
         $where = [];
@@ -88,6 +134,10 @@ class Mysql implements Source
        return $where ? " WHERE " . join(' AND ', $where) : "";
     }
 
+    /**
+     * @param array $options
+     * @return string
+     */
     private function options(array $options) : string
     {
         if (!$options) return '';
@@ -114,7 +164,14 @@ class Mysql implements Source
         return $query;
     }
 
-    public function update(string $table, array $conditions,  array $data, array $options = []) : ?int
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $data
+     * @param array $options
+     * @return int
+     */
+    public function update(string $table, array $conditions, array $data, array $options = []) : int
     {
         if (!$conditions || !$data) return false;
 
@@ -128,16 +185,22 @@ class Mysql implements Source
         $where = $this->where($conditions);
         if (!$where) {
             Log::error("No where conditions for update!");
-            return false;
+            return 0;
         }
         $query = "UPDATE `$table` SET " . join(', ', $values). $where;
         $result = $this->query($query);
         if ($result !== true) {
-            return false;
+            return 0;
         }
         return $this->mysql->affected_rows;
     }
 
+    /**
+     * @param string $table
+     * @param array $data
+     * @param array $options
+     * @return int
+     */
     public function insert(string $table, array $data, array $options = []) : int
     {
         if (!$data) return false;
@@ -157,6 +220,12 @@ class Mysql implements Source
         return $this->mysql->insert_id;
     }
 
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $options
+     * @return int
+     */
     public function delete(string $table, array $conditions, array $options = []) : int
     {
         $where = $this->where($conditions);

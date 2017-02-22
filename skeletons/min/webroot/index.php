@@ -19,7 +19,8 @@ require_once(VENDOR_PATH . 'alkemann/h2l/src/bootstrap.php');
 define('DEBUG', 0);
 
 // Default error handler
-set_exception_handler ( 'alkemann\h2l\handleError' );
+set_exception_handler('alkemann\h2l\handleError');
+set_error_handler('alkemann\h2l\handleWarning', E_WARNING);
 
 
 $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);

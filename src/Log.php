@@ -10,6 +10,14 @@ namespace alkemann\h2l;
  *
  *
  * @package alkemann\h2l
+ * @method static void info() info($message, array $context = []) Log info level
+ * @method static void debug() debug($message, array $context = []) Log debug level
+ * @method static void notice() notice($message, array $context = []) Log notice level
+ * @method static void warning() warning($message, array $context = []) Log warning level
+ * @method static void error() error($message, array $context = []) Log error level
+ * @method static void critical() critical($message, array $context = []) Log critical level
+ * @method static void alert() alert($message, array $context = []) Log alert level
+ * @method static void emergency() emergency($message, array $context = []) Log emergency level
  */
 class Log
 {
