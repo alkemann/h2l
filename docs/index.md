@@ -6,7 +6,7 @@ Welcome to H2L a micro framework for PHP 7.1+
 
  - [Making an Api](guides/api.md)
  - [Single page app](guides/single_page.md)
- - [A CMS of static pages](guides/static_page.md)
+ - [A CMS of static pages](guides/static_pages.md)
 
 ## Framework documentation
 
