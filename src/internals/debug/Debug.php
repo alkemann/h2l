@@ -202,7 +202,7 @@ class Debug
         return $arr;
     }
 
-    public function api(mixed $var) : array
+    public function api($var) : array
     {
         if (is_object($var)) {
             $class = get_class($var);
