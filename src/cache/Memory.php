@@ -23,9 +23,8 @@ class Memory
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
-        if (!is_string($key)) throw new \InvalidArgumentException("$key is not a string");
         if ($this->has($key)) {
             return $this->pool[$key];
         }
@@ -46,9 +45,8 @@ class Memory
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function set($key, $value, $ttl = null)
+    public function set(string $key, $value, $ttl = null) : bool
     {
-        if (!is_string($key)) throw new \InvalidArgumentException("$key is not a string");
         // @TODO TTL?
         $this->pool[$key] = $value;
         return true;
@@ -64,7 +62,7 @@ class Memory
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function delete($key)
+    public function delete(string $key) : bool
     {
         unset($this->pool[$key]);
         return true;
@@ -75,7 +73,7 @@ class Memory
      *
      * @return bool True on success and false on failure.
      */
-    public function clear()
+    public function clear() : bool
     {
         $this->pool = [];
         return true;
@@ -93,7 +91,7 @@ class Memory
      *   MUST be thrown if $keys is neither an array nor a Traversable,
      *   or if any of the $keys are not a legal value.
      */
-    public function getMultiple($keys, $default = null)
+    public function getMultiple($keys, $default = null) : array
     {
         $out = [];
         foreach ($keys as $key) {
@@ -116,7 +114,7 @@ class Memory
      *   MUST be thrown if $values is neither an array nor a Traversable,
      *   or if any of the $values are not a legal value.
      */
-    public function setMultiple($values, $ttl = null)
+    public function setMultiple($values, $ttl = null) : bool
     {
         foreach ($values as $key => $value) {
             $this->set($key, $value, $ttl);
@@ -135,7 +133,7 @@ class Memory
      *   MUST be thrown if $keys is neither an array nor a Traversable,
      *   or if any of the $keys are not a legal value.
      */
-    public function deleteMultiple($keys)
+    public function deleteMultiple($keys) : bool
     {
         foreach ($keys as $key) {
             $this->delete($key);
@@ -158,7 +156,7 @@ class Memory
      * @throws \Psr\SimpleCache\InvalidArgumentException
      *   MUST be thrown if the $key string is not a legal value.
      */
-    public function has($key)
+    public function has(string $key) : bool
     {
         return array_key_exists($key, $this->pool);
     }
