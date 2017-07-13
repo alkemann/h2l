@@ -56,7 +56,7 @@ trait Model
      * @throws ConfigMissing
      * @throws \InvalidArgumentException
      */
-    public static function get($id, array $conditions = [], array $options = [])
+    public static function get($id, array $conditions = [], array $options = []) : ?Model
     {
         if ($conditions) {
             throw new \InvalidArgumentException("Conditions is not implmenented on get");
@@ -67,7 +67,7 @@ trait Model
         if ($result && $result->num_rows == 1) {
             return new static($result->fetch_assoc());
         }
-        return false;
+        return null;
     }
 
     /**
