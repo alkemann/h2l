@@ -95,7 +95,7 @@ class Mysql implements Source
      */
     public function find(string $table, array $conditions, array $options = [])
     {
-        $options += ['limit' => 99, 'array' => true, 'fields' => false, 'pk' => false];
+        $options += ['limit' => 99, 'array' => true, 'fields' => null, 'pk' => false];
 
         $query = "SELECT "
             . $this->fields($options['fields'])

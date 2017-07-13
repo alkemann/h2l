@@ -19,7 +19,7 @@ trait Model
      * @return data\Source
      * @throws exceptions\ConfigMissing
      */
-    public static function db() : data\Source
+    public static function db() : ?data\Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
         return Connections::get($name);
@@ -56,7 +56,7 @@ trait Model
      * @throws ConfigMissing
      * @throws \InvalidArgumentException
      */
-    public static function get($id, array $conditions = [], array $options = []) : ?Model
+    public static function get($id, array $conditions = [], array $options = [])
     {
         if ($conditions) {
             throw new \InvalidArgumentException("Conditions is not implmenented on get");
@@ -87,7 +87,7 @@ trait Model
 
     protected static function fields() : ?array
     {
-        return isset(static::$fields) ? static::$fields : false;
+        return isset(static::$fields) ? static::$fields : null;
     }
 
     private static function filterByFields(array $data) : array

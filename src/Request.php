@@ -150,11 +150,7 @@ class Request
             try {
                 return $this->_getArrayValue($keys, $_SESSION);
             } catch (\OutOfBoundsException $e) {
-                if ($e->getCode() == 999) {
-                    return null;
-                } else {
-                    throw $e;
-                }
+                return null;
             }
         }
     }
