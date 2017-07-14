@@ -51,3 +51,4 @@ Router::add('|version|' function($r) {
 To run tests you must can checkout the repo and require with dev and run `./bin/runtests` in the same folder as this README.md.
 
 Or to run tests on the vendor included lib into your application, you must also require phpunit; `composer require phpunit/phpunit` and then you can run h2l tests with `vendor/bin/testh2l`
+.
