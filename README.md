@@ -9,7 +9,7 @@ Get started quickly with static pages and small apis
 
 ## Requirements
 
- + PHP 7
+ + PHP 7.1
 
 
 ## Install
@@ -33,7 +33,7 @@ Get started quickly with static pages and small apis
  + Add dynamic routes there by supplying a regex match on url and a closure handler:
 
 Some example routes:
- ```
+ ```php
 use alkemann\h2l\{Request, Router, Result};
 
 // Get task by id, i.e. http://example.com/api/tasks/12
