@@ -1,9 +1,9 @@
 # H2L - microframework
 
-[![Travis](https://img.shields.io/travis/alkemann/h2l.svg)]()
-[![Packagist](https://img.shields.io/packagist/l/alkemann/h2l.svg)]()
-[![Tag](https://img.shields.io/github/tag/alkemann/h2l.svg)]()
-[![PHP](https://img.shields.io/badge/PHP_version-7.1-green.svg)]()
+[![Travis](https://img.shields.io/travis/alkemann/h2l.svg)](https://travis-ci.org/alkemann/h2l)
+[![Packagist](https://img.shields.io/packagist/l/alkemann/h2l.svg)](https://packagist.org/packages/alkemann/h2l)
+[![Tag](https://img.shields.io/github/tag/alkemann/h2l.svg)](https://github.com/alkemann/h2l/releases)
+[![PHP](https://img.shields.io/badge/PHP_version-7.1-green.svg)](http://php.net/ChangeLog-7.php)
 
 Get started quickly with static pages and small apis
 
