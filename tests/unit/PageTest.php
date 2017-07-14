@@ -85,18 +85,15 @@ class PageTest extends \PHPUnit_Framework_TestCase
             $config = $this->_setupFolder();
             $this->_setupViewFiles($config);
         } catch (\Throwable $t) {
-            //
             $this->markTestSkipped("Skipping File test: " . $t->getMessage());
         }
 
-        // $request = new Request(); // @TODO use a mock instead
-        $request = $this->getMock(
-            'alkemann\h2l\Request',
-            ['type', 'route', 'method'], // mocked methods
-            [], // no constructor arguments
-            'Request',
-            false
-        );
+        $request = $this->getMockBuilder('alkemann\h2l\Request')
+            ->setMockClassName('Request')
+            ->disableOriginalConstructor()
+            ->setMethods(['type', 'route', 'method']) // mocked methods
+            ->getMock();
+
         $request->expects($this->once())->method('type')->willReturn('html');
         $request->expects($this->once())->method('route')->willReturn(
             new Route('place')
