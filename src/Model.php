@@ -56,16 +56,16 @@ trait Model
      * @throws ConfigMissing
      * @throws \InvalidArgumentException
      */
-    public static function get($id, array $conditions = [], array $options = []) : ?Model
+    public static function get($id, array $conditions = [], array $options = []) //: ?Model
     {
         if ($conditions) {
             throw new \InvalidArgumentException("Conditions is not implmenented on get");
         }
         $pk = static::pk();
         $conditions[$pk] = $id;
-        $result = static::db()->find(static::table(), $conditions, $options);
-        if ($result && $result->num_rows == 1) {
-            return new static($result->fetch_assoc());
+        $result = static::db()->one(static::table(), $conditions, $options);
+        if ($result) {
+            return new static($result);
         }
         return null;
     }
@@ -80,9 +80,12 @@ trait Model
     {
         $conditions = self::filterByFields($conditions);
         $result = static::db()->find(static::table(), $conditions, $options);
-        while ($row = $result->fetch_assoc()) {
-            yield new static($row);
-        }
+        $gen = function() use ($result) {
+            foreach ($result as $row) {
+                yield new static($row);
+            }
+        };
+        return $gen();
     }
 
     protected static function fields() : ?array

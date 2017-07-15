@@ -87,13 +87,23 @@ class Mysql implements Source
         return $result;
     }
 
+    public function one(string $table, array $conditions, array $options = []) : ?array
+    {
+        $result = $this->find($table, $conditions, $options);
+
+        if ($result) {
+            foreach($result as $row) return $row;
+        }
+        return null;
+    }
+
     /**
      * @param string $table
      * @param array $conditions
      * @param array $options
      * @return string
      */
-    public function find(string $table, array $conditions, array $options = [])
+    public function find(string $table, array $conditions, array $options = []) : \Traversable
     {
         $options += ['limit' => 99, 'array' => true, 'fields' => null, 'pk' => false];
 
@@ -103,7 +113,16 @@ class Mysql implements Source
             . $this->where($conditions)
             . $this->options($options);
 
-        return $this->query($query);
+        $result = $this->query($query);
+        if ($result) {
+            $generator = function() use ($result) {
+                while ($row = $result->fetch_assoc()) {
+                    yield $row;
+                }
+            };
+            return $generator();
+        }
+        return $result;
     }
 
     /**
