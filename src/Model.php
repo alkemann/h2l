@@ -19,7 +19,7 @@ trait Model
      * @return data\Source
      * @throws exceptions\ConfigMissing
      */
-    public static function db() : ?data\Source
+    public static function db() //: ?data\Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
         return Connections::get($name);
@@ -106,7 +106,7 @@ trait Model
         return $gen();
     }
 
-    protected static function fields() : ?array
+    private static function fields() : ?array
     {
         return isset(static::$fields) ? static::$fields : null;
     }
@@ -141,6 +141,7 @@ trait Model
         if ($this->exists()) {
             $id   = $this->$pk;
             $data = self::filterByFields($data);
+            // TODO unset $data[$pk] ?
             $rows = $db->update($table, [$pk => $id], $data, $options);
             if (!$rows) return false;
         } else {
