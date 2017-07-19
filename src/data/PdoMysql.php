@@ -86,14 +86,21 @@ class PdoMysql implements Source
     public function find(string $table, array $conditions, array $options = []) : \Traversable
     {
         $values = [];
-        $where = $this->where($conditions, $values);
-        $limit = $this->limit($options, $values);
+        $where = $this->where($conditions);
+        $limit = $this->limit($options);
         $query = "SELECT * FROM `{$table}` {$where}{$limit};";
 
-        $dbh = $this->handler();
         Log::debug("PDO:QUERY [$query]");
+        $dbh = $this->handler();
         $stmt = $dbh->prepare($query);
-        if ($stmt->execute($values) === false) {
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":c_{$key}", $value);
+        }
+        if ($limit) {
+            $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
+            $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
+        }
+        if ($stmt->execute() === false) {
             $g = function() { yield ; };
             return $g();
         }
@@ -104,17 +111,15 @@ class PdoMysql implements Source
         return $stmt;
     }
 
-    private function where(array $conditions, array &$values) : string
+    private function where(array $conditions) : string
     {
-        $where = "WHERE ";
-        foreach ($conditions as $key => $val) {
-            $where .= "$key = ? ";
-            $values[] = $val;
-        }
-        return $where == "WHERE " ? "" : $where;
+        if (empty($conditions)) return "";
+        $fun = function($o, $v) { return "{$o}{$v} = :c_{$v}"; };
+        $where = array_reduce(array_keys($conditions), $fun, "");
+        return "WHERE {$where} ";
     }
 
-    private function limit(array $options, array &$values) : string
+    private function limit(array $options) : string
     {
         if (array_key_exists('limit', $options)) {
             if (array_key_exists('offset', $options)) {
@@ -123,7 +128,7 @@ class PdoMysql implements Source
                 $values[] = 0;
             }
             $values[] =  (int) $options['limit'];
-            return "LIMIT ?,? ";
+            return "LIMIT :o_offset,:o_limit ";
         }
         return "";
     }
