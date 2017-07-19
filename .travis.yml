@@ -5,3 +5,6 @@ before_script: composer install
 script:
   - bin/runtests
   - bin/coverage tests/clover.xml 80
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
