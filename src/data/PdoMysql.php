@@ -46,6 +46,8 @@ class PdoMysql implements Source
         ];
         try {
             $this->db = new PDO("mysql:host={$host};dbname={$db}", $user, $pass, $opts);
+            // @TODO use this?
+            // $this->db->setAttribute( PDO::ATTR_EMULATE_PREPARES, false);
         } catch (\PDOException $e) {
             throw new ConnectionError("Unable to connect to $host : $db with user $user");
         }
