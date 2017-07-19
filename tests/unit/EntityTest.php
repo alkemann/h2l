@@ -27,8 +27,21 @@ class EntityTest extends \PHPUnit_Framework_TestCase
 
         $class = get_class($e);
 
-        $e2 = new $class(['id' => 2, 'title' => 'New title']);
+        $data = ['id' => 2, 'title' => 'New title'];
+        $e2 = new $class($data);
         $this->assertEquals("New title", $e2->title);
+        $this->assertEquals($data, $e2->data());
+        $this->assertEquals($data, $e2->to('array'));
+        $this->assertEquals(json_encode($data), $e2->to('json'));
+    }
+
+    public function testException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $e = new class { use Entity; };
+        $e->data(['id' => 1, 'title' => "tittel"]);
+        $this->assertEquals("tittel", $e->title);
+        $e->to('XML');
     }
 
     public function testJson()
