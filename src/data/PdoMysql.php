@@ -64,23 +64,16 @@ class PdoMysql implements Source
     public function one(string $table, array $conditions, array $options = []) : ?array
     {
         $result = $this->find($table, $conditions, $options);
-        if ($result) { // && $result instanceof \PDOStatement
-            $hits = $result->rowCount();
-            if ($hits === 0) {
-                return null;
-            }
-            if ($hits > 1) {
-                throw new \Error("One request found more than 1 match!");
-            }
-
-            $r = $result->fetch(PDO::FETCH_ASSOC);
-            if ($r === false) {
-                // TODO log error?
-                return null;
-            }
-            return $r;
+        $result = iterator_to_array($result);
+        $hits = sizeof($result);
+        if ($hits === 0) {
+            return null;
         }
-        return null;
+        if ($hits > 1) {
+            throw new \Error("One request found more than 1 match!");
+        }
+
+        return $result[0];
     }
 
     public function find(string $table, array $conditions, array $options = []) : \Traversable
@@ -101,12 +94,13 @@ class PdoMysql implements Source
             $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
         }
         if ($stmt->execute() === false) {
-            $g = function() { yield ; };
-            return $g();
+            return new \EmptyIterator;
         }
 
         if ($stmt && $stmt instanceof \PDOStatement) {
+            // @codeCoverageIgnoreStart
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            // codeCoverageIgnoreEnd
         }
         return $stmt;
     }
@@ -135,16 +129,58 @@ class PdoMysql implements Source
 
     public function update(string $table, array $conditions, array $data, array $options = []) : int
     {
+        if (!$conditions || !$data) return 0;
 
+        $datasql = $this->data($data);
+        $where = $this->where($conditions);
+        $q = "UPDATE `{$table}` SET {$datasql} {$where};";
+
+        Log::debug("PDO:QUERY [$q]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($q);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":d_{$key}", $value);
+        }
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":c_{$key}", $value);
+        }
+        $result = $stmt->execute();
+        return ($result == true) ? $stmt->rowCount() : 0;
     }
 
-    public function insert(string $table, array $data, array $options = [])
+    private function data(array $data) : string
     {
-
+        $fun = function($o, $v) { return "{$o}{$v} = :d_{$v}"; };
+        return array_reduce(array_keys($data), $fun, "");
     }
 
-    public function delete(string $table, array $conditions, array $options = [])
+    public function insert(string $table, array $data, array $options = []) : ?int
     {
+        $keys = implode(', ', array_keys($data));
+        $data_phs = ':' . implode(', :', array_keys($data));
+        $q = "INSERT INTO `{$table}` ({$keys}) VALUES ({$data_phs});";
+        Log::debug("PDO:QUERY [$q]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($q);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
+        }
+        $result = $stmt->execute();
+        return ($result == true) ? $dbh->lastInsertId() : null;
+    }
 
+    public function delete(string $table, array $conditions, array $options = []) : int
+    {
+        $where = $this->where($conditions);
+        if (empty($conditions) || empty($where)) return 0;
+        $q = "DELETE FROM `{$table}` {$where};";
+        Log::debug("PDO:QUERY [$q]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($q);
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":c_{$key}", $value);
+        }
+        $result = $stmt->execute();
+        return ($result == true) ? $stmt->rowCount() : 0;
     }
 }

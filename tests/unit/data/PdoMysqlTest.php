@@ -62,12 +62,36 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
         $result = iterator_to_array($result);
         $this->assertEquals($expected, $result);
 
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+
+        $result = $m->find('things', ['status' => 1], ['limit' => 10]);
+        $this->assertTrue($result instanceof \Traversable);
+        $this->assertEquals("Iterator", $result->name);
+        $expected = $r;
+        $result = iterator_to_array($result);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testFindNoResults()
+    {
+        $ec = function() { return false; };
+        $mi = new MockStatement($ec, []);
+        $eq = 'SELECT * FROM `things` WHERE nothing = :c_nothing ;';
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+        $result = $m->find('things', ['nothing' => 'has this']);
+        $this->assertTrue($result instanceof \Traversable);
+        // Check that we are NOT getting the Mock statement in response:
+        $this->assertFalse($result instanceof MockStatement);
+        foreach ($result as $key => $value) {
+            var_dump([$key => $value]);
+        }
+        $this->assertEquals([], iterator_to_array($result));
     }
 
     private function createInstanceWithMockedHandler(string $expected_query, MockStatement $ms)
     {
         $handler = $this->getMockBuilder(PDO::class)
-            ->setMethods(['prepare']) // mocked methods
+            ->setMethods(['prepare', 'lastInsertId']) // mocked methods
             ->getMock();
         $handler->expects($this->once())
             ->method('prepare')
@@ -95,5 +119,72 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testOneNotFound()
+    {
+        $m = $this->getMockBuilder('alkemann\h2l\data\PdoMysql')
+            ->setMethods(['find'])
+            ->getMock();
+        $m->expects($this->once())
+            ->method('find')
+            ->with('things', ['id' => 99], [])
+            ->will($this->returnValue(new \EmptyIterator));
+        $this->assertNull($m->one('things', ['id' => 99]));
+    }
 
+    public function testOneFoundMany()
+    {
+        $this->expectException(\Error::class);
+
+        $m = $this->getMockBuilder('alkemann\h2l\data\PdoMysql')
+            ->setMethods(['find'])
+            ->getMock();
+        $f = function() { return true; };
+        $r = [['id' => 1], ['id' => 2]];
+        $m->expects($this->once())
+            ->method('find')
+            ->with('things', ['id' => 99], [])
+            ->will($this->returnValue(new MockStatement($f, $r)));
+        $this->assertNull($m->one('things', ['id' => 99]));
+    }
+
+    public function testUpdate()
+    {
+        $eq = "UPDATE `things` SET status = :d_status WHERE id = :c_id ;";
+        $ec = function() { return true; };
+        $mi = new MockStatement($ec, [1]);
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+        $expected = 1;
+        $result = $m->update('things', ['id' => 12], ['status' => 'DONE']);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testInsert()
+    {
+        $eq = "INSERT INTO `things` (task, status) VALUES (:task, :status);";
+        $ec = function() { return true; };
+        $mi = new MockStatement($ec, [1]);
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+
+        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\PdoMysql', 'db');
+        $reflection_prop->setAccessible(true);
+        $handler = $reflection_prop->getValue($m);
+        $handler->expects($this->once())
+            ->method('lastInsertId')
+            ->will($this->returnValue(5));
+
+        $expected = 5;
+        $result = $m->insert('things', ['task' => 'Win at TDD', 'status' => 'DONE']);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testDelete()
+    {
+        $eq = "DELETE FROM `things` WHERE id = :c_id ;";
+        $ec = function() { return true; };
+        $mi = new MockStatement($ec, [1]);
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+        $expected = 1;
+        $result = $m->delete('things', ['id' => 12]);
+        $this->assertEquals($expected, $result);
+    }
 }
