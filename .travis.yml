@@ -2,4 +2,6 @@ language: php
 php:
   - '7.1'
 before_script: composer install
-script: bin/runtests
+script:
+  - bin/runtests
+  - bin/coverage clover.xml 90
