@@ -5,7 +5,7 @@ services:
   - mysql
 before_script:
   - mysql -u root --password="" < tests/config/travis_start.sql
-  - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'tests'];" > tests/config/pdo_mysql_connection.php
+  - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'h2l_tests'];" > tests/config/pdo_mysql_connection.php
   - composer install
 script:
   - bin/runtests
