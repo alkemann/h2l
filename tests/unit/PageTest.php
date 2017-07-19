@@ -66,6 +66,28 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('application/json', $ref_contentType->invoke($page));
     }
 
+    public function testBadFormatUsesHtml()
+    {
+        $conf = [];
+        $request = new Request(
+            ['url' => 'somethig.csv'],
+            [
+                'HTTP_ACCEPT' => '*/*;q=0.8',
+                'REQUEST_URI' => '/tasks.json',
+                'REQUEST_METHOD' => 'GET'
+            ]
+        );
+        $page = new class($request, $conf) extends Page {
+            public function __construct(Request $request, array $config = []) {
+                parent::__construct($request, $config);
+                $this->_type = 'csv';
+            }
+        };
+        $ref_contentType = new \ReflectionMethod($page, 'contentType');
+        $ref_contentType->setAccessible(true);
+        $this->assertEquals('text/html', $ref_contentType->invoke($page));
+    }
+
     public function testSetData()
     {
         $page = new Page(new Request);
