@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\exceptions\ConfigMissing;
+
 class ConnectionsTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -44,11 +46,10 @@ class ConnectionsTest extends \PHPUnit_Framework_TestCase
         Connections::add('test1', function() {});
     }
 
-    /**
-     * @expectedException alkemann\h2l\exceptions\ConfigMissing
-     */
     public function testGetOnMissing()
     {
+        $this->expectException(ConfigMissing::class);
+        $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
         $result = Connections::get('i did not make this');
     }
 

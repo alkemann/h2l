@@ -19,7 +19,7 @@ trait Model
      * @return data\Source
      * @throws exceptions\ConfigMissing
      */
-    public static function db() : ?data\Source
+    public static function db() //: ?data\Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
         return Connections::get($name);
@@ -43,7 +43,10 @@ trait Model
     private static function table() : string
     {
         if (!isset(static::$table)) {
-            throw new ConfigMissing(get_called_class() . ' is missing static::$table');
+            throw new ConfigMissing(
+                get_called_class() . ' is missing static::$table',
+                ConfigMissing::MISSING_TABLE
+            );
         }
         return static::$table;
     }
@@ -56,36 +59,54 @@ trait Model
      * @throws ConfigMissing
      * @throws \InvalidArgumentException
      */
-    public static function get($id, array $conditions = [], array $options = []) : ?Model
+    public static function get($id, array $conditions = [], array $options = []) //: ?Model
     {
         if ($conditions) {
             throw new \InvalidArgumentException("Conditions is not implmenented on get");
         }
         $pk = static::pk();
         $conditions[$pk] = $id;
-        $result = static::db()->find(static::table(), $conditions, $options);
-        if ($result && $result->num_rows == 1) {
-            return new static($result->fetch_assoc());
+        $result = static::db()->one(static::table(), $conditions, $options);
+        if ($result) {
+            return new static($result);
         }
         return null;
     }
 
     /**
+     * Find all records matching $conditions, returns a generator
+     *
+     * May return an array if `array` is specified in $options as true. In either case
+     * values in the list will be instances of the model class.
+     *
      * @param array $conditions
      * @param array $options
-     * @return \Generator
+     * @return \Generator | array
      * @throws exceptions\ConfigMissing
      */
-    public static function find(array $conditions = [], array $options = []) : \Generator
+    public static function find(array $conditions = [], array $options = []) // : \Generator
     {
         $conditions = self::filterByFields($conditions);
         $result = static::db()->find(static::table(), $conditions, $options);
-        while ($row = $result->fetch_assoc()) {
-            yield new static($row);
+
+        if (array_key_exists('array', $options) && $options['array'] === true) {
+            $out = [];
+            foreach ($result as $row) {
+                $m = new static($row);
+                $out[$m->{$m->pk()}] = $m;
+            }
+            return $out;
         }
+
+        $gen = function() use ($result) {
+            foreach ($result as $row) {
+                yield new static($row);
+            }
+        };
+        return $gen();
     }
 
-    protected static function fields() : ?array
+    private static function fields() : ?array
     {
         return isset(static::$fields) ? static::$fields : null;
     }
@@ -120,6 +141,7 @@ trait Model
         if ($this->exists()) {
             $id   = $this->$pk;
             $data = self::filterByFields($data);
+            // TODO unset $data[$pk] ?
             $rows = $db->update($table, [$pk => $id], $data, $options);
             if (!$rows) return false;
         } else {
@@ -129,10 +151,9 @@ trait Model
             if (!$id) return false;
         }
 
-        $result = static::db()->find($table, [$pk => $id], ['limit' => 1]);
+        $result = $db->one($table, [$pk => $id]);
         $this->reset();
-        $this->data($result->fetch_assoc());
-
+        $this->data($result);
         return true;
     }
 

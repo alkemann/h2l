@@ -41,6 +41,33 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function test404WithDebug()
+    {
+        if (defined('DEBUG') == false) {
+            define('DEBUG', true);
+        }
+        if (DEBUG == false) {
+            $this->markTestSkipped("DEBUG must be defined as ON for this test!");
+            return;
+        }
+
+        $p = new class() {
+            public function setData() {}
+            public function render()
+            {
+                throw new \alkemann\h2l\exceptions\InvalidUrl("NO PAGE");
+            }
+        };
+        $options = [
+            'page_class' => get_class($p)
+        ];
+        $e = new Error(404, "Not found", $options);
+        define('CONTENT_PATH', "/tmp");
+        $expected = "No error page made at NO PAGE";
+        $result = $e->render();
+        $this->assertEquals($expected, $result);
+    }
+
     /**
      * @expectedException Error
      */
@@ -50,4 +77,12 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $e->render();
     }
 
+    /**
+     * @expectedException Error
+     */
+    public function testHeaderException()
+    {
+        $e = new Error(404, "Page not found", ['header_func' => 99]);
+        $e->render();
+    }
 }

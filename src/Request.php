@@ -133,6 +133,7 @@ class Request
      * First call to this method will initiate the session
      *
      * @TODO Implment dependency injection
+     * @codeCoverageIgnore
      * @param string $key Dot notation for deeper values, i.e. `user.email`
      * @return mixed/null
      */
@@ -167,6 +168,7 @@ class Request
      * @param  mixed $data
      * @return mixed
      * @throws OutOfBoundsException if the key does not exist in data
+     * @codeCoverageIgnore
      */
     private function _getArrayValue($keys, &$data) {
         $key = array_shift($keys);
@@ -191,6 +193,7 @@ class Request
     /**
      * Redirect NOW the request to $url
      *
+     * @codeCoverageIgnore
      * @param $url
      */
     public function redirect($url)

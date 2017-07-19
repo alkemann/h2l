@@ -13,11 +13,11 @@
     syntaxCheck                 = "false">
 
     <testsuites>
-        <testsuite name="Unit Tests">
+        <testsuite name="Unit">
             <directory suffix="Test.php">unit</directory>
         </testsuite>
 
-        <testsuite name="Integration Tests">
+        <testsuite name="Integration">
             <directory suffix="Test.php">integration</directory>
         </testsuite>
     </testsuites>

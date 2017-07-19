@@ -31,6 +31,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($c->delete('o'));
         $this->assertFalse($c->has('v'));
         $this->assertFalse($c->has('o'));
+        $this->assertEquals(777, $c->get('o', 777));
     }
 
     public function testMultiples()
