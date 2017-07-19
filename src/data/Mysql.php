@@ -257,6 +257,6 @@ class Mysql implements Source
         if ($result !== true) {
             return false;
         }
-        return $this->mysql->insert_id;
+        return $this->mysql->insert_id; // TODO affected rows!
     }
 }

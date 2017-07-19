@@ -71,15 +71,30 @@ trait Model
     }
 
     /**
+     * Find all records matching $conditions, returns a generator
+     *
+     * May return an array if `array` is specified in $options as true. In either case
+     * values in the list will be instances of the model class.
+     *
      * @param array $conditions
      * @param array $options
-     * @return \Generator
+     * @return \Generator | array
      * @throws exceptions\ConfigMissing
      */
-    public static function find(array $conditions = [], array $options = []) : \Generator
+    public static function find(array $conditions = [], array $options = []) // : \Generator
     {
         $conditions = self::filterByFields($conditions);
         $result = static::db()->find(static::table(), $conditions, $options);
+
+        if (array_key_exists('array', $options) && $options['array'] === true) {
+            $out = [];
+            foreach ($result as $row) {
+                $m = new static($row);
+                $out[$m->{$m->pk()}] = $m;
+            }
+            return $out;
+        }
+
         $gen = function() use ($result) {
             foreach ($result as $row) {
                 yield new static($row);
@@ -132,10 +147,9 @@ trait Model
             if (!$id) return false;
         }
 
-        $result = static::db()->find($table, [$pk => $id], ['limit' => 1]);
+        $result = $db->one($table, [$pk => $id]);
         $this->reset();
-        $this->data($result->fetch_assoc());
-
+        $this->data($result);
         return true;
     }
 
