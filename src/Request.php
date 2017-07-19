@@ -168,6 +168,7 @@ class Request
      * @param  mixed $data
      * @return mixed
      * @throws OutOfBoundsException if the key does not exist in data
+     * @codeCoverageIgnore
      */
     private function _getArrayValue($keys, &$data) {
         $key = array_shift($keys);
