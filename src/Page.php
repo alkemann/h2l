@@ -92,9 +92,6 @@ class Page implements Response
                     extract($this->_data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
                 })($neckfile);
-
-        } catch (\Throwable $t) {
-            throw $t;
         } finally {
             $ret = ob_get_contents();
             ob_end_clean();
@@ -121,8 +118,6 @@ class Page implements Response
                 extract($this->_data);
                 include $ldkfoskdfosjicyvutwehkshfskjdf;
             })($footfile);
-        } catch (\Throwable $t) {
-            throw $t;
         } finally {
             $ret = ob_get_contents();
             ob_end_clean();
@@ -143,8 +138,6 @@ class Page implements Response
                 extract($this->_data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })($file);
-        } catch (\Throwable $t) {
-            throw $t;
         } finally {
             $ret = ob_get_contents();
             ob_end_clean();
