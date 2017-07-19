@@ -4,6 +4,7 @@
 [![Packagist](https://img.shields.io/packagist/l/alkemann/h2l.svg)](https://packagist.org/packages/alkemann/h2l)
 [![Tag](https://img.shields.io/github/tag/alkemann/h2l.svg)](https://github.com/alkemann/h2l/releases)
 [![PHP](https://img.shields.io/badge/PHP_version-7.1-green.svg)](http://php.net/ChangeLog-7.php)
+[![codecov](https://codecov.io/gh/alkemann/h2l/branch/master/graph/badge.svg)](https://codecov.io/gh/alkemann/h2l)
 
 Get started quickly with static pages and small apis
 
