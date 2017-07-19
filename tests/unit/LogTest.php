@@ -1,6 +1,8 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\tests\unit;
+
+use alkemann\h2l\Log;
 
 class LogTest extends \PHPUnit_Framework_TestCase
 {

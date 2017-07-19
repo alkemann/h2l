@@ -1,8 +1,8 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\exceptions\ConfigMissing;
+use alkemann\h2l\{Connections, exceptions\ConfigMissing};
 
 class ConnectionsTest extends \PHPUnit_Framework_TestCase
 {

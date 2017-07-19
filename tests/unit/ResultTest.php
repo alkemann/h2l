@@ -1,7 +1,8 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\tests\unit;
 
+use alkemann\h2l\{Result, Response};
 
 class ResultTest extends \PHPUnit_Framework_TestCase
 {
