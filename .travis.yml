@@ -3,13 +3,12 @@ php:
   - '7.1'
 services:
   - mysql
-before_install:
-  - mysql -e 'CREATE DATABASE `h2l_tests`;USE `h2l_tests`; CREATE TABLE `tests` ( `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , `name` VARCHAR(256) NOT NULL DEFAULT 'A name' , `age` INT UNSIGNED NOT NULL DEFAULT '69' , `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = InnoDB;'
+before_script:
+  - mysql -u root --password="" < tests/config/travis_start.sql
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'tests'];" > tests/config/pdo_mysql_connection.php
-before_script: composer install
+  - composer install
 script:
   - bin/runtests
   - bin/coverage tests/clover.xml 80
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
