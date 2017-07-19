@@ -17,8 +17,10 @@ class MockStatement implements \Iterator {
     public function next() { next($this->result); }
     public function rewind() { reset($this->result); }
     public function valid() { return current($this->result) !== false; }
-    public function execute($v) { $ec = $this->ec; return $ec($v); }
+    public function execute($v = []) { $ec = $this->ec; return $ec($v); }
     public function fetch() { return $this->current(); }
+    public function bindValue($key, $value) {}
+    public function rowCount() { return sizeof($this->result); }
 }
 
 class PdoMysqlTest extends \PHPUnit_Framework_TestCase
@@ -83,14 +85,15 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testOne()
     {
-        $ec = function($v) { return sizeof($v) === 1 && $v[0] == 12; };
+        $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore']];
         $mi = new MockStatement($ec, $r);
-        $eq = 'SELECT * FROM `things` WHERE id = ? ;';
+        $eq = 'SELECT * FROM `things` WHERE id = :c_id ;';
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
         $expected = ['id' => 12, 'title' => 'Gore'];
         $result = $m->one('things', ['id' => 12]);
         $this->assertEquals($expected, $result);
-
     }
+
+
 }

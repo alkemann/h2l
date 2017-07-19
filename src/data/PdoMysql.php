@@ -64,9 +64,21 @@ class PdoMysql implements Source
     public function one(string $table, array $conditions, array $options = []) : ?array
     {
         $result = $this->find($table, $conditions, $options);
-
         if ($result) { // && $result instanceof \PDOStatement
-            return $result->fetch(PDO::FETCH_ASSOC);
+            $hits = $result->rowCount();
+            if ($hits === 0) {
+                return null;
+            }
+            if ($hits > 1) {
+                throw new \Error("One request found more than 1 match!");
+            }
+
+            $r = $result->fetch(PDO::FETCH_ASSOC);
+            if ($r === false) {
+                // TODO log error?
+                return null;
+            }
+            return $r;
         }
         return null;
     }
