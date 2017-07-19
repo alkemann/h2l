@@ -34,7 +34,10 @@ class Error implements Response
     {
         $this->code = $errorCode;
         $this->message = $message;
-        $this->_config = $config;
+        $this->_config = $config + [
+            'page_class' => Page::class,
+            'request_class' => Request::class
+        ];
     }
 
     /**
@@ -47,27 +50,29 @@ class Error implements Response
             throw new \Error("Header function injected to Error is not callable");
         }
         $errorPage = null;
+        $page_class = $this->_config['page_class'];
+        $request_class = $this->_config['request_class'];
         switch ($this->code) {
             case 404:
                 $h("HTTP/1.0 404 Not Found");
-                $errorPage = new Page(new Request(['url' => '404']), $this->_config);
+                $errorPage = new $page_class(new $request_class(['url' => '404']), $this->_config);
                 break;
             case 400:
                 $h("HTTP/1.0 400 {$this->message}");
                 break;
             default:
                 $h("HTTP/1.0 {$this->code} Bad request");
-                $errorPage = new Page(new Request(['url' => '500']), $this->_config);
+                $errorPage = new $page_class(new $request_class(['url' => '500']), $this->_config);
                 break;
         }
         if ($errorPage) {
             // TODO only do this if request accepts html?
             try {
                 $errorPage->setData('message', $this->message);
-                echo $errorPage->render(); // @TODO should return??
+                return $errorPage->render();
             } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
                 if (defined('DEBUG') && DEBUG) {
-                    echo "No error page made at " . $e->getMessage();
+                    return "No error page made at " . $e->getMessage();
                 }
             }
         }
