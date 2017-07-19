@@ -4,4 +4,4 @@ php:
 before_script: composer install
 script:
   - bin/runtests
-  - bin/coverage clover.xml 90
+  - bin/coverage tests/clover.xml 90
