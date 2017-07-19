@@ -44,11 +44,10 @@ class ConnectionsTest extends \PHPUnit_Framework_TestCase
         Connections::add('test1', function() {});
     }
 
-    /**
-     * @expectedException alkemann\h2l\exceptions\ConfigMissing
-     */
     public function testGetOnMissing()
     {
+        $this->expectException(alkemann\h2l\exceptions\ConfigMissing::class);
+        $this->expectExceptionCode(alkemann\h2l\exceptions\ConfigMissing::MISSING_CONNECTION);
         $result = Connections::get('i did not make this');
     }
 

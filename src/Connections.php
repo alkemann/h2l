@@ -47,7 +47,10 @@ class Connections
      */
     public static function get(string $name)
     {
-        if (!isset(self::$open[$name])) throw new ConfigMissing("Connection $name is not configured");
+        if (!isset(self::$open[$name])) throw new ConfigMissing(
+            "Connection $name is not configured",
+            ConfigMissing::MISSING_CONNECTION
+        );
 
         if (self::$connections[$name] === false) {
             $open = self::$open[$name];

@@ -43,7 +43,10 @@ trait Model
     private static function table() : string
     {
         if (!isset(static::$table)) {
-            throw new ConfigMissing(get_called_class() . ' is missing static::$table');
+            throw new ConfigMissing(
+                get_called_class() . ' is missing static::$table',
+                ConfigMissing::MISSING_TABLE
+            );
         }
         return static::$table;
     }
