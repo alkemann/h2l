@@ -87,6 +87,7 @@ class Log
     /**
      * A default naive file handler that can be used initially, but should be replaced for prod
      *
+     * @codeCoverageIgnore
      * @param string $level
      * @param string $message
      * @param array $context
