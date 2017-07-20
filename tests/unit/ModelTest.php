@@ -135,9 +135,10 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($result instanceof \Traversable);
 
-        foreach ($result as $person)
+        foreach ($result as $id => $person)
             $this->assertTrue($person instanceof Person, get_class($person) . " is not Person!");
             $this->assertEquals('John', $person->data['name']);
+            $this->assertEquals($person->data['pid'], $id);
             $this->assertTrue($person->exists());
     }
 
@@ -148,7 +149,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         ;
         $con->expects($this->once())->method('find')
-            ->with('people', ['name' => 'John'], ['array' => true])
+            ->with('people', ['name' => 'John'])
             ->will($this->returnValue(new \ArrayObject([
                     ['pid' => 55, 'name' => 'John'],
                     ['pid' => 56, 'name' => 'John']
@@ -160,7 +161,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
             return $con;
         });
         Person::$connection = $conn_id;
-        $result = Person::find(['name' => 'John'], ['array' => true]);
+        $result = Person::findAsArray(['name' => 'John']);
         $this->assertTrue(is_array($result));
         $this->assertEquals(55, key($result));
         $first = current($result);

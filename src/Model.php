@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\exceptions\ConfigMissing;
+use alkemann\h2l\{exceptions\ConfigMissing, data\Source};
 
 /**
  * Class Model
@@ -16,10 +16,10 @@ use alkemann\h2l\exceptions\ConfigMissing;
 trait Model
 {
     /**
-     * @return data\Source
+     * @return alkemann\h2l\data\Source
      * @throws exceptions\ConfigMissing
      */
-    public static function db() //: ?data\Source
+    public static function db() : Source
     {
         $name = isset(static::$connection) ? static::$connection : 'default';
         return Connections::get($name);
@@ -76,34 +76,38 @@ trait Model
     /**
      * Find all records matching $conditions, returns a generator
      *
-     * May return an array if `array` is specified in $options as true. In either case
-     * values in the list will be instances of the model class.
-     *
      * @param array $conditions
      * @param array $options
-     * @return \Generator | array
-     * @throws exceptions\ConfigMissing
+     * @return \Generator
+     * @throws alkemann\h2l\exceptions\ConfigMissing
      */
-    public static function find(array $conditions = [], array $options = []) // : \Generator
+    public static function find(array $conditions = [], array $options = []) : \Generator
     {
         $conditions = self::filterByFields($conditions);
         $result = static::db()->find(static::table(), $conditions, $options);
-
-        if (array_key_exists('array', $options) && $options['array'] === true) {
-            $out = [];
+        $pk = static::pk();
+        $gen = function() use ($result, $pk) {
             foreach ($result as $row) {
-                $m = new static($row);
-                $out[$m->{$m->pk()}] = $m;
-            }
-            return $out;
-        }
-
-        $gen = function() use ($result) {
-            foreach ($result as $row) {
-                yield new static($row);
+                $model = new static($row);
+                $id = $row[$pk];
+                yield $id => $model;
             }
         };
         return $gen();
+    }
+
+    /**
+     * Find all records matching `$conditions`, returns an array with key being the pk value
+     *
+     * @param array $conditions
+     * @param array $options
+     * @return array
+     * @throws alkemann\h2l\exceptions\ConfigMissing
+     */
+    public static function findAsArray(array $conditions = [], array $options = []) : array
+    {
+        $generator = static::find($conditions, $options);
+        return iterator_to_array($generator);
     }
 
     private static function fields() : ?array
