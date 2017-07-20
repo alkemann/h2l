@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\unit\response;
 
 use alkemann\h2l\{Response, response\Json};
 
-class ResultTest extends \PHPUnit_Framework_TestCase
+class JsonTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testConstructor()
@@ -14,45 +14,71 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($r instanceof Json);
     }
 
-    // public function testRender()
-    // {
-    //     $data = ['id' => 12, 'title' => 'Hello there'];
-    //     $r = new Result(['id' => 12, 'title' => 'Hello there'], 'json', ['header_func' => function($h) {}]);
+    public function testRender()
+    {
+        $data = ['id' => 12, 'title' => 'Hello there'];
+        $r = new Json(['id' => 12, 'title' => 'Hello there'], 200, "", ['header_func' => function($h) {}]);
 
-    //     $expected = json_encode($data);
-    //     $result = $r->render();
-    //     $this->assertEquals($expected, $result);
-    // }
+        $expected = json_encode($data);
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+    }
 
-    // public function testHeaderAndEchoOverrides()
-    // {
-    //     $html   = "<h1>hello</h1>";
-    //     $header = null;
-    //     $r = new Result($html, 'text', [
-    //         'header_func' => function($h) use (&$header) { $header = $h; }
-    //     ]);
+    public function testContentIsGenerator()
+    {
+        $headers = [];
+        $data = $this->mock_gen();
+        $r = new Json($data, 200, "", [
+            'header_func' => function($h) use (&$headers) { $headers[] = $h; }
+        ]);
 
-    //     $result = $r->render();
-    //     $this->assertEquals($html, $result);
-    //     $this->assertEquals("Content-type: text/html", $header);
-    // }
+        $expected = json_encode([["id"=>0],["id"=>1],["id"=>2]]);
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
 
-    // private function mock_gen()
-    // {
-    //     for ($i=0; $i < 3; $i++) {
-    //         yield ['id' => $i];
-    //     }
-    // }
+        $expected = ['Content-type: application/json'];
+        $this->assertEquals($expected, $headers);
+    }
 
-    // public function testContentIsGenerator()
-    // {
-    //     $data = $this->mock_gen();
-    //     $r = new Result($data, 'json', [
-    //         'header_func' => function($h) use (&$header) { $header = $h; }
-    //     ]);
+    private function mock_gen()
+    {
+        for ($i=0; $i < 3; $i++) {
+            yield ['id' => $i];
+        }
+    }
 
-    //     $expected = json_encode([["id"=>0],["id"=>1],["id"=>2]]);
-    //     $result = $r->render();
-    //     $this->assertEquals($expected, $result);
-    // }
+    public function testErrorResponse()
+    {
+        $headers = [];
+        $r = new Json(null, 400, null, [
+            'header_func' => function($h) use (&$headers) { $headers[] = $h; }
+        ]);
+        $expected = "";
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+
+        $expected = [
+            'Content-type: application/json',
+            'HTTP/1.0 400 Bad request'
+        ];
+        $this->assertEquals($expected, $headers);
+    }
+
+    public function testErrorResponseWithMessage()
+    {
+        $headers = [];
+        $r = new Json(null, 500, "Internal Server Error", [
+            'header_func' => function($h) use (&$headers) { $headers[] = $h; }
+        ]);
+        $expected = "";
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+
+        $expected = [
+            'Content-type: application/json',
+            'HTTP/1.0 500 Internal Server Error'
+        ];
+        $this->assertEquals($expected, $headers);
+    }
+
 }

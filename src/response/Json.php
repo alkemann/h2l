@@ -15,14 +15,7 @@ class Json implements \alkemann\h2l\Response
     private $_message;
     private $_config;
 
-    /**
-     * Result constructor.
-     *
-     * @param mixed $content The content in raw format to render, i.e. an object that implements \JsonSerializable
-     * @param string $format 'html', 'json' or 'xml'
-     * @param array $config Inject
-     */
-    public function __construct($content = null, int $code = 200, string $message = "", array $config = [])
+    public function __construct($content = null, int $code = 200, ?string $message = null, array $config = [])
     {
         $this->_config = $config;
         $this->_content = $content;
@@ -34,10 +27,14 @@ class Json implements \alkemann\h2l\Response
      * Set header and return a string rendered and ready to be echo'ed as response
      *
      * Header 'Content-type:' will be set using `header` or an injeced 'header_func' through constructor
-     *
-     * @return string
      */
     public function render() : string
+    {
+        $this->setHeaders();
+        return $this->formattedContent();
+    }
+
+    private function setHeaders() : void
     {
         $h = $this->_config['header_func'] ?? 'header';
         $h("Content-type: application/json");
@@ -46,9 +43,8 @@ class Json implements \alkemann\h2l\Response
                 $h("HTTP/1.0 {$this->_code} {$this->_message}");
             else
                 $h("HTTP/1.0 {$this->_code} Bad request");
-
+                // TODO use standard http code strings?
         }
-        return $this->formattedContent();
     }
 
     private function formattedContent() : string
