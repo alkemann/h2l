@@ -2,22 +2,25 @@
 
 namespace alkemann\h2l\tests\integration;
 
-use alkemann\h2l\{Page, Route, Request, Response};
+use alkemann\h2l\{Page, Route, Request, Response, exceptions\InvalidUrl};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
+    private static $config = [];
+
+    public static function setUpBeforeClass()
+    {
+        $base = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'mocks' . DIRECTORY_SEPARATOR . 'page' . DIRECTORY_SEPARATOR;
+        static::$config = [
+            'content_path' => $base . 'content' . DIRECTORY_SEPARATOR,
+            'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
+        ];
+    }
 
     public function testRenderingSimple()
     {
-        try {
-            $config = $this->_setupFolder();
-            $this->_setupViewFiles($config);
-        } catch (\Throwable $t) {
-            $this->markTestSkipped("Skipping File test: " . $t->getMessage());
-        }
-
-        $request = $this->getMockBuilder('alkemann\h2l\Request')
-            ->setMockClassName('Request')
+        $request = $this->getMockBuilder(Request::class)
+            // ->setMockClassName('Request')
             ->disableOriginalConstructor()
             ->setMethods(['type', 'route', 'method']) // mocked methods
             ->getMock();
@@ -27,15 +30,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
             new Route('place')
         );
 
-        $config['content_path'] = substr($config['content_path'], 0, -6);
-        $page = new Page($request, $config);
+        $page = new Page($request, static::$config);
 
         $expected = '<html><body><div><h1>Win!</h1></div></body></html>';
         $result = $page->render();
         $this->assertEquals($expected, $result);
 
         $page->layout = 'spicy';
-        $expected = '<html><title>Spice</title><body><h1>Win!</h1></body></html>';
+        $expected = '<html><head><title>Spice</title></head><body><h1>Win!</h1></body></html>';
         $result = $page->render();
         $this->assertEquals($expected, $result);
 
@@ -43,75 +45,24 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $expected = '<h1>Win!</h1>';
         $result = $page->render();
         $this->assertEquals($expected, $result);
-
-        $this->_cleanupViewFiles();
-
-        $caught = false; // invalid url;
-        try {
-            $result = $page->render();
-        } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
-            $caught = true;
-        }
-        $this->assertTrue($caught, 'Exception was not thrown for missing page');
-
     }
 
-    private function _setupFolder()
+    public function testMissingViewFile()
     {
-        $path = sys_get_temp_dir();
-        $h2l = $path . DIRECTORY_SEPARATOR . 'h2l';
-        if (file_exists($h2l))
-            $this->recursiveDelete($h2l);
-        $cpath = $path . DIRECTORY_SEPARATOR . 'h2l' . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . 'pages';
-        mkdir($cpath, 777, true);
-        $lpath = $path . DIRECTORY_SEPARATOR . 'h2l' . DIRECTORY_SEPARATOR . 'layouts';
-        mkdir($lpath, 777, true);
-        mkdir($lpath . DIRECTORY_SEPARATOR . 'default', 777, true);
-        mkdir($lpath . DIRECTORY_SEPARATOR . 'spicy', 777, true);
-        return ['content_path' => $cpath . DIRECTORY_SEPARATOR, 'layout_path' => $lpath . DIRECTORY_SEPARATOR];
-    }
+        $request = $this->getMockBuilder(Request::class)
+            // ->setMockClassName('Request')
+            ->disableOriginalConstructor()
+            ->setMethods(['type', 'route', 'method']) // mocked methods
+            ->getMock();
 
-    private function _setupViewFiles(array $config)
-    {
-        // view file
-        $f = $config['content_path'] . DIRECTORY_SEPARATOR . 'place.html.php';
-        file_put_contents($f, '<h1>Win!</h1>');
-        $f = $config['content_path'] . DIRECTORY_SEPARATOR . 'task.json.php';
-        file_put_contents($f, '{"id": 12, "title": "Win"}');
-        // layout one folder with head, neck and foot
-        $lp = $config['layout_path'] . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR;
-        file_put_contents($lp.'head.html.php', '<html><body>');
-        file_put_contents($lp.'neck.html.php', '<div>');
-        file_put_contents($lp.'foot.html.php', '</div></body></html>');
-        // layout two folder with head, and foot
-        $lp = $config['layout_path'] . DIRECTORY_SEPARATOR . 'spicy' . DIRECTORY_SEPARATOR;
-        file_put_contents($lp.'head.html.php', '<html><title>Spice</title><body>');
-        file_put_contents($lp.'foot.html.php', '</body></html>');
-    }
+        $request->expects($this->once())->method('type')->willReturn('html');
+        $request->expects($this->once())->method('route')->willReturn(
+            new Route('unknown')
+        );
 
-    private function _cleanupViewFiles()
-    {
-        $path = sys_get_temp_dir();
-        $h2l = $path . DIRECTORY_SEPARATOR . 'h2l';
-        if (file_exists($h2l))
-            $this->recursiveDelete($h2l);
-    }
+        $this->expectException(InvalidUrl::class);
+        $page = new Page($request, static::$config);
+        $result = $page->render();
 
-    /**
-     * Delete a file or recursively delete a directory
-     *
-     * @param string $str Path to file or directory
-     */
-    private function recursiveDelete($str) {
-        if (is_file($str)) {
-            return @unlink($str);
-        }
-        elseif (is_dir($str)) {
-            $scan = glob(rtrim($str,'/').'/*');
-            foreach($scan as $index=>$path) {
-                $this->recursiveDelete($path);
-            }
-            return @rmdir($str);
-        }
     }
 }
