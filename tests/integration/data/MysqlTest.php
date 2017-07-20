@@ -3,11 +3,11 @@
 namespace alkemann\h2l\tests\integration\data;
 
 use alkemann\h2l\exceptions\ConnectionError;
-use alkemann\h2l\data\PdoMysql;
+use alkemann\h2l\data\Mysql;
 use PDO;
 use PDOException;
 
-class PdoMysqlTest extends \PHPUnit_Framework_TestCase
+class MysqlTest extends \PHPUnit_Framework_TestCase
 {
     private static $config = [];
     private static $handler_method;
@@ -21,7 +21,7 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
         }
         self::$config = include($f);
 
-        static::$handler_method = new \ReflectionMethod('alkemann\h2l\data\PdoMysql', 'handler');
+        static::$handler_method = new \ReflectionMethod('alkemann\h2l\data\Mysql', 'handler');
         static::$handler_method->setAccessible(true);
     }
 
@@ -29,14 +29,14 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(ConnectionError::class);
 
-        $m = new PdoMysql(['host' => 'nope']);
+        $m = new Mysql(['host' => 'nope']);
         $h = static::$handler_method->invoke($m);
         $this->assertTrue($h instanceof PDO);
     }
 
     public function testConnectSuccess()
     {
-        $m = new PdoMysql(self::$config);
+        $m = new Mysql(self::$config);
         $h = static::$handler_method->invoke($m);
         $this->assertTrue($h instanceof PDO);
     }

@@ -2,12 +2,10 @@
 
 namespace alkemann\h2l\data;
 
+use alkemann\h2l\exceptions\ConnectionError;
+use PDO;
 use alkemann\h2l\Log;
 
-/**
- * Class Mysql
- * @package alkemann\h2l\data
- */
 class Mysql implements Source
 {
 
@@ -17,246 +15,172 @@ class Mysql implements Source
     protected $_config = [];
 
     /**
-     * @var mixed
+     * @var PDO
      */
-    private $mysql;
+    protected $db = null;
 
-    /**
-     * Mysql constructor.
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
-
         $defaults = [
-            'mysqli' => null,
+            'host' => 'localhost',
+            'db' => 'test',
+            'user' => null,
+            'pass' => null
         ];
-        $this->_config = $config + $defaults;
-
-        $this->mysql = $this->_config['mysqli'];
-        unset($this->_config['mysqli']);
+        $this->config = $config + $defaults;
     }
 
-    /**
-     * Close the database connections
-     */
-    public function close() : void
+    private function handler() //: PDO
     {
-        $this->mysql->close();
-    }
-
-    /**
-     * Select the databaase
-     *
-     * @param $database
-     * @return Mysql ($this)
-     */
-    private function db($database) : Mysql
-    {
-        $result = $this->mysql->select_db($database);
-        if (!$result) {
-            die($this->mysql->error . " \n Can't select database [$database]");
+        if ($this->db) {
+            return $this->db;
         }
-        return $this;
-    }
 
-    /**
-     * Escapes values
-     *
-     * @param $value
-     * @return string
-     */
-    private function escape($value) : string
-    {
-        return "'" . $this->mysql->escape_string($value) . "'";
-    }
-
-    /**
-     * @param string $query
-     * @param array $options
-     * @return mixed
-     */
-    public function query($query, array $options = [])
-    {
-        Log::debug("Query: " . $query);
-        $result = $this->mysql->query($query);
-        $last_error = $this->mysql->error;
-        if ($last_error) {
-            Log::error("MYSQL: " . $last_error);
+        $host = $this->config['host'];
+        $db = $this->config['db'];
+        $user = $this->config['user'];
+        $pass = $this->config['pass'];
+        $opts = [
+            PDO::ATTR_EMULATE_PREPARES => false,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
+        try {
+            $this->db = new PDO("mysql:host={$host};dbname={$db}", $user, $pass, $opts);
+            // @TODO use this?
+            // $this->db->setAttribute( PDO::ATTR_EMULATE_PREPARES, false);
+        } catch (\PDOException $e) {
+            throw new ConnectionError("Unable to connect to $host : $db with user $user");
         }
-        return $result;
+        return $this->db;
+    }
+
+    public function query($query, array $params = [])
+    {
+        Log::debug("PDO:QUERY [$query]");
+        $result = $this->handler()->query($query);
+        return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function one(string $table, array $conditions, array $options = []) : ?array
     {
         $result = $this->find($table, $conditions, $options);
-
-        if ($result) {
-            foreach($result as $row) return $row;
+        $result = iterator_to_array($result);
+        $hits = sizeof($result);
+        if ($hits === 0) {
+            return null;
         }
-        return null;
+        if ($hits > 1) {
+            throw new \Error("One request found more than 1 match!");
+        }
+
+        return $result[0];
     }
 
-    /**
-     * @param string $table
-     * @param array $conditions
-     * @param array $options
-     * @return string
-     */
     public function find(string $table, array $conditions, array $options = []) : \Traversable
     {
-        $options += ['limit' => 99, 'array' => true, 'fields' => null, 'pk' => false];
+        $values = [];
+        $where = $this->where($conditions);
+        $limit = $this->limit($options);
+        $query = "SELECT * FROM `{$table}` {$where}{$limit};";
 
-        $query = "SELECT "
-            . $this->fields($options['fields'])
-            . " FROM `$table`"
-            . $this->where($conditions)
-            . $this->options($options);
-
-        $result = $this->query($query);
-        if ($result) {
-            $generator = function() use ($result) {
-                while ($row = $result->fetch_assoc()) {
-                    yield $row;
-                }
-            };
-            return $generator();
+        Log::debug("PDO:QUERY [$query]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($query);
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":c_{$key}", $value);
         }
-        return $result;
+        if ($limit) {
+            $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
+            $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
+        }
+        if ($stmt->execute() === false) {
+            return new \EmptyIterator;
+        }
+
+        if ($stmt && $stmt instanceof \PDOStatement) {
+            // @codeCoverageIgnoreStart
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            // codeCoverageIgnoreEnd
+        }
+        return $stmt;
     }
 
-    /**
-     * @param array|null $fields
-     * @return string
-     */
-    private function fields(?array $fields) : string
-    {
-        if (!$fields) return '*';
-        foreach ($fields as &$field) {
-            $field = "`" . $this->mysql->escape_string($field) . "`";
-        }
-        return join(',', $fields);
-    }
-
-    /**
-     * @param array $conditions
-     * @return string
-     */
     private function where(array $conditions) : string
     {
-        $where = [];
-        foreach ($conditions as $field => $value) {
-            $field = $this->mysql->escape_string($field);
-            $value = $this->mysql->escape_string($value);
-            $where[] = "`$field` = '$value'";
-        }
-       return $where ? " WHERE " . join(' AND ', $where) : "";
+        if (empty($conditions)) return "";
+        $fun = function($o, $v) { return "{$o}{$v} = :c_{$v}"; };
+        $where = array_reduce(array_keys($conditions), $fun, "");
+        return "WHERE {$where} ";
     }
 
-    /**
-     * @param array $options
-     * @return string
-     */
-    private function options(array $options) : string
+    private function limit(array $options) : string
     {
-        if (!$options) return '';
-
-        $query = '';
-        if (isset($options['order'])) {
-            if (is_array($options['order'])) {
-                $order = [];
-                foreach ($options['order'] as $field => $dir) {
-                    $order[] = "`$field` " . (strtoupper($dir) == 'ASC' ? 'ASC' : 'DESC');
-                }
-                $query .= " ORDER BY " . join(' AND ', $order);
+        if (array_key_exists('limit', $options)) {
+            if (array_key_exists('offset', $options)) {
+                $values[] = (int) $options['offset'];
             } else {
-                $query .= " ORDER BY `{$options['order']}`";
+                $values[] = 0;
             }
+            $values[] =  (int) $options['limit'];
+            return "LIMIT :o_offset,:o_limit ";
         }
-
-        if (isset($options['limit'])) {
-            $query .= " LIMIT {$options['limit']}";
-            if (isset($options['offset'])) {
-                $query .= ',' . $options['offset'];
-            }
-        }
-        return $query;
+        return "";
     }
 
-    /**
-     * @param string $table
-     * @param array $conditions
-     * @param array $data
-     * @param array $options
-     * @return int
-     */
     public function update(string $table, array $conditions, array $data, array $options = []) : int
     {
-        if (!$conditions || !$data) return false;
+        if (!$conditions || !$data) return 0;
 
-        $values = [];
-        foreach ($data as $field => $value) {
-            $field = $this->mysql->escape_string($field);
-            $value = $this->mysql->escape_string($value);
-            $values[] = "`$field` = '$value'";
-        }
-        $values[] = "`updated` = NOW()";
+        $datasql = $this->data($data);
         $where = $this->where($conditions);
-        if (!$where) {
-            Log::error("No where conditions for update!");
-            return 0;
+        $q = "UPDATE `{$table}` SET {$datasql} {$where};";
+
+        Log::debug("PDO:QUERY [$q]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($q);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":d_{$key}", $value);
         }
-        $query = "UPDATE `$table` SET " . join(', ', $values). $where;
-        $result = $this->query($query);
-        if ($result !== true) {
-            return 0;
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":c_{$key}", $value);
         }
-        return $this->mysql->affected_rows;
+        $result = $stmt->execute();
+        return ($result == true) ? $stmt->rowCount() : 0;
     }
 
-    /**
-     * @param string $table
-     * @param array $data
-     * @param array $options
-     * @return int
-     */
-    public function insert(string $table, array $data, array $options = []) : int
+    private function data(array $data) : string
     {
-        if (!$data) return false;
-        $fields = join('`,`', array_keys($data));
-        $fields = "`$fields`,`updated`,`created`";
-        $values = [];
-        foreach ($data as $value) {
-            $values[] = $this->mysql->escape_string($value);
-        }
-        $values = join("','", $values);
-        $values = "'$values',NOW(),NOW()";
-        $query  = "INSERT INTO `$table` ($fields) VALUES ($values);";
-        $result = $this->query($query);
-        if ($result !== true) {
-            return false;
-        }
-        return $this->mysql->insert_id;
+        $fun = function($o, $v) { return "{$o}{$v} = :d_{$v}"; };
+        return array_reduce(array_keys($data), $fun, "");
     }
 
-    /**
-     * @param string $table
-     * @param array $conditions
-     * @param array $options
-     * @return int
-     */
+    public function insert(string $table, array $data, array $options = []) : ?int
+    {
+        $keys = implode(', ', array_keys($data));
+        $data_phs = ':' . implode(', :', array_keys($data));
+        $q = "INSERT INTO `{$table}` ({$keys}) VALUES ({$data_phs});";
+        Log::debug("PDO:QUERY [$q]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($q);
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
+        }
+        $result = $stmt->execute();
+        return ($result == true) ? $dbh->lastInsertId() : null;
+    }
+
     public function delete(string $table, array $conditions, array $options = []) : int
     {
         $where = $this->where($conditions);
-        if (!$where) {
-            Log::error("No where conditions for delete!");
-            return false;
+        if (empty($conditions) || empty($where)) return 0;
+        $q = "DELETE FROM `{$table}` {$where};";
+        Log::debug("PDO:QUERY [$q]");
+        $dbh = $this->handler();
+        $stmt = $dbh->prepare($q);
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":c_{$key}", $value);
         }
-        $query = "DELETE FROM `$table`" . $where;
-        $result = $this->query($query);
-        if ($result !== true) {
-            return false;
-        }
-        return $this->mysql->insert_id; // TODO affected rows!
+        $result = $stmt->execute();
+        return ($result == true) ? $stmt->rowCount() : 0;
     }
 }

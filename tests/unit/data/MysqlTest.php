@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\unit\data;
 
-use alkemann\h2l\data\PdoMysql;
+use alkemann\h2l\data\Mysql;
 
 class MockStatement implements \Iterator {
     public $name = "Iterator";
@@ -23,7 +23,7 @@ class MockStatement implements \Iterator {
     public function rowCount() { return sizeof($this->result); }
 }
 
-class PdoMysqlTest extends \PHPUnit_Framework_TestCase
+class MysqlTest extends \PHPUnit_Framework_TestCase
 {
     private static $config = [];
 
@@ -36,9 +36,9 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $handler->expects($this->once())->method('query')->will($this->returnValue(new class() { public function fetchAll() { return "QUERIED"; }}));
 
-        $m = new PdoMysql;
+        $m = new Mysql;
 
-        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\PdoMysql', 'db');
+        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\Mysql', 'db');
         $reflection_prop->setAccessible(true);
         $reflection_prop->setValue($m, $handler);
 
@@ -98,9 +98,9 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
             ->with($expected_query)
             ->will($this->returnValue($ms));
 
-        $m = new PdoMysql;
+        $m = new Mysql;
 
-        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\PdoMysql', 'db');
+        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\Mysql', 'db');
         $reflection_prop->setAccessible(true);
         $reflection_prop->setValue($m, $handler);
 
@@ -121,7 +121,7 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testOneNotFound()
     {
-        $m = $this->getMockBuilder('alkemann\h2l\data\PdoMysql')
+        $m = $this->getMockBuilder('alkemann\h2l\data\Mysql')
             ->setMethods(['find'])
             ->getMock();
         $m->expects($this->once())
@@ -135,7 +135,7 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(\Error::class);
 
-        $m = $this->getMockBuilder('alkemann\h2l\data\PdoMysql')
+        $m = $this->getMockBuilder('alkemann\h2l\data\Mysql')
             ->setMethods(['find'])
             ->getMock();
         $f = function() { return true; };
@@ -165,7 +165,7 @@ class PdoMysqlTest extends \PHPUnit_Framework_TestCase
         $mi = new MockStatement($ec, [1]);
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
 
-        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\PdoMysql', 'db');
+        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\Mysql', 'db');
         $reflection_prop->setAccessible(true);
         $handler = $reflection_prop->getValue($m);
         $handler->expects($this->once())
