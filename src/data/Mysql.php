@@ -6,7 +6,7 @@ use alkemann\h2l\exceptions\ConnectionError;
 use PDO;
 use alkemann\h2l\Log;
 
-class PdoMysql implements Source
+class Mysql implements Source
 {
 
     /**
