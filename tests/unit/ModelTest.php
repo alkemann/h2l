@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{Model, Connections, exceptions\ConfigMissing};
+use alkemann\h2l\{Model, Connections, data\Source, exceptions\ConfigMissing};
 
 class Person {
     use Model;
@@ -46,8 +46,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testMissingTableConfig()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['one'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
 
@@ -65,8 +65,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testGet()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['one'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $con->expects($this->once())->method('one')
@@ -88,8 +88,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testGetNotFound()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['one'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $conn_id = uniqid();
@@ -114,17 +114,16 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testFind()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['find'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $con->expects($this->once())->method('find')
             ->with('people', ['name' => 'John'], [])
-            ->will($this->returnValue(
-                [
+            ->will($this->returnValue(new \ArrayObject([
                     ['pid' => 55, 'name' => 'John'],
                     ['pid' => 56, 'name' => 'John']
-                ]
+                ])
             ));
 
         $conn_id = uniqid();
@@ -144,17 +143,16 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testFindWithArray()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['find'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $con->expects($this->once())->method('find')
             ->with('people', ['name' => 'John'], ['array' => true])
-            ->will($this->returnValue(
-                [
+            ->will($this->returnValue(new \ArrayObject([
                     ['pid' => 55, 'name' => 'John'],
                     ['pid' => 56, 'name' => 'John']
-                ]
+                ])
             ));
 
         $conn_id = uniqid();
@@ -180,8 +178,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveNew()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['insert', 'one'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $con->expects($this->once())->method('insert')
@@ -208,8 +206,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveUpdate()
     {
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['update', 'one'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $con->expects($this->once())->method('update')
@@ -234,8 +232,8 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     public function testDelete()
     {
 
-        $con = $this->getMockBuilder(alkemann\h2l\data\Source::class)
-            ->setMethods(['delete'])
+        $con = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
             ->getMock();
         ;
         $con->expects($this->once())->method('delete')
