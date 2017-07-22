@@ -1,7 +1,9 @@
 /skeletons export-ignore
 /tests export-ignore
+/docs export-ignore
 /.gitattributes export-ignore
 /README.md export-ignore
 /LICENSE export-ignore
 /TODO.todo export-ignore
+/.travis.yml export-ignore
 
