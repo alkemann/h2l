@@ -60,9 +60,6 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         }
 
         $p = new class() {
-            public static function fromRequest(Request $r) {
-                return new static;
-            }
             public function setData() {}
             public function render()
             {
