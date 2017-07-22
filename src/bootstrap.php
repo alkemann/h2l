@@ -2,6 +2,9 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\{exceptions\InvalidUrl, response\Error};
+use Error as PhpError;
+
 if (DEBUG) require_once 'internals/functions.php';
 
 /**
@@ -11,14 +14,14 @@ if (DEBUG) require_once 'internals/functions.php';
  */
 function handleError(\Throwable $e) : void
 {
-    if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
+    if ($e instanceof InvalidUrl) {
         Log::info("InvalidUrl: " . $e->getMessage());
-        echo (new response\Error(null, 404, ['message' => $e->getMessage()]))->render();
+        echo (new Error(['code' => 404, 'data' => ['message' => $e->getMessage()]]))->render();
         return;
     }
     if ($e instanceof \Exception) {
         Log::error(get_class($e) . ": " . $e->getMessage());
-    } elseif ($e instanceof \Error) {
+    } elseif ($e instanceof PhpError) {
         Log::alert(get_class($e) . ": " . $e->getMessage());
     }
 
@@ -34,7 +37,7 @@ function handleError(\Throwable $e) : void
         echo '<pre>' . $e->getTraceAsString() . '</pre><br>';
         d($e);
     } else {
-        echo (new response\Error(null, 500, ['message' => $e->getMessage()]))->render();
+        echo (new Error(['code' => 500, 'data' => ['message' => $e->getMessage()]]))->render();
     }
 }
 

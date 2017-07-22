@@ -11,38 +11,34 @@ use alkemann\h2l\{Request, Response, response\Page, Log};
  */
 class Error extends Response
 {
-    /**
-     * @var int
-     */
-    public $code;
-    /**
-     * @var string
-     */
-    public $message;
-    /**
-     * @var string
-     */
-    public $content;
-    /**
-     * @var string
-     */
-    public $type = 'html';
-    /**
-     * @var array
-     */
+
+    protected $code = 500;
+    protected $type = 'html';
+    protected $data = [];
+    protected $request = null;
+
     protected $_config = [];
 
-    public function __construct(?string $content = null, int $code = 500, array $config = [])
+    public function __construct(array $config = [])
     {
 
-        foreach (['data', 'type', 'message'] as $key) {
+        foreach (['data', 'type', 'code', 'request'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
                 unset($config[$key]);
             }
         }
-        $this->code = $code;
-        $this->content = $content;
+
+        if ($this->request) {
+            $this->type = $this->request->type();
+        } else {
+            // @TODO dependency injection?
+            $httaccept = $_SERVER['HTTP_ACCEPT'] ?? '*/*';
+            if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
+                $this->type = 'json';
+            }
+        }
+
         $this->_config = $config + [
             'page_class' => Page::class
         ];
@@ -59,25 +55,23 @@ class Error extends Response
         }
         $page_class = $this->_config['page_class'];
 
-        $message = $this->message ?? self::$code_to_message[$this->code];
-        $h("HTTP/1.0 {$this->code} {$message}");
+        $msg = self::$code_to_message[$this->code];
+        $h("HTTP/1.0 {$this->code} {$msg}");
 
-        if ($this->content) {
-            try {
-                $page_config = $this->_config + ['template' => $this->code == 404 ? '404' : 'error'];
-                $page = new $page_class($this->content, $this->code, $page_config);
-                if ($this->message) {
-                    $page->setData('message', $this->message);
-                }
-                return $page->render();
-            } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
-                Log::debug("No error page made at " . $e->getMessage());
-                if (defined('DEBUG') && DEBUG) {
-                    return "No error page made at " . $e->getMessage();
-                }
+        try {
+            $page_config = $this->_config + [
+                'code' => $this->code,
+                'template' => $this->code == 404 ? '404' : 'error',
+                'type' => $this->type,
+                'data' => $this->data
+            ];
+            $page = new $page_class($page_config);
+            return $page->render();
+        } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
+            Log::debug("No error page made at " . $e->getMessage());
+            if (defined('DEBUG') && DEBUG) {
+                return "No error page made at " . $e->getMessage();
             }
-        } else {
-            $h("Content-type: {$this->contentType()}");
         }
         return '';
     }

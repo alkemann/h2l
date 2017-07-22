@@ -22,14 +22,16 @@ class Page extends Response
      * @var Request
      */
     protected $request;
-    protected $config = [];
     protected $data = [];
-    protected $template;
+    protected $template = 'error';
     protected $type = 'html';
+    protected $code = 200;
 
-    public function __construct(?string $content = null, int $code = 200, array $config = [])
+    protected $_config = [];
+
+    public function __construct(array $config = [])
     {
-        foreach (['request', 'data', 'type'] as $key) {
+        foreach (['request', 'data', 'type', 'code'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
             }
@@ -37,8 +39,7 @@ class Page extends Response
         if (isset($config['template'])) {
             $this->setTemplate($config['template']);
         }
-        $this->config = $config;
-        // if ($this->request == null) dd($this);
+        $this->_config = $config;
     }
 
     /**
@@ -52,8 +53,9 @@ class Page extends Response
         $config += [
             'request'   => $request,
             'type'      => $request->type(),
+
         ];
-        $page = new static(null, 200, $config);
+        $page = new static($config);
         $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url);
         return $page;
     }
@@ -107,7 +109,7 @@ class Page extends Response
 
     private function getLayoutFile(string $name) : string
     {
-        $path = $this->config['layout_path'] ?? LAYOUT_PATH;
+        $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
@@ -132,6 +134,10 @@ class Page extends Response
     }
 
     // @TODO refactor, and cache
+    /**
+     * @return string
+     * @throws alkemann\h2l\exceptions\InvalidUrl
+     */
     public function view($view) : string
     {
         $file = $this->getContentFile($view);
@@ -153,7 +159,7 @@ class Page extends Response
 
     private function getContentFile($view) : string
     {
-        $path = $this->config['content_path'] ?? CONTENT_PATH;
+        $path = $this->_config['content_path'] ?? CONTENT_PATH;
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
@@ -168,7 +174,7 @@ class Page extends Response
     {
         $contentType = $this->contentType();
 
-        $h = $this->config['header_func'] ?? 'header';
+        $h = $this->_config['header_func'] ?? 'header';
         $h("Content-type: $contentType");
         $view = $this->view($this->template);
         $response = $this->head();
