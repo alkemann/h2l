@@ -9,7 +9,7 @@ use alkemann\h2l\{Request, Response};
  *
  * @package alkemann\h2l
  */
-class Page implements Response
+class Page extends Response
 {
     /**
      * Overwrite this in view templates to set layout, i.e. `$this->layout = 'slim';`
@@ -26,13 +26,6 @@ class Page implements Response
     protected $data = [];
     protected $template;
     protected $type = 'html';
-
-    private $_validTypes = ['html','json', 'xml'];
-    private $_contentTypes = [
-        'html' => 'text/html',
-        'json' => 'application/json',
-        'xml' => 'application/xml'
-    ];
 
     public function __construct(?string $content = null, int $code = 200, array $config = [])
     {
@@ -182,15 +175,6 @@ class Page implements Response
         $response .= $view;
         $response .= $this->foot();
         return $response;
-    }
-
-    private function contentType() : string
-    {
-        $format = $this->type;
-        if (in_array($format, $this->_validTypes)) {
-            return $this->_contentTypes[$format];
-        }
-        return "text/html";
     }
 
     public function setTemplate(string $template) : void
