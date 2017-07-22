@@ -13,7 +13,7 @@ function handleError(\Throwable $e) : void
 {
     if ($e instanceof \alkemann\h2l\exceptions\InvalidUrl) {
         Log::info("InvalidUrl: " . $e->getMessage());
-        echo (new Error(404, $e->getMessage()))->render();
+        echo (new response\Error(null, 404, ['message' => $e->getMessage()]))->render();
         return;
     }
     if ($e instanceof \Exception) {
@@ -34,7 +34,7 @@ function handleError(\Throwable $e) : void
         echo '<pre>' . $e->getTraceAsString() . '</pre><br>';
         d($e);
     } else {
-        (new Error(500, $e->getMessage()))->render();
+        echo (new response\Error(null, 500, ['message' => $e->getMessage()]))->render();
     }
 }
 

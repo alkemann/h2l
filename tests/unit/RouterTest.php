@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{Request, Router, Route, Result, Page};
+use alkemann\h2l\{Request, Router, Route, response\Page, response\Json};
 
 
 class RouterTest extends \PHPUnit_Framework_TestCase
@@ -48,7 +48,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         Router::add('|^api/\w+/(?<name>\w+)/(?<id>\d+)$|', function($r) use (&$id, &$name) {
             $id = (int) $r->param('id');
             $name = $r->param('name');
-            return new Result(['id' => $id, 'name' => $name]);
+            return new Json(['id' => $id, 'name' => $name]);
         });
 
         $reflection = new \ReflectionMethod('alkemann\h2l\Router', 'matchDynamicRoute');

@@ -1,8 +1,8 @@
 <?php
 
-namespace alkemann\h2l\tests\unit;
+namespace alkemann\h2l\tests\unit\response;
 
-use alkemann\h2l\{Page, Route, Request, Response};
+use alkemann\h2l\{response\Page, Route, Request, Response};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'url' => 'places/norway',
                 'filter' => 'all'
             ]);
-        $page = new Page($request);
+        $page = Page::fromRequest($request);
         $this->assertTrue($page instanceof Response);
         $this->assertTrue($page instanceof Page);
         $this->assertSame($request, $page->request());
@@ -32,8 +32,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $ref_templateFromUrl = new \ReflectionMethod($page, 'templateFromUrl');
         $ref_templateFromUrl->setAccessible(true);
 
-        $this->assertEquals('text/html', $ref_contentType->invoke($page));
-        $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_templateFromUrl->invoke($page));
+        $this->assertEquals('text/html', $ref_contentType->invoke($page, 'places/norway'));
+        $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_templateFromUrl->invoke($page, 'places/norway'));
     }
 
     public function testJsonFormat()
@@ -46,7 +46,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
             ],
             ['url' => 'tasks']);
-        $page = new Page($request);
+        $page = Page::fromRequest($request);
         $ref_contentType = new \ReflectionMethod($page, 'contentType');
         $ref_contentType->setAccessible(true);
         $this->assertEquals('application/json', $ref_contentType->invoke($page));
@@ -62,7 +62,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
             ],
             ['url' => 'tasks.json']);
-        $page = new Page($request);
+        $page = Page::fromRequest($request);
         $ref_contentType = new \ReflectionMethod($page, 'contentType');
         $ref_contentType->setAccessible(true);
         $this->assertEquals('application/json', $ref_contentType->invoke($page));
@@ -79,12 +79,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET'
             ]
         );
-        $page = new class($request, $conf) extends Page {
-            public function __construct(Request $request, array $config = []) {
-                parent::__construct($request, $config);
-                $this->_type = 'csv';
-            }
-        };
+        $page = Page::fromRequest($request, $conf);
+        $ref_type = new \ReflectionProperty($page, 'type');
+        $ref_type->setAccessible(true);
+        $ref_type->setValue($page, 'csv');
+
         $ref_contentType = new \ReflectionMethod($page, 'contentType');
         $ref_contentType->setAccessible(true);
         $this->assertEquals('text/html', $ref_contentType->invoke($page));
@@ -92,11 +91,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public function testSetData()
     {
-        $page = new Page(new Request);
+        $page = Page::fromRequest(new Request);
         $page->setData('place', 'Norway');
         $page->setData(['city' => 'Oslo', 'height' => 12]);
 
-        $ref_data = new \ReflectionProperty($page, '_data');
+        $ref_data = new \ReflectionProperty($page, 'data');
         $ref_data->setAccessible(true);
         $expected = ['place' => 'Norway', 'city' => 'Oslo', 'height' => 12];
         $result = $ref_data->getvalue($page);
