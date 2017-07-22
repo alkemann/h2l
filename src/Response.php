@@ -81,8 +81,5 @@ abstract class Response
         return "text/html";
     }
 
-    /**
-     * @return string
-     */
     abstract public function render() : string ;
 }

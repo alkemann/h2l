@@ -28,9 +28,10 @@ class Page extends Response
 
     protected $_config = [];
 
-    public function __construct(array $config = [])
+    public function __construct($data = [], array $config = [])
     {
-        foreach (['request', 'data', 'type', 'code'] as $key) {
+        $this->data = $data;
+        foreach (['request', 'type', 'code'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
             }
@@ -46,15 +47,15 @@ class Page extends Response
      *
      * @param Request $request
      * @param array $config
+     * @return Page
      */
-    public static function fromRequest(Request $request, array $config = [])
+    public static function fromRequest(Request $request, array $config = []) : Page
     {
         $config += [
             'request'   => $request,
             'type'      => $request->type(),
-
         ];
-        $page = new static($config);
+        $page = new static([], $config);
         $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url);
         return $page;
     }

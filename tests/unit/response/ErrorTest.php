@@ -13,7 +13,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
         $code = 406;
-        $e = new Error(compact('header_func', 'content_path', 'code'));
+        $e = new Error([], compact('header_func', 'content_path', 'code'));
         $this->assertTrue($e instanceof Response);
         $this->assertTrue($e instanceof Error);
         $e->render();
@@ -34,7 +34,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
         $request->expects($this->once())->method('type')->willReturn('json');
 
-        $e = new Error(compact('header_func', 'content_path', 'code', 'request'));
+        $e = new Error([], compact('header_func', 'content_path', 'code', 'request'));
         $this->assertTrue($e instanceof Error);
         $this->assertEquals("json", $e->type());
     }
@@ -45,7 +45,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
         $code = 400;
-        $e = new Error(compact('header_func', 'content_path', 'code'));
+        $e = new Error([], compact('header_func', 'content_path', 'code'));
         $e->render();
         $expected = ['HTTP/1.0 400 Bad Request', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
@@ -57,7 +57,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
         $code = 404;
-        $e = new Error(compact('header_func', 'content_path', 'code'));
+        $e = new Error([], compact('header_func', 'content_path', 'code'));
         $e->render();
         $expected = ['HTTP/1.0 404 Not Found', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
@@ -84,7 +84,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $page_class = get_class($p);
         $code = 404;
-        $e = new Error(compact('header_func', 'page_class', 'code'));
+        $e = new Error([], compact('header_func', 'page_class', 'code'));
         define('CONTENT_PATH', "/tmp");
         $expected = "No error page made at NO/PAGE";
         $result = $e->render();
@@ -96,7 +96,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
      */
     public function testHeaderException()
     {
-        $e = new Error(['header_func' => 99]);
+        $e = new Error([], ['header_func' => 99]);
         $e->render();
     }
 }
