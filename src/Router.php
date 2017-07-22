@@ -51,6 +51,9 @@ class Router
     {
         $url = static::$_aliases[$url] ?? $url;
 
+        if (isset(static::$_routes[$method]) && isset(static::$_routes[$method][$url])) {
+            return new Route($url, static::$_routes[$method][$url]);
+        }
         // TODO cache of previous matched dynamic routes
         $route = static::matchDynamicRoute($url, $method);
         if ($route) return $route;
@@ -67,7 +70,6 @@ class Router
             return null;
 
         foreach (static::$_routes[$method] as $route => $cb) {
-            if ($url === $route) return new Route($url, $cb);
             $result = preg_match($route, $url, $matches);
             if (!$result) continue;
 
