@@ -63,7 +63,8 @@ class Error extends Response
                 'template' => $this->code == 404 ? '404' : 'error',
                 'type' => $this->type
             ];
-            $page = new $page_class($this->data, $page_config);
+            $data = $this->data + ['code' => $this->code];
+            $page = new $page_class($data, $page_config);
             return $page->render();
         } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());
