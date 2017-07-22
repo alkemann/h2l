@@ -57,7 +57,7 @@ class Router
 
         // TODO cache of valid static routes
         return new Route($url, function(Request $request) {
-            return new Page($request);
+            return response\Page::fromRequest($request);
         });
     }
 

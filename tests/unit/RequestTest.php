@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{Request, Route, Response, Error};
+use alkemann\h2l\{Request, Route, Response, response\Error};
 
 class RequestTests extends \PHPUnit_Framework_TestCase
 {
@@ -73,7 +73,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
 
     public function testParameters()
     {
-        $route = new Route('thing', function() {return new Error(500);}, ['place' => 'Oslo']);
+        $route = new Route('thing', function() {return new Error(null, 500);}, ['place' => 'Oslo']);
         $request = $this->getMockBuilder('alkemann\h2l\Request')
             ->disableOriginalConstructor()
             ->setMockClassName('Request') // Mock class name

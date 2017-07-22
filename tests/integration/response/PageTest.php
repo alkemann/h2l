@@ -1,8 +1,8 @@
 <?php
 
-namespace alkemann\h2l\tests\integration;
+namespace alkemann\h2l\tests\integration\response;
 
-use alkemann\h2l\{Page, Route, Request, Response, exceptions\InvalidUrl};
+use alkemann\h2l\{response\Page, Route, Request, Response, exceptions\InvalidUrl};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +10,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $base = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'mocks' . DIRECTORY_SEPARATOR . 'page' . DIRECTORY_SEPARATOR;
+        $base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'mocks' . DIRECTORY_SEPARATOR . 'page' . DIRECTORY_SEPARATOR;
         static::$config = [
             'content_path' => $base . 'content' . DIRECTORY_SEPARATOR,
             'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
@@ -30,7 +30,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
             new Route('place')
         );
 
-        $page = new Page($request, static::$config);
+        $page = Page::fromRequest($request, static::$config);
 
         $expected = '<html><body><div><h1>Win!</h1></div></body></html>';
         $result = $page->render();
@@ -61,7 +61,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->expectException(InvalidUrl::class);
-        $page = new Page($request, static::$config);
+        $page = Page::fromRequest($request, static::$config);
         $result = $page->render();
 
     }

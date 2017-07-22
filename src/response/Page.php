@@ -1,6 +1,8 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\response;
+
+use alkemann\h2l\{Request, Response};
 
 /**
  * Class Page
@@ -19,34 +21,48 @@ class Page implements Response
     /**
      * @var Request
      */
-    protected $_request;
-    protected $_data = [];
-    protected $_url;
-    protected $_template;
-    protected $_type = 'html';
-    protected $_validTypes = ['html','json', 'xml'];
-    protected $_contentTypes = [
+    protected $request;
+    protected $config = [];
+    protected $data = [];
+    protected $template;
+    protected $type = 'html';
+
+    private $_validTypes = ['html','json', 'xml'];
+    private $_contentTypes = [
         'html' => 'text/html',
         'json' => 'application/json',
         'xml' => 'application/xml'
     ];
-    protected $_config = [];
+
+    public function __construct(?string $content = null, int $code = 200, array $config = [])
+    {
+        foreach (['request', 'data', 'type'] as $key) {
+            if (isset($config[$key])) {
+                $this->{$key} = $config[$key];
+            }
+        }
+        if (isset($config['template'])) {
+            $this->setTemplate($config['template']);
+        }
+        $this->config = $config;
+        // if ($this->request == null) dd($this);
+    }
 
     /**
-     * Page constructor.
-     *
      * Analyze the request url to convert to a view template
      *
      * @param Request $request
      * @param array $config
      */
-    public function __construct(Request $request, array $config = [])
+    public static function fromRequest(Request $request, array $config = [])
     {
-        $this->_request  = $request;
-        $this->_config   = $config;
-        $this->_type     = $request->type();
-        $this->_url      = $request->route()->url;
-        $this->_template = $config['template'] ?? $this->templateFromUrl();
+        $config += [
+            'request'   => $request,
+            'type'      => $request->type(),
+        ];
+        $page = new static(null, 200, $config);
+        $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url);
+        return $page;
     }
 
     /**
@@ -59,19 +75,16 @@ class Page implements Response
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
-                $this->_data[$k] = $v;
+                $this->data[$k] = $v;
             }
         } else {
-            $this->_data[$key] = $value;
+            $this->data[$key] = $value;
         }
     }
 
-    /**
-     * @return Request
-     */
     public function request() : Request
     {
-        return $this->_request;
+        return $this->request;
     }
 
     // @TODO refactor, and cache
@@ -82,14 +95,14 @@ class Page implements Response
             $headfile = $this->getLayoutFile('head');
             if (file_exists($headfile))
                 (function($sldkfjlksejflskjflskdjflskdfj) {
-                    extract($this->_data);
+                    extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
                 })($headfile);
 
             $neckfile = $this->getLayoutFile('neck');
             if (file_exists($neckfile))
                 (function($lidsinqjhsdfytqkwjkasjdksadsdg) {
-                    extract($this->_data);
+                    extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
                 })($neckfile);
         } finally {
@@ -101,8 +114,8 @@ class Page implements Response
 
     private function getLayoutFile(string $name) : string
     {
-        $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
-        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->_type . '.php';
+        $path = $this->config['layout_path'] ?? LAYOUT_PATH;
+        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
     // @TODO refactor, and cache
@@ -115,7 +128,7 @@ class Page implements Response
         ob_start();
         try {
             (function($ldkfoskdfosjicyvutwehkshfskjdf) {
-                extract($this->_data);
+                extract($this->data);
                 include $ldkfoskdfosjicyvutwehkshfskjdf;
             })($footfile);
         } finally {
@@ -135,7 +148,7 @@ class Page implements Response
         ob_start();
         try {
             (function($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
-                extract($this->_data);
+                extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })($file);
         } finally {
@@ -147,7 +160,7 @@ class Page implements Response
 
     private function getContentFile($view) : string
     {
-        $path = $this->_config['content_path'] ?? CONTENT_PATH;
+        $path = $this->config['content_path'] ?? CONTENT_PATH;
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
@@ -161,8 +174,10 @@ class Page implements Response
     public function render() : string
     {
         $contentType = $this->contentType();
-        header("Content-type: $contentType");
-        $view = $this->view($this->_template);
+
+        $h = $this->config['header_func'] ?? 'header';
+        $h("Content-type: $contentType");
+        $view = $this->view($this->template);
         $response = $this->head();
         $response .= $view;
         $response .= $this->foot();
@@ -171,16 +186,21 @@ class Page implements Response
 
     private function contentType() : string
     {
-        $format = $this->_type;
+        $format = $this->type;
         if (in_array($format, $this->_validTypes)) {
             return $this->_contentTypes[$format];
         }
         return "text/html";
     }
 
-    private function templateFromUrl() : string
+    public function setTemplate(string $template) : void
     {
-        $parts = \explode('/', $this->_url);
+        $this->template = "{$template}.{$this->type}";
+    }
+
+    private function templateFromUrl(?string $url = null) : string
+    {
+        $parts = \explode('/', $url);
         $last = \array_slice($parts, -1, 1, true);
         unset($parts[key($last)]);
         $view = current($last);
@@ -188,12 +208,12 @@ class Page implements Response
         if ($period) {
             $type = substr($view , $period + 1);
             if (in_array($type, $this->_validTypes)) {
-                $this->_type = $type;
+                $this->type = $type;
                 $view = substr($view , 0, $period);
             }
         }
 
-        $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $this->_type;
+        $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $this->type;
         return trim($ret, DIRECTORY_SEPARATOR);
     }
 }
