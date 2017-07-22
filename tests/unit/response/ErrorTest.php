@@ -17,8 +17,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($e instanceof Response);
         $this->assertTrue($e instanceof Error);
         $e->render();
-        $this->assertEquals(406, $e->code);
-        $expected = ['HTTP/1.0 406 some text', 'Content-type: text/html'];
+        $expected = ['HTTP/1.0 406 Not Acceptable', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
     }
 
@@ -29,7 +28,6 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $content_path = dirname(__DIR__);
         $code = 400;
         $e = new Error(compact('header_func', 'content_path', 'code'));
-        $this->assertEquals(400, $e->code);
         $e->render();
         $expected = ['HTTP/1.0 400 Bad Request', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
@@ -40,10 +38,9 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
-        $code = 400;
+        $code = 404;
         $e = new Error(compact('header_func', 'content_path', 'code'));
         $e->render();
-        $this->assertEquals(404, $e->code);
         $expected = ['HTTP/1.0 404 Not Found', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
 
