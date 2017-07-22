@@ -18,10 +18,10 @@ class Error extends Response
 
     protected $_config = [];
 
-    public function __construct(array $config = [])
+    public function __construct(array $data = [], array $config = [])
     {
-
-        foreach (['data', 'type', 'code', 'request'] as $key) {
+        $this->data = $data;
+        foreach (['type', 'code', 'request'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
                 unset($config[$key]);
@@ -61,10 +61,9 @@ class Error extends Response
             $page_config = $this->_config + [
                 'code' => $this->code,
                 'template' => $this->code == 404 ? '404' : 'error',
-                'type' => $this->type,
-                'data' => $this->data
+                'type' => $this->type
             ];
-            $page = new $page_class($page_config);
+            $page = new $page_class($this->data, $page_config);
             return $page->render();
         } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());

@@ -16,7 +16,7 @@ function handleError(\Throwable $e) : void
 {
     if ($e instanceof InvalidUrl) {
         Log::info("InvalidUrl: " . $e->getMessage());
-        echo (new Error(['code' => 404, 'data' => ['message' => $e->getMessage()]]))->render();
+        echo (new Error(['message' => $e->getMessage()], ['code' => 404]))->render();
         return;
     }
     if ($e instanceof \Exception) {
@@ -37,7 +37,7 @@ function handleError(\Throwable $e) : void
         echo '<pre>' . $e->getTraceAsString() . '</pre><br>';
         d($e);
     } else {
-        echo (new Error(['code' => 500, 'data' => ['message' => $e->getMessage()]]))->render();
+        echo (new Error(['message' => $e->getMessage()], ['code' => 500]))->render();
     }
 }
 
