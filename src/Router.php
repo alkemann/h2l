@@ -9,6 +9,7 @@ namespace alkemann\h2l;
  */
 class Router
 {
+    public static $DELIMITER = '|';
 
     private static $_aliases = [];
     private static $_routes = [];
@@ -51,6 +52,9 @@ class Router
     {
         $url = static::$_aliases[$url] ?? $url;
 
+        if (isset(static::$_routes[$method]) && isset(static::$_routes[$method][$url])) {
+            return new Route($url, static::$_routes[$method][$url]);
+        }
         // TODO cache of previous matched dynamic routes
         $route = static::matchDynamicRoute($url, $method);
         if ($route) return $route;
@@ -67,7 +71,7 @@ class Router
             return null;
 
         foreach (static::$_routes[$method] as $route => $cb) {
-            if ($url === $route) return new Route($url, $cb);
+            if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) continue;
             $result = preg_match($route, $url, $matches);
             if (!$result) continue;
 

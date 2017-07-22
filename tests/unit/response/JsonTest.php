@@ -17,7 +17,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
     public function testRender()
     {
         $data = ['id' => 12, 'title' => 'Hello there'];
-        $r = new Json(['id' => 12, 'title' => 'Hello there'], 200, "", ['header_func' => function($h) {}]);
+        $r = new Json(['id' => 12, 'title' => 'Hello there'], 200, ['header_func' => function($h) {}]);
 
         $expected = json_encode($data);
         $result = $r->render();
@@ -28,7 +28,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
     {
         $headers = [];
         $data = $this->mock_gen();
-        $r = new Json($data, 200, "", [
+        $r = new Json($data, 200, [
             'header_func' => function($h) use (&$headers) { $headers[] = $h; }
         ]);
 
@@ -50,7 +50,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
     public function testErrorResponse()
     {
         $headers = [];
-        $r = new Json(null, 400, null, [
+        $r = new Json(null, 400, [
             'header_func' => function($h) use (&$headers) { $headers[] = $h; }
         ]);
         $expected = "";
@@ -59,7 +59,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
 
         $expected = [
             'Content-type: application/json',
-            'HTTP/1.0 400 Bad request'
+            'HTTP/1.0 400 Bad Request'
         ];
         $this->assertEquals($expected, $headers);
     }
@@ -67,7 +67,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
     public function testErrorResponseWithMessage()
     {
         $headers = [];
-        $r = new Json(null, 500, "Internal Server Error", [
+        $r = new Json(null, 500, [
             'header_func' => function($h) use (&$headers) { $headers[] = $h; }
         ]);
         $expected = "";
