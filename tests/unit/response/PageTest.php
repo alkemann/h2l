@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\unit\response;
 
-use alkemann\h2l\{response\Page, Route, Request, Response};
+use alkemann\h2l\{response\Page, Router, Route, Request, Response};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {

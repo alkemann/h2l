@@ -58,12 +58,19 @@ abstract class Response
         505 => 'HTTP Version Not Supported',
     ];
 
+    protected $type = 'html';
+
     protected $_validTypes = ['html','json', 'xml'];
     protected $_contentTypes = [
         'html' => 'text/html',
         'json' => 'application/json',
         'xml' => 'application/xml'
     ];
+
+    public function type() : string
+    {
+        return $this->type;
+    }
 
     protected function contentType() : string
     {

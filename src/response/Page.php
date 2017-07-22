@@ -24,7 +24,6 @@ class Page extends Response
     protected $request;
     protected $data = [];
     protected $template = 'error';
-    protected $type = 'html';
     protected $code = 200;
 
     protected $_config = [];

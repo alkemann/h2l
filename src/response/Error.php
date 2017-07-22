@@ -13,7 +13,6 @@ class Error extends Response
 {
 
     protected $code = 500;
-    protected $type = 'html';
     protected $data = [];
     protected $request = null;
 

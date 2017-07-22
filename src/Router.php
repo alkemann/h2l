@@ -9,6 +9,7 @@ namespace alkemann\h2l;
  */
 class Router
 {
+    public static $DELIMITER = '|';
 
     private static $_aliases = [];
     private static $_routes = [];
@@ -70,6 +71,7 @@ class Router
             return null;
 
         foreach (static::$_routes[$method] as $route => $cb) {
+            if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) continue;
             $result = preg_match($route, $url, $matches);
             if (!$result) continue;
 

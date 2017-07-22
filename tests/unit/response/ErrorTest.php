@@ -19,6 +19,24 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $e->render();
         $expected = ['HTTP/1.0 406 Not Acceptable', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
+        $this->assertEquals("html", $e->type());
+    }
+
+    public function testConstructWithRequest()
+    {
+        $header = [];
+        $header_func = function($h) use (&$header) {$header[] = $h; };
+        $request = $this->getMockBuilder(Request::class)
+            // ->setMockClassName('Request')
+            ->disableOriginalConstructor()
+            ->setMethods(['type', 'route', 'method']) // mocked methods
+            ->getMock();
+
+        $request->expects($this->once())->method('type')->willReturn('json');
+
+        $e = new Error(compact('header_func', 'content_path', 'code', 'request'));
+        $this->assertTrue($e instanceof Error);
+        $this->assertEquals("json", $e->type());
     }
 
     public function test400WithMessage()

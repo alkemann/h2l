@@ -73,4 +73,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("tasks", $name);
         $this->assertEquals('{"id":12,"name":"tasks"}', $response->render());
     }
+
+    public function testDirectMatchedRoute()
+    {
+        $cb = function(Request $r) { return ""; };
+        Router::add('/api/people', $cb, Request::GET);
+        $route = Router::match('/api/people', Request::GET);
+        $this->assertTrue($route instanceof Route);
+        $this->assertEquals($cb, $route->callback);
+    }
 }
