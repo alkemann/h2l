@@ -12,8 +12,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
-        $message = "some text";
-        $e = new Error(null, 406, compact('header_func', 'content_path', 'message'));
+        $code = 406;
+        $e = new Error(compact('header_func', 'content_path', 'code'));
         $this->assertTrue($e instanceof Response);
         $this->assertTrue($e instanceof Error);
         $e->render();
@@ -27,11 +27,11 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
-        $message = "This is message";
-        $e = new Error(null, 400, compact('header_func', 'content_path', 'message'));
+        $code = 400;
+        $e = new Error(compact('header_func', 'content_path', 'code'));
         $this->assertEquals(400, $e->code);
         $e->render();
-        $expected = ['HTTP/1.0 400 This is message', 'Content-type: text/html'];
+        $expected = ['HTTP/1.0 400 Bad Request', 'Content-type: text/html'];
         $this->assertEquals($expected, $header);
     }
 
@@ -40,7 +40,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
-        $e = new Error(null, 404, compact('header_func', 'content_path'));
+        $code = 400;
+        $e = new Error(compact('header_func', 'content_path', 'code'));
         $e->render();
         $this->assertEquals(404, $e->code);
         $expected = ['HTTP/1.0 404 Not Found', 'Content-type: text/html'];
@@ -70,7 +71,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         };
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $page_class = get_class($p);
-        $e = new Error(null, 404, compact('header_func', 'page_class'));
+        $code = 404;
+        $e = new Error(compact('header_func', 'page_class', 'code'));
         define('CONTENT_PATH', "/tmp");
         $expected = "No error page made at NO/PAGE";
         $result = $e->render();
@@ -82,7 +84,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
      */
     public function testHeaderException()
     {
-        $e = new Error(null, 404, ['header_func' => 99, 'message' => "Page not found"]);
+        $e = new Error(['header_func' => 99]);
         $e->render();
     }
 }
