@@ -82,8 +82,8 @@ class Mysql implements Source
         $where = $this->where($conditions);
         $limit = $this->limit($options);
         $query = "SELECT * FROM `{$table}` {$where}{$limit};";
-
-        Log::debug("PDO:QUERY [$query]");
+        $params = $this->boundDebugString($conditions, $options);
+        Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
         $stmt = $dbh->prepare($query);
         foreach ($conditions as $key => $value) {
@@ -103,6 +103,21 @@ class Mysql implements Source
             // codeCoverageIgnoreEnd
         }
         return $stmt;
+    }
+
+    private function boundDebugString(array $conditions, array $options, array $data = []) : string
+    {
+        $out = [];
+        foreach ($conditions as $k => $v) {
+            $out[] = "c_{$k}:'{$v}'";
+        }
+        foreach ($data as $k => $v) {
+            $out[] = "d_{$k}:{$v}";
+        }
+        foreach ($options as $k => $v) {
+            $out[] = "o_{$k}:{$v}";
+        }
+        return join(", ", $out);
     }
 
     private function where(array $conditions) : string
@@ -133,11 +148,12 @@ class Mysql implements Source
 
         $datasql = $this->data($data);
         $where = $this->where($conditions);
-        $q = "UPDATE `{$table}` SET {$datasql} {$where};";
+        $query = "UPDATE `{$table}` SET {$datasql} {$where};";
 
-        Log::debug("PDO:QUERY [$q]");
+        $params = $this->boundDebugString($conditions, $options, $data);
+        Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
-        $stmt = $dbh->prepare($q);
+        $stmt = $dbh->prepare($query);
         foreach ($data as $key => $value) {
             $stmt->bindValue(":d_{$key}", $value);
         }
@@ -157,13 +173,14 @@ class Mysql implements Source
     public function insert(string $table, array $data, array $options = []) : ?int
     {
         $keys = implode(', ', array_keys($data));
-        $data_phs = ':' . implode(', :', array_keys($data));
-        $q = "INSERT INTO `{$table}` ({$keys}) VALUES ({$data_phs});";
-        Log::debug("PDO:QUERY [$q]");
+        $data_phs = ':d_' . implode(', :d_', array_keys($data));
+        $query = "INSERT INTO `{$table}` ({$keys}) VALUES ({$data_phs});";
+        $params = $this->boundDebugString([], [], $data);
+        Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
-        $stmt = $dbh->prepare($q);
+        $stmt = $dbh->prepare($query);
         foreach ($data as $key => $value) {
-            $stmt->bindValue(':' . $key, $value);
+            $stmt->bindValue(':d_' . $key, $value);
         }
         $result = $stmt->execute();
         return ($result == true) ? $dbh->lastInsertId() : null;
@@ -173,12 +190,19 @@ class Mysql implements Source
     {
         $where = $this->where($conditions);
         if (empty($conditions) || empty($where)) return 0;
-        $q = "DELETE FROM `{$table}` {$where};";
-        Log::debug("PDO:QUERY [$q]");
+
+        $limit = $this->limit($options);
+        $query = "DELETE FROM `{$table}` {$where}{$limit};";
+        $params = $this->boundDebugString($conditions, $options);
+        Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
-        $stmt = $dbh->prepare($q);
+        $stmt = $dbh->prepare($query);
         foreach ($conditions as $key => $value) {
             $stmt->bindValue(":c_{$key}", $value);
+        }
+        if ($limit) {
+            $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
+            $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
         }
         $result = $stmt->execute();
         return ($result == true) ? $stmt->rowCount() : 0;
