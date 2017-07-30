@@ -9,10 +9,10 @@ namespace alkemann\h2l;
  */
 class Request
 {
-    const GET    = 'GET';
-    const PATCH  = 'PATCH';
-    const POST   = 'POST';
-    const PUT    = 'PUT';
+    const GET = 'GET';
+    const PATCH = 'PATCH';
+    const POST = 'POST';
+    const PUT = 'PUT';
     const DELETE = 'DELETE';
 
     private $_request;
@@ -43,9 +43,9 @@ class Request
     public function __construct(array $request = [], array $server = [], array $get = [], array $post = [])
     {
         $this->_request = $request;
-        $this->_server  = $server;
-        $this->_post    = $post;
-        $this->_get     = $get;
+        $this->_server = $server;
+        $this->_post = $post;
+        $this->_get = $get;
         unset($this->_get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
         $this->_parameters = [];
 
@@ -55,41 +55,59 @@ class Request
             $this->_type = 'json';
         }
 
-        $this->_url     = $this->_request['url'] ?? '/';
-        $this->_method  = $this->_server['REQUEST_METHOD'] ?? Request::GET;
-        $this->_route   = Router::match($this->_url, $this->_method);
+        $this->_url = $this->_request['url'] ?? '/';
+        $this->_method = $this->_server['REQUEST_METHOD'] ?? Request::GET;
+        $this->_route = Router::match($this->_url, $this->_method);
     }
 
     /**
      * @TODO inspect request headers for content type, auto parse the body
      * @return string the raw 'php://input' post
      */
-    public function getPostBody():string { return file_get_contents('php://input'); }
+    public function getPostBody(): string
+    {
+        return file_get_contents('php://input');
+    }
 
     /**
      * @return Route identified for request
      */
-    public function route():Route { return $this->_route; }
+    public function route(): Route
+    {
+        return $this->_route;
+    }
 
     /**
      * @param Route $route
      */
-    public function setRoute(Route $route):void { $this->_route = $route; }
+    public function setRoute(Route $route): void
+    {
+        $this->_route = $route;
+    }
 
     /**
      * @return string the requested url
      */
-    public function url():string { return $this->_url; }
+    public function url(): string
+    {
+        return $this->_url;
+    }
 
     /**
      * @return string Request::GET, Request::POST, Request::PATCH, Request::PATCH etc
      */
-    public function method():string { return $this->_method; }
+    public function method(): string
+    {
+        return $this->_method;
+    }
 
     /**
      * @return string 'html', 'json', 'xml' etc
      */
-    public function type():string { return $this->_type; }
+    public function type(): string
+    {
+        return $this->_type;
+    }
 
     /**
      * Get request parameters from url as url parats, get queries or post, in that order
@@ -99,19 +117,22 @@ class Request
      */
     public function param(string $name)
     {
-        if (isset($this->_parameters[$name]))
+        if (isset($this->_parameters[$name])) {
             return $this->_parameters[$name];
-        if (isset($this->_get[$name]))
+        }
+        if (isset($this->_get[$name])) {
             return $this->_get[$name];
-        if (isset($this->_post[$name]))
+        }
+        if (isset($this->_post[$name])) {
             return $this->_post[$name];
+        }
         return null;
     }
 
     /**
      * @return array $_GET
      */
-    public function query() : array
+    public function query(): array
     {
         return $this->_get;
     }
@@ -121,7 +142,7 @@ class Request
      *
      * @return Response
      */
-    public function response() : Response
+    public function response(): Response
     {
         $cb = $this->_route->callback;
         $this->_parameters = $this->_route->parameters;
@@ -171,7 +192,8 @@ class Request
      * @throws OutOfBoundsException if the key does not exist in data
      * @codeCoverageIgnore
      */
-    private function _getArrayValue($keys, &$data) {
+    private function _getArrayValue($keys, &$data)
+    {
         $key = array_shift($keys);
         if (!is_array($data) || empty($key)) {
             return $data;
@@ -181,11 +203,11 @@ class Request
                 return $data[$key];
             } else {
                 array_unshift($keys, $key);
-                throw new \OutOfBoundsException("Key [" . join('.', $keys) . "] not set in " . print_r($data,true));
+                throw new \OutOfBoundsException("Key [" . join('.', $keys) . "] not set in " . print_r($data, 1));
             }
         } else {
             if (!array_key_exists($key, $data)) {
-                throw new \OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data,true));
+                throw new \OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
             }
             return $this->_getArrayValue($keys, $data[$key]);
         }
@@ -200,7 +222,7 @@ class Request
     public function redirect($url)
     {
         // @TODO add support for reverse route match
-        header( "Location: " . $url);
+        header("Location: " . $url);
         exit;
     }
 }

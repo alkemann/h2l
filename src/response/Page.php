@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\{Request, Response};
+use alkemann\h2l\{
+    Request, Response
+};
 
 /**
  * Class Page
@@ -49,11 +51,11 @@ class Page extends Response
      * @param array $config
      * @return Page
      */
-    public static function fromRequest(Request $request, array $config = []) : Page
+    public static function fromRequest(Request $request, array $config = []): Page
     {
         $config += [
-            'request'   => $request,
-            'type'      => $request->type(),
+            'request' => $request,
+            'type' => $request->type(),
         ];
         $page = new static([], $config);
         $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url);
@@ -63,10 +65,10 @@ class Page extends Response
     /**
      * Provide data (variables) that are to be extracted into the view (and layout) templates
      *
-     * @param string/array $key an array of data or the name for $value
+     * @param string /array $key an array of data or the name for $value
      * @param null $value if $key is a string, this can be the value of that var
      */
-    public function setData($key, $value = null) : void
+    public function setData($key, $value = null): void
     {
         if (is_array($key)) {
             foreach ($key as $k => $v) {
@@ -77,29 +79,31 @@ class Page extends Response
         }
     }
 
-    public function request() : Request
+    public function request(): Request
     {
         return $this->request;
     }
 
     // @TODO refactor, and cache
-    private function head() : string
+    private function head(): string
     {
         ob_start();
         try {
             $headfile = $this->getLayoutFile('head');
-            if (file_exists($headfile))
-                (function($sldkfjlksejflskjflskdjflskdfj) {
+            if (file_exists($headfile)) {
+                (function ($sldkfjlksejflskjflskdjflskdfj) {
                     extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
                 })($headfile);
+            }
 
             $neckfile = $this->getLayoutFile('neck');
-            if (file_exists($neckfile))
-                (function($lidsinqjhsdfytqkwjkasjdksadsdg) {
+            if (file_exists($neckfile)) {
+                (function ($lidsinqjhsdfytqkwjkasjdksadsdg) {
                     extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
                 })($neckfile);
+            }
         } finally {
             $ret = ob_get_contents();
             ob_end_clean();
@@ -107,22 +111,23 @@ class Page extends Response
         return $ret;
     }
 
-    private function getLayoutFile(string $name) : string
+    private function getLayoutFile(string $name): string
     {
         $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
     // @TODO refactor, and cache
-    private function foot() : string
+    private function foot(): string
     {
         $footfile = $this->getLayoutFile('foot');
-        if (!file_exists($footfile))
+        if (!file_exists($footfile)) {
             return '';
+        }
 
         ob_start();
         try {
-            (function($ldkfoskdfosjicyvutwehkshfskjdf) {
+            (function ($ldkfoskdfosjicyvutwehkshfskjdf) {
                 extract($this->data);
                 include $ldkfoskdfosjicyvutwehkshfskjdf;
             })($footfile);
@@ -134,11 +139,12 @@ class Page extends Response
     }
 
     // @TODO refactor, and cache
+
     /**
      * @return string
      * @throws alkemann\h2l\exceptions\InvalidUrl
      */
-    public function view($view) : string
+    public function view($view): string
     {
         $file = $this->getContentFile($view);
         if (!file_exists($file)) {
@@ -146,7 +152,7 @@ class Page extends Response
         }
         ob_start();
         try {
-            (function($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
+            (function ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
                 extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })($file);
@@ -157,7 +163,7 @@ class Page extends Response
         return $ret;
     }
 
-    private function getContentFile($view) : string
+    private function getContentFile($view): string
     {
         $path = $this->_config['content_path'] ?? CONTENT_PATH;
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
@@ -170,7 +176,7 @@ class Page extends Response
      * @return string fully rendered string, ready to be echo'ed
      * @throws \alkemann\h2l\exceptions\InvalidUrl if the view template does not exist
      */
-    public function render() : string
+    public function render(): string
     {
         $contentType = $this->contentType();
 
@@ -183,23 +189,23 @@ class Page extends Response
         return $response;
     }
 
-    public function setTemplate(string $template) : void
+    public function setTemplate(string $template): void
     {
         $this->template = "{$template}.{$this->type}";
     }
 
-    private function templateFromUrl(?string $url = null) : string
+    private function templateFromUrl(?string $url = null): string
     {
         $parts = \explode('/', $url);
         $last = \array_slice($parts, -1, 1, true);
         unset($parts[key($last)]);
         $view = current($last);
-        $period = strrpos($view , '.');
+        $period = strrpos($view, '.');
         if ($period) {
-            $type = substr($view , $period + 1);
+            $type = substr($view, $period + 1);
             if (in_array($type, $this->_validTypes)) {
                 $this->type = $type;
-                $view = substr($view , 0, $period);
+                $view = substr($view, 0, $period);
             }
         }
 
