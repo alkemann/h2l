@@ -160,7 +160,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $eq = "INSERT INTO `things` (task, status) VALUES (:task, :status);";
+        $eq = "INSERT INTO `things` (task, status) VALUES (:d_task, :d_status);";
         $ec = function() { return true; };
         $mi = new MockStatement($ec, [1]);
         $m = $this->createInstanceWithMockedHandler($eq, $mi);

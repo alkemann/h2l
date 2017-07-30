@@ -48,17 +48,17 @@ class Router
     {
         $url = static::$_aliases[$url] ?? $url;
 
-        if (isset(static::$_routes[$method]) == false) {
-            return null;
-        }
+        if (isset(static::$_routes[$method])) {
+            if (isset(static::$_routes[$method][$url])) {
+                return new Route($url, static::$_routes[$method][$url]);
+            }
 
-        if (isset(static::$_routes[$method][$url])) {
-            return new Route($url, static::$_routes[$method][$url]);
+            // TODO cache of previous matched dynamic routes
+            $route = static::matchDynamicRoute($url, $method);
+            if ($route) {
+                return $route;
+            }
         }
-
-        // TODO cache of previous matched dynamic routes
-        $route = static::matchDynamicRoute($url, $method);
-        if ($route) return $route;
 
         // TODO cache of valid static routes, maybe with a try, catch, finally?
         return new Route($url, function(Request $request) {
