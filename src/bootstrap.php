@@ -26,11 +26,13 @@ function handleError(\Throwable $e) : void
     }
 
     if (DEBUG && isset($e->xdebug_message)) {
+        header("HTTP/1.0 500 Internal Server Error");
         header("Content-type: text/html");
         echo '<table>' . $e->xdebug_message . '</table><br>';
         dbp('xdebug_message');
         d($e);
     } elseif (DEBUG) {
+        header("HTTP/1.0 500 Internal Server Error");
         header("Content-type: text/html");
         echo '<h1 style="color:red;">' . $e->getMessage() . '</h1>';
         echo '<h3>' . $e->getFile() . ' :: ' . $e->getLine() . '</h3>';
