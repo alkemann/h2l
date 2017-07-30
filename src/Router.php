@@ -26,8 +26,6 @@ class Router
     /**
      * Add new dynamic route to application
      *
-     * << Detailed description >>
-     *
      * @param string $url Regex that is valid for preg_match, including named groups
      * @param \Closure $closure Code to run on this match
      * @param mixed $methods a single Request::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
@@ -41,8 +39,6 @@ class Router
 
     /**
      * Given a request url and request method, identify dynamic route or return fixed route
-     *
-     * << Detailed description >>
      *
      * @param string $url Request url, i.e. '/api/user/32'
      * @param string $method Request::<GET/POST/PATCH/PUT/DELETE>
@@ -59,7 +55,7 @@ class Router
         $route = static::matchDynamicRoute($url, $method);
         if ($route) return $route;
 
-        // TODO cache of valid static routes
+        // TODO cache of valid static routes, maybe with a try, catch, finally?
         return new Route($url, function(Request $request) {
             return response\Page::fromRequest($request);
         });

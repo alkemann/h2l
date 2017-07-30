@@ -61,6 +61,7 @@ class Request
     }
 
     /**
+     * @TODO inspect request headers for content type, auto parse the body
      * @return string the raw 'php://input' post
      */
     public function getPostBody():string { return file_get_contents('php://input'); }
