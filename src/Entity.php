@@ -38,7 +38,7 @@ trait Entity
      * @param string $name
      * @param mixed $value
      */
-    public function __set(string $name, $value) : void
+    public function __set(string $name, $value): void
     {
         $this->data[$name] = $value;
     }
@@ -47,7 +47,7 @@ trait Entity
      * @param $name
      * @return bool
      */
-    public function __isset(string $name) : bool
+    public function __isset(string $name): bool
     {
         return isset($this->data[$name]);
     }
@@ -56,7 +56,7 @@ trait Entity
      * @param array|null $data
      * @return array
      */
-    public function data(array $data = null) : array
+    public function data(array $data = null): array
     {
         if (is_null($data)) {
             return $this->data;
@@ -70,7 +70,7 @@ trait Entity
     /**
      * Reset object by removing all data
      */
-    public function reset() : void
+    public function reset(): void
     {
         $this->data = [];
     }
@@ -98,7 +98,7 @@ trait Entity
     /**
      * @return array
      */
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
         return $this->data;
     }

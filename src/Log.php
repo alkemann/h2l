@@ -32,7 +32,7 @@ class Log
      * Add handler, it should implement Psr\Log\LoggerInterface
      *
      * @param string $name unique name for this handler
-     * @param object/callable $handler an object that implement Psr\Log\LoggerInterface or a callable
+     * @param object|callable $handler an object that implement Psr\Log\LoggerInterface or a callable
      */
     public static function handler(string $name, $handler)
     {
@@ -55,7 +55,7 @@ class Log
      * @param string $method
      * @param array $args
      */
-    public static function __callStatic(string $method, array $args = []) : void
+    public static function __callStatic(string $method, array $args = []): void
     {
         /*
         if (!in_array($method, ['debug', 'info', 'notice', 'warning', 'error', 'critical', 'alert', 'emergency'])) {
@@ -73,7 +73,7 @@ class Log
      * @param $message
      * @param array $context
      */
-    public static function log($level, $message, array $context = []) : void
+    public static function log($level, $message, array $context = []): void
     {
         foreach (static::$handlers as $handlerName => $handler) {
             if (is_callable($handler)) { // avoid this?
@@ -92,7 +92,7 @@ class Log
      * @param string $message
      * @param array $context
      */
-    private static function file(string $level, string $message, array $context = []) : void
+    private static function file(string $level, string $message, array $context = []): void
     {
         $file = LOGS_PATH . 'app.log';
         $fileHandler = fopen($file, 'a');

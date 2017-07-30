@@ -18,7 +18,7 @@ class Router
      * @param string $alias
      * @param string $real
      */
-    public static function alias(string $alias, string $real) : void
+    public static function alias(string $alias, string $real): void
     {
         static::$_aliases[$alias] = $real;
     }
@@ -30,11 +30,12 @@ class Router
      * @param \Closure $closure Code to run on this match
      * @param mixed $methods a single Request::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
      */
-    public static function add(string $url, \Closure $closure, $methods = [Request::GET]) : void
+    public static function add(string $url, \Closure $closure, $methods = [Request::GET]): void
     {
         // @TODO change from closure to just callable?
-        foreach ((array) $methods as $method)
+        foreach ((array)$methods as $method) {
             static::$_routes[$method][$url] = $closure;
+        }
     }
 
     /**
@@ -44,7 +45,7 @@ class Router
      * @param string $method Request::<GET/POST/PATCH/PUT/DELETE>
      * @return Route
      */
-    public static function match(string $url, string $method = Request::GET) : Route
+    public static function match(string $url, string $method = Request::GET): Route
     {
         $url = static::$_aliases[$url] ?? $url;
 
@@ -61,21 +62,27 @@ class Router
         }
 
         // TODO cache of valid static routes, maybe with a try, catch, finally?
-        return new Route($url, function(Request $request) {
+        return new Route($url, function (Request $request) {
             return response\Page::fromRequest($request);
         });
     }
 
-    private static function matchDynamicRoute(string $url, string $method = Request::GET) : ?Route
+    private static function matchDynamicRoute(string $url, string $method = Request::GET): ?Route
     {
         foreach (static::$_routes[$method] as $route => $cb) {
-            if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) continue;
+            if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) {
+                continue;
+            }
             $result = preg_match($route, $url, $matches);
-            if (!$result) continue;
+            if (!$result) {
+                continue;
+            }
 
             $parameters = array_filter(
                 $matches,
-                function($v) {return !is_int($v);},
+                function ($v) {
+                    return !is_int($v);
+                },
                 ARRAY_FILTER_USE_KEY
             );
 

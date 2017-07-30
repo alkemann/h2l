@@ -61,7 +61,7 @@ class Mysql implements Source
         return $result->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function one(string $table, array $conditions, array $options = []) : ?array
+    public function one(string $table, array $conditions, array $options = []): ?array
     {
         $result = $this->find($table, $conditions, $options);
         $result = iterator_to_array($result);
@@ -76,7 +76,7 @@ class Mysql implements Source
         return $result[0];
     }
 
-    public function find(string $table, array $conditions, array $options = []) : \Traversable
+    public function find(string $table, array $conditions, array $options = []): \Traversable
     {
         $values = [];
         $where = $this->where($conditions);
@@ -105,7 +105,7 @@ class Mysql implements Source
         return $stmt;
     }
 
-    private function boundDebugString(array $conditions, array $options, array $data = []) : string
+    private function boundDebugString(array $conditions, array $options, array $data = []): string
     {
         $out = [];
         foreach ($conditions as $k => $v) {
@@ -120,31 +120,37 @@ class Mysql implements Source
         return join(", ", $out);
     }
 
-    private function where(array $conditions) : string
+    private function where(array $conditions): string
     {
-        if (empty($conditions)) return "";
-        $fun = function($o, $v) { return "{$o}{$v} = :c_{$v}"; };
+        if (empty($conditions)) {
+            return "";
+        }
+        $fun = function ($o, $v) {
+            return "{$o}{$v} = :c_{$v}";
+        };
         $where = array_reduce(array_keys($conditions), $fun, "");
         return "WHERE {$where} ";
     }
 
-    private function limit(array $options) : string
+    private function limit(array $options): string
     {
         if (array_key_exists('limit', $options)) {
             if (array_key_exists('offset', $options)) {
-                $values[] = (int) $options['offset'];
+                $values[] = (int)$options['offset'];
             } else {
                 $values[] = 0;
             }
-            $values[] =  (int) $options['limit'];
+            $values[] = (int)$options['limit'];
             return "LIMIT :o_offset,:o_limit ";
         }
         return "";
     }
 
-    public function update(string $table, array $conditions, array $data, array $options = []) : int
+    public function update(string $table, array $conditions, array $data, array $options = []): int
     {
-        if (!$conditions || !$data) return 0;
+        if (!$conditions || !$data) {
+            return 0;
+        }
 
         $datasql = $this->data($data);
         $where = $this->where($conditions);
@@ -164,13 +170,15 @@ class Mysql implements Source
         return ($result == true) ? $stmt->rowCount() : 0;
     }
 
-    private function data(array $data) : string
+    private function data(array $data): string
     {
-        $fun = function($o, $v) { return "{$o}{$v} = :d_{$v}"; };
+        $fun = function ($o, $v) {
+            return "{$o}{$v} = :d_{$v}";
+        };
         return array_reduce(array_keys($data), $fun, "");
     }
 
-    public function insert(string $table, array $data, array $options = []) : ?int
+    public function insert(string $table, array $data, array $options = []): ?int
     {
         $keys = implode(', ', array_keys($data));
         $data_phs = ':d_' . implode(', :d_', array_keys($data));
@@ -186,10 +194,12 @@ class Mysql implements Source
         return ($result == true) ? $dbh->lastInsertId() : null;
     }
 
-    public function delete(string $table, array $conditions, array $options = []) : int
+    public function delete(string $table, array $conditions, array $options = []): int
     {
         $where = $this->where($conditions);
-        if (empty($conditions) || empty($where)) return 0;
+        if (empty($conditions) || empty($where)) {
+            return 0;
+        }
 
         $limit = $this->limit($options);
         $query = "DELETE FROM `{$table}` {$where}{$limit};";

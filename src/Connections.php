@@ -30,11 +30,15 @@ class Connections
      * @param Closure|null $close an optional anonymous function that takes the connection as arguments and closes it
      * @throws InvalidArgumentException if connection $name already exists
      */
-    public static function add(string $name, Closure $open, ?Closure $close = null) : void
+    public static function add(string $name, Closure $open, ?Closure $close = null): void
     {
-        if (isset(self::$open[$name])) throw new InvalidArgumentException("Connection $name already exists");
+        if (isset(self::$open[$name])) {
+            throw new InvalidArgumentException("Connection $name already exists");
+        }
         self::$open[$name] = $open;
-        if ($close) self::$close[$name] = $close;
+        if ($close) {
+            self::$close[$name] = $close;
+        }
         self::$connections[$name] = false;
     }
 
@@ -47,10 +51,9 @@ class Connections
      */
     public static function get(string $name)
     {
-        if (!isset(self::$open[$name])) throw new ConfigMissing(
-            "Connection $name is not configured",
-            ConfigMissing::MISSING_CONNECTION
-        );
+        if (!isset(self::$open[$name])) {
+            throw new ConfigMissing("Connection $name is not configured", ConfigMissing::MISSING_CONNECTION);
+        }
 
         if (self::$connections[$name] === false) {
             $open = self::$open[$name];
@@ -64,15 +67,19 @@ class Connections
      * @throws UnderflowException when connection is already closed
      * @throws InvalidArgumentException if connection does not exist
      */
-    public static function close(string $name) : void
+    public static function close(string $name): void
     {
-        if (!isset(self::$open[$name])) throw new InvalidArgumentException("Connection $name does not exists");
+        if (!isset(self::$open[$name])) {
+            throw new InvalidArgumentException("Connection $name does not exists");
+        }
 
-        if (self::$connections[$name] === false)
+        if (self::$connections[$name] === false) {
             throw new UnderflowException("Already closed");
+        }
 
-        if (!isset(self::$close[$name]))
-            return; // Closing is option, no error
+        if (!isset(self::$close[$name])) {
+            return; // Closing is optional, no error
+        }
 
         $close = self::$close[$name];
         $close(self::$connections[$name]);

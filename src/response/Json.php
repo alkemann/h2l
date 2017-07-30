@@ -27,13 +27,13 @@ class Json extends \alkemann\h2l\Response
      *
      * Header 'Content-type:' will be set using `header` or an injeced 'header_func' through constructor
      */
-    public function render() : string
+    public function render(): string
     {
         $this->setHeaders();
         return $this->formattedContent();
     }
 
-    private function setHeaders() : void
+    private function setHeaders(): void
     {
         $h = $this->_config['header_func'] ?? 'header';
         $h("Content-type: application/json");
@@ -43,10 +43,12 @@ class Json extends \alkemann\h2l\Response
         }
     }
 
-    private function formattedContent() : string
+    private function formattedContent(): string
     {
         $content = $this->_content;
-        if (empty($content)) return "";
+        if (empty($content)) {
+            return "";
+        }
         if ($content instanceof \Generator) {
             $content = iterator_to_array($content);
         }

@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\{Request, Response, response\Page, Log};
+use alkemann\h2l\{
+    Log, Response
+};
 
 /**
  * Class Error
@@ -39,14 +41,14 @@ class Error extends Response
         }
 
         $this->_config = $config + [
-            'page_class' => Page::class
-        ];
+                'page_class' => Page::class
+            ];
     }
 
     /**
      * @throws \Error
      */
-    public function render() : string
+    public function render(): string
     {
         $h = $this->_config['header_func'] ?? 'header';
         if (is_callable($h) == false) {
@@ -59,10 +61,10 @@ class Error extends Response
 
         try {
             $page_config = $this->_config + [
-                'code' => $this->code,
-                'template' => $this->code == 404 ? '404' : 'error',
-                'type' => $this->type
-            ];
+                    'code' => $this->code,
+                    'template' => $this->code == 404 ? '404' : 'error',
+                    'type' => $this->type
+                ];
             $data = $this->data + ['code' => $this->code];
             $page = new $page_class($data, $page_config);
             return $page->render();

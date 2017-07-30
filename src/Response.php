@@ -60,19 +60,19 @@ abstract class Response
 
     protected $type = 'html';
 
-    protected $_validTypes = ['html','json', 'xml'];
+    protected $_validTypes = ['html', 'json', 'xml'];
     protected $_contentTypes = [
         'html' => 'text/html',
         'json' => 'application/json',
         'xml' => 'application/xml'
     ];
 
-    public function type() : string
+    public function type(): string
     {
         return $this->type;
     }
 
-    protected function contentType() : string
+    protected function contentType(): string
     {
         $format = $this->type;
         if (in_array($format, $this->_validTypes)) {
@@ -81,5 +81,5 @@ abstract class Response
         return "text/html";
     }
 
-    abstract public function render() : string ;
+    abstract public function render(): string;
 }

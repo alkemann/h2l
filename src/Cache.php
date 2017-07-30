@@ -21,37 +21,37 @@ class Cache
         return $this->handler->get($key, $default);
     }
 
-    public function set(string $key, $value, $ttl = null) : bool
+    public function set(string $key, $value, $ttl = null): bool
     {
         return $this->handler->set($key, $value, $ttl);
     }
 
-    public function delete(string $key) : bool
+    public function delete(string $key): bool
     {
         return $this->handler->delete($key);
     }
 
-    public function clear() : bool
+    public function clear(): bool
     {
         return $this->handler->clear();
     }
 
-    public function getMultiple($keys, $default = null) : array // or iterable?
+    public function getMultiple($keys, $default = null): array // or iterable?
     {
         return $this->handler->getMultiple($keys, $default);
     }
 
-    public function setMultiple($values, $ttl = null) : bool
+    public function setMultiple($values, $ttl = null): bool
     {
         return $this->handler->setMultiple($values, $ttl);
     }
 
-    public function deleteMultiple($keys) : bool
+    public function deleteMultiple($keys): bool
     {
         return $this->handler->deleteMultiple($keys);
     }
 
-    public function has(string $key) : bool
+    public function has(string $key): bool
     {
         return $this->handler->has($key);
     }
