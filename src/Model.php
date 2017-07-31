@@ -18,8 +18,7 @@ use alkemann\h2l\{
 trait Model
 {
     /**
-     * @return alkemann\h2l\data\Source
-     * @throws exceptions\ConfigMissing
+     * @throws ConfigMissing
      */
     public static function db(): Source
     {
@@ -54,10 +53,6 @@ trait Model
     }
 
     /**
-     * @param mixed $id
-     * @param array $conditions
-     * @param array $options
-     * @return bool|Model
      * @throws ConfigMissing
      * @throws \InvalidArgumentException
      */
@@ -78,10 +73,7 @@ trait Model
     /**
      * Find all records matching $conditions, returns a generator
      *
-     * @param array $conditions
-     * @param array $options
-     * @return \Generator
-     * @throws alkemann\h2l\exceptions\ConfigMissing
+     * @throws ConfigMissing
      */
     public static function find(array $conditions = [], array $options = []): \Generator
     {
@@ -101,10 +93,7 @@ trait Model
     /**
      * Find all records matching `$conditions`, returns an array with key being the pk value
      *
-     * @param array $conditions
-     * @param array $options
-     * @return array
-     * @throws alkemann\h2l\exceptions\ConfigMissing
+     * @throws ConfigMissing
      */
     public static function findAsArray(array $conditions = [], array $options = []): array
     {
@@ -136,7 +125,7 @@ trait Model
      * @param array $data
      * @param array $options
      * @return bool
-     * @throws exceptions\ConfigMissing
+     * @throws ConfigMissing
      */
     public function save(array $data = [], array $options = []): bool
     {

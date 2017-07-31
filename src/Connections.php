@@ -21,7 +21,7 @@ class Connections
     private static $close = [];
 
     /**
-     * Add a new connnection by giving a name and a closure that is callable to open and return it
+     * Add a new connection by giving a name and a closure that is callable to open and return it
      *
      * A close Closure may also be supplied for connection that requires/supports closing
      *
