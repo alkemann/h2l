@@ -82,4 +82,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($route instanceof Route);
         $this->assertEquals($cb, $route->callback);
     }
+
+    public function testMatch()
+    {
+        $cb = function(Request $r) { return ""; };
+         Router::add('|/dynamic/(?<id>\d+)|', $cb, Request::GET);
+        $route = Router::match('/dynamic/123', Request::GET);
+        $this->assertTrue($route instanceof Route);
+        $this->assertEquals(['id' => 123], $route->parameters);
+        $this->assertEquals($cb, $route->callback);
+    }
 }
