@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\unit\response;
 
-use alkemann\h2l\{response\Page, Router, Route, Request, Response};
+use alkemann\h2l\{
+    Environment, response\Page, Router, Route, Request, Response
+};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
@@ -102,4 +104,23 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testMissingContentPathConfigs()
+    {
+        $this->expectException(\alkemann\h2l\exceptions\ConfigMissing::class);
+        Environment::setEnvironment('testMissingContentPathConfigs');
+        $page = Page::fromRequest(new Request(['url' => 'place']));
+        $page->render();
+        Environment::setEnvironment(Environment::TEST);
+    }
+    public function testMissingLayoutConfigs()
+    {
+        $conf = Environment::grab(Environment::TEST);
+        Environment::setEnvironment('testMissingContentPathConfigs');
+        unset($conf['layout_path']);
+        Environment::set($conf, 'testMissingContentPathConfigs');
+        $page = Page::fromRequest(new Request(['url' => 'place']));
+        $expected = "<h1>Win!</h1>";
+        $result = $page->render();
+        $this->assertEquals($expected, $result);
+    }
 }

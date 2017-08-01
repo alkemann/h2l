@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\unit\response;
 
-use alkemann\h2l\{response\Error, Response, Request};
+use alkemann\h2l\{response\Error, Response, Request, Environment, exceptions\InvalidUrl};
 
 class ErrorTest extends \PHPUnit_Framework_TestCase
 {
@@ -53,6 +53,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function test404()
     {
+        Environment::put('debug', false);
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $content_path = dirname(__DIR__);
@@ -66,29 +67,28 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function test404WithDebug()
     {
-        if (defined('DEBUG') == false) {
-            define('DEBUG', true);
-        }
-        if (DEBUG == false) {
-            $this->markTestSkipped("DEBUG must be defined as ON for this test!");
-            return;
-        }
+        Environment::set([
+            'debug' => true,
+            'content_path' => '/tmp/',
+        ], "test404WithDebug");
+        Environment::setEnvironment('test404WithDebug');
 
         $p = new class() {
             public function setData() {}
             public function render()
             {
-                throw new \alkemann\h2l\exceptions\InvalidUrl("NO/PAGE");
+                throw new InvalidUrl("NO/PAGE");
             }
         };
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $page_class = get_class($p);
         $code = 404;
         $e = new Error([], compact('header_func', 'page_class', 'code'));
-        define('CONTENT_PATH', "/tmp");
         $expected = "No error page made at NO/PAGE";
         $result = $e->render();
         $this->assertEquals($expected, $result);
+
+        Environment::setEnvironment(Environment::TEST);
     }
 
     /**

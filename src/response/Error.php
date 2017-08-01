@@ -4,6 +4,7 @@ namespace alkemann\h2l\response;
 
 use alkemann\h2l\Log;
 use alkemann\h2l\Response;
+use alkemann\h2l\Environment;
 
 /**
  * Class Error
@@ -77,7 +78,7 @@ class Error extends Response
             return $page->render();
         } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());
-            if (defined('DEBUG') && DEBUG) {
+            if (Environment::get('debug')) {
                 return "No error page made at " . $e->getMessage();
             }
         }
