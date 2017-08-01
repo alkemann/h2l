@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\integration\response;
 
-use alkemann\h2l\{response\Page, Route, Request, Response, exceptions\InvalidUrl, Environtment};
+use alkemann\h2l\{
+    Environment, exceptions\InvalidUrl, Request, response\Page, Route
+};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,15 +12,14 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        Environtment::setEnvironment(Environtment::TEST);
+        Environment::setEnvironment(Environment::TEST);
     }
 
     public function testRenderingSimple()
     {
         $request = $this->getMockBuilder(Request::class)
-            // ->setMockClassName('Request')
             ->disableOriginalConstructor()
-            ->setMethods(['type', 'route', 'method']) // mocked methods
+            ->setMethods(['type', 'route', 'method'])
             ->getMock();
 
         $request->expects($this->once())->method('type')->willReturn('html');
