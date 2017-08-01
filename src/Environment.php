@@ -102,6 +102,14 @@ final class Environment
         if (is_null($environment)) {
             $environment = static::current();
         }
+
+        if ($environment === Environment::ALL) {
+            foreach (array_keys(self::$settings) as $env) {
+                static::add($configs, $env);
+            }
+            static::add($configs, Environment::current());
+            return;
+        }
         foreach ($configs as $key => $value) {
             self::$settings[$environment][$key] = $value;
         }
