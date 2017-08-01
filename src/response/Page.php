@@ -5,6 +5,7 @@ namespace alkemann\h2l\response;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
+use alkemann\h2l\Environment;
 
 /**
  * Class Page
@@ -113,8 +114,18 @@ class Page extends Response
 
     private function getLayoutFile(string $name): string
     {
-        $path = $this->config['layout_path'] ?? LAYOUT_PATH;
-        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
+        $ds = DIRECTORY_SEPARATOR;
+        $default_layout_path = ROOT . $ds . 'content' . $ds . 'layouts' . $ds;
+        $path = $this->config['layout_path'] ?? Environment::get('layout_path', $default_layout_path);
+        return $path . $this->layout . $ds . $name . '.' . $this->type . '.php';
+    }
+
+    private function getContentFile($view): string
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $default_content_path = ROOT . $ds . 'content' . $ds;
+        $path = $this->config['content_path'] ?? Environment::get('content_path', $default_content_path);
+        return $path . 'pages' . $ds . $view . '.php';
     }
 
     // @TODO refactor, and cache
@@ -161,12 +172,6 @@ class Page extends Response
             ob_end_clean();
         }
         return $ret;
-    }
-
-    private function getContentFile($view): string
-    {
-        $path = $this->config['content_path'] ?? CONTENT_PATH;
-        return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
     /**

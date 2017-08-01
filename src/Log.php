@@ -96,7 +96,9 @@ class Log
      */
     private static function file(string $level, string $message, array $context = []): void
     {
-        $file = LOGS_PATH . 'app.log';
+        $default_path = ROOT . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
+        $path = Environment::get('logs_path', $default_path);
+        $file = $path . 'app.log';
         $fileHandler = fopen($file, 'a');
         $string = date('Y-m-d H:i:s') . " " . strtoupper($level) . " " . $message . PHP_EOL;
         fwrite($fileHandler, $string);
