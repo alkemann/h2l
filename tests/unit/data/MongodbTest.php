@@ -119,12 +119,12 @@ class MongodbTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result == true);
 
         $expected = [
-            '597dfade74050a000678d7b2' => [
+            [
                 'id' => '597dfade74050a000678d7b2',
                 'name' => 'John',
                 'status' => 'NEW'
             ],
-            '597dfade74050a000678d111' => [
+            [
                 'id' => '597dfade74050a000678d111',
                 'name' => 'Alec',
                 'status' => 'NEW'
@@ -171,6 +171,33 @@ class MongodbTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $mongo_result->expects($this->once())
             ->method('isAcknowledged')->willReturn(false);
+        $collection = $this->getMockBuilder(Collection::class)
+            ->disableOriginalConstructor()
+            ->setMethods([])
+            ->getMock();
+        $collection->expects($this->once())
+            ->method('insertOne')
+            ->with(['name' => 'Dolf', 'status' => 'NEW'], [])
+            ->willReturn($mongo_result);
+
+        $mongo = $this->mocky($collection);
+        $expected = null;
+        $result = $mongo->insert('people', ['name' => 'Dolf', 'status' => 'NEW']);
+        $this->assertEquals($expected, $result);
+    }
+
+
+    public function testInsertFailed()
+    {
+        $mongo_result = $this->getMockBuilder(InsertOneResult::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isAcknowledged', 'getInsertedCount'])
+            ->getMock();
+        $mongo_result->expects($this->once())
+            ->method('isAcknowledged')->willReturn(true);
+        $mongo_result->expects($this->once())
+            ->method('getInsertedCount')
+            ->willReturn(0);
         $collection = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
             ->setMethods([])

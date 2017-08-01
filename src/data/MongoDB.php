@@ -2,13 +2,11 @@
 
 namespace alkemann\h2l\data;
 
-use alkemann\h2l\Log;
+use alkemann\h2l\{
+    exceptions\ConnectionError, Log
+};
 use MongoDB\{
-    BSON\ObjectID,
-    Model\BSONDocument,
-    Driver\Exception\RuntimeException,
-    Collection,
-    UpdateResult, DeleteResult, InsertOneResult
+    BSON\ObjectID, Client, Collection, DeleteResult, Driver\Exception\RuntimeException, InsertOneResult, Model\BSONDocument, UpdateResult
 };
 
 class MongoDb implements Source
@@ -51,10 +49,13 @@ class MongoDb implements Source
         if ($this->client == null) {
             $host = $this->config['host'];
             $port = $this->config['port'];
-            //        $user = $this->config['user'];
-            //        $pass = $this->config['pass'];
+            $options = $this->config;
+            unset($options['host']);
+            unset($options['port']);
+            unset($options['db']);
             try {
-                $this->client = new \MongoDB\Client("mongodb://{$host}:{$port}");
+                $this->client = new Client("mongodb://{$host}:{$port}", $options);
+                $this->client->listDatabases(); // @TODO skip this extra call to trigger connection error fast?
             } catch (RuntimeException $e) {
                 throw new ConnectionError("Unable to connect to {$host}:{$port} : " . $e->getMessage());
             }
@@ -112,8 +113,7 @@ class MongoDb implements Source
         $conditions = $this->idReplaceConditions($conditions);
         $cursor = $collection->find($conditions, $options);
         foreach ($cursor as $document) {
-            $row = $this->out($document);
-            yield $row['id'] => $row;
+            yield $this->out($document);
         }
     }
 
