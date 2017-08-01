@@ -25,8 +25,6 @@ class MockStatement implements \Iterator {
 
 class MysqlTest extends \PHPUnit_Framework_TestCase
 {
-    private static $config = [];
-
     public function testQuery()
     {
         $handler = $this->getMockBuilder('PDO')
