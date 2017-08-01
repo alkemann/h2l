@@ -4,6 +4,7 @@ namespace alkemann\h2l\response;
 
 use alkemann\h2l\Log;
 use alkemann\h2l\Response;
+use alkemann\h2l\Environment;
 
 /**
  * Class Error

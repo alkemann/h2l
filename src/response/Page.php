@@ -127,7 +127,7 @@ class Page extends Response
 
     private function getContentFile($view): string
     {
-        $path = $this->config['content_path'] ?? Environment::get('content_path', null§);
+        $path = $this->config['content_path'] ?? Environment::get('content_path', null);
         if (is_null($path)) {
             if (defined('ROOT')) {
                 $path = ROOT . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR;
