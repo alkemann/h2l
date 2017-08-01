@@ -9,7 +9,7 @@ before_script:
   - mongo mydb_test --eval 'db.addUser("travis", "test");'
   - mysql -u root --password="" < tests/config/travis_start.sql
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'h2l_tests'];" > tests/config/pdo_mysql_connection.php
-  - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'test'];" > tests/config/pdo_mongo_connection.php
+  - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'test'];" > tests/config/mongo_connection.php
   - composer install
 script:
   - bin/runtests
