@@ -12,13 +12,15 @@
         }
     ],
     "suggest": {
-        "monolog/monolog": "Advanced logging that can be plugged into the logger"
+        "monolog/monolog": "Advanced logging that can be plugged into the logger",
+        "mongodb/mongodb": "A Mongo DB data connection is provided that uses this library"
     },
     "require": {
         "php": "^7.1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.2"
+        "phpunit/phpunit": "^5.2",
+        "mongodb/mongodb": "^1.1"
     },
     "bin": ["bin/h2l", "bin/testh2l"],
     "autoload": {

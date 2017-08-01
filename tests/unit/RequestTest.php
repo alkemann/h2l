@@ -80,10 +80,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
             ->setMethods(['method']) // mocked methods
             ->getMock();
 
-        $reflection = new \ReflectionClass($request);
-        $reflection_property = $reflection->getProperty('_route');
-        $reflection_property->setAccessible(true);
-        $reflection_property->setValue($request, $route);
+        $request->setRoute($route);
 
         $this->assertNull($request->param('place'));
 

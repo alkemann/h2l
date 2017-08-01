@@ -205,6 +205,25 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Abe', $p->data['name']);
     }
 
+    public function testSaveInsertFail()
+    {
+        $con = $this->getMockBuilder(Source::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
+            ->getMock();
+        $con->expects($this->once())
+            ->method('insert')
+            ->willReturn(false);
+        $conn_id = uniqid();
+        Connections::add($conn_id, function() use ($con) {
+            return $con;
+        });
+        Person::$connection = $conn_id;
+        $p = new Person(['name' => 'Abe']);
+        $result = $p->save(['bad' => 'thing']); // TODO test combinations of save with data
+        $this->assertFalse($result);
+    }
+
     public function testSaveUpdate()
     {
         $con = $this->getMockBuilder(Source::class)

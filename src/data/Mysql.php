@@ -78,7 +78,6 @@ class Mysql implements Source
 
     public function find(string $table, array $conditions, array $options = []): \Traversable
     {
-        $values = [];
         $where = $this->where($conditions);
         $limit = $this->limit($options);
         $query = "SELECT * FROM `{$table}` {$where}{$limit};";
@@ -96,7 +95,6 @@ class Mysql implements Source
         if ($stmt->execute() === false) {
             return new \EmptyIterator;
         }
-
         if ($stmt && $stmt instanceof \PDOStatement) {
             // @codeCoverageIgnoreStart
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
