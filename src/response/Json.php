@@ -11,15 +11,15 @@ class Json extends \alkemann\h2l\Response
 {
     protected $type = 'json';
 
-    private $_code;
-    private $_content;
-    private $_config;
+    private $code;
+    private $content;
+    private $config;
 
     public function __construct($content = null, int $code = 200, array $config = [])
     {
-        $this->_config = $config;
-        $this->_content = $content;
-        $this->_code = $code;
+        $this->config = $config;
+        $this->content = $content;
+        $this->code = $code;
     }
 
     /**
@@ -35,17 +35,17 @@ class Json extends \alkemann\h2l\Response
 
     private function setHeaders(): void
     {
-        $h = $this->_config['header_func'] ?? 'header';
+        $h = $this->config['header_func'] ?? 'header';
         $h("Content-type: application/json");
-        if ($this->_code != 200) {
-            $msg = static::$code_to_message[$this->_code];
-            $h("HTTP/1.0 {$this->_code} {$msg}");
+        if ($this->code != 200) {
+            $msg = static::$code_to_message[$this->code];
+            $h("HTTP/1.0 {$this->code} {$msg}");
         }
     }
 
     private function formattedContent(): string
     {
-        $content = $this->_content;
+        $content = $this->content;
         if (empty($content)) {
             return "";
         }

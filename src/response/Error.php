@@ -2,9 +2,8 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\{
-    Log, Response
-};
+use alkemann\h2l\Log;
+use alkemann\h2l\Response;
 
 /**
  * Class Error
@@ -18,7 +17,7 @@ class Error extends Response
     protected $data = [];
     protected $request = null;
 
-    protected $_config = [];
+    protected $config = [];
 
     public function __construct(array $data = [], array $config = [])
     {
@@ -36,7 +35,7 @@ class Error extends Response
             $this->grabTypeFromGlobals();
         }
 
-        $this->_config = $config + [
+        $this->config = $config + [
                 'page_class' => Page::class
             ];
     }
@@ -58,17 +57,17 @@ class Error extends Response
      */
     public function render(): string
     {
-        $h = $this->_config['header_func'] ?? 'header';
+        $h = $this->config['header_func'] ?? 'header';
         if (is_callable($h) == false) {
             throw new \Error("Header function injected to Error is not callable");
         }
-        $page_class = $this->_config['page_class'];
+        $page_class = $this->config['page_class'];
 
         $msg = self::$code_to_message[$this->code];
         $h("HTTP/1.0 {$this->code} {$msg}");
 
         try {
-            $page_config = $this->_config + [
+            $page_config = $this->config + [
                     'code' => $this->code,
                     'template' => $this->code == 404 ? '404' : 'error',
                     'type' => $this->type

@@ -41,7 +41,9 @@ class Log
         } elseif (is_object($handler)) {
             // TODO check if object implements interface?
             if (!method_exists($handler, 'log')) {
-                throw new \InvalidArgumentException("$name is not a valid handler, it must implement the Psr\Log\LoggerInterface");
+                throw new \InvalidArgumentException(
+                    "$name is not a valid handler, it must implement the Psr\Log\LoggerInterface"
+                );
             }
         } else {
             throw new \InvalidArgumentException("$name is not a valid handler");

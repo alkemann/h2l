@@ -15,19 +15,19 @@ class Request
     const PUT = 'PUT';
     const DELETE = 'DELETE';
 
-    private $_request;
-    private $_server;
-    private $_parameters;
-    private $_get;
-    private $_post;
-    private $_url;
-    private $_method;
-    private $_type = 'html';
+    private $request;
+    private $server;
+    private $parameters;
+    private $get;
+    private $post;
+    private $url;
+    private $method;
+    private $type = 'html';
 
     /**
      * @var Route
      */
-    protected $_route;
+    protected $route;
 
     /**
      * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
@@ -42,22 +42,22 @@ class Request
      */
     public function __construct(array $request = [], array $server = [], array $get = [], array $post = [])
     {
-        $this->_request = $request;
-        $this->_server = $server;
-        $this->_post = $post;
-        $this->_get = $get;
-        unset($this->_get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
-        $this->_parameters = [];
+        $this->request = $request;
+        $this->server = $server;
+        $this->post = $post;
+        $this->get = $get;
+        unset($this->get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
+        $this->parameters = [];
 
         // override html type with json
-        $httaccept = $this->_server['HTTP_ACCEPT'] ?? '*/*';
+        $httaccept = $this->server['HTTP_ACCEPT'] ?? '*/*';
         if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
-            $this->_type = 'json';
+            $this->type = 'json';
         }
 
-        $this->_url = $this->_request['url'] ?? '/';
-        $this->_method = $this->_server['REQUEST_METHOD'] ?? Request::GET;
-        $this->_route = Router::match($this->_url, $this->_method);
+        $this->url = $this->request['url'] ?? '/';
+        $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
+        $this->route = Router::match($this->url, $this->method);
     }
 
     /**
@@ -75,7 +75,7 @@ class Request
      */
     public function route(): Route
     {
-        return $this->_route;
+        return $this->route;
     }
 
     /**
@@ -83,7 +83,7 @@ class Request
      */
     public function setRoute(Route $route): void
     {
-        $this->_route = $route;
+        $this->route = $route;
     }
 
     /**
@@ -91,7 +91,7 @@ class Request
      */
     public function url(): string
     {
-        return $this->_url;
+        return $this->url;
     }
 
     /**
@@ -99,7 +99,7 @@ class Request
      */
     public function method(): string
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -107,7 +107,7 @@ class Request
      */
     public function type(): string
     {
-        return $this->_type;
+        return $this->type;
     }
 
     /**
@@ -118,14 +118,14 @@ class Request
      */
     public function param(string $name)
     {
-        if (isset($this->_parameters[$name])) {
-            return $this->_parameters[$name];
+        if (isset($this->parameters[$name])) {
+            return $this->parameters[$name];
         }
-        if (isset($this->_get[$name])) {
-            return $this->_get[$name];
+        if (isset($this->get[$name])) {
+            return $this->get[$name];
         }
-        if (isset($this->_post[$name])) {
-            return $this->_post[$name];
+        if (isset($this->post[$name])) {
+            return $this->post[$name];
         }
         return null;
     }
@@ -135,7 +135,7 @@ class Request
      */
     public function query(): array
     {
-        return $this->_get;
+        return $this->get;
     }
 
     /**
@@ -145,8 +145,8 @@ class Request
      */
     public function response(): Response
     {
-        $cb = $this->_route->callback;
-        $this->_parameters = $this->_route->parameters;
+        $cb = $this->route->callback;
+        $this->parameters = $this->route->parameters;
         return call_user_func_array($cb, [$this]);
     }
 
@@ -172,7 +172,7 @@ class Request
         if ($key && is_string($key) && strpos($key, '.') !== false) {
             $keys = explode('.', $key);
             try {
-                return $this->_getArrayValue($keys, $_SESSION);
+                return $this->getArrayValue($keys, $_SESSION);
             } catch (\OutOfBoundsException $e) {
                 return null;
             }
@@ -193,7 +193,7 @@ class Request
      * @throws OutOfBoundsException if the key does not exist in data
      * @codeCoverageIgnore
      */
-    private function _getArrayValue($keys, &$data)
+    private function getArrayValue($keys, &$data)
     {
         $key = array_shift($keys);
         if (!is_array($data) || empty($key)) {
@@ -210,7 +210,7 @@ class Request
             if (!array_key_exists($key, $data)) {
                 throw new \OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
             }
-            return $this->_getArrayValue($keys, $data[$key]);
+            return $this->getArrayValue($keys, $data[$key]);
         }
     }
 

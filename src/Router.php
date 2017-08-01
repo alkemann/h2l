@@ -11,8 +11,8 @@ class Router
 {
     public static $DELIMITER = '|';
 
-    private static $_aliases = [];
-    private static $_routes = [];
+    private static $aliases = [];
+    private static $routes = [];
 
     /**
      * @param string $alias
@@ -20,7 +20,7 @@ class Router
      */
     public static function alias(string $alias, string $real): void
     {
-        static::$_aliases[$alias] = $real;
+        static::$aliases[$alias] = $real;
     }
 
     /**
@@ -34,7 +34,7 @@ class Router
     {
         // @TODO change from closure to just callable?
         foreach ((array)$methods as $method) {
-            static::$_routes[$method][$url] = $closure;
+            static::$routes[$method][$url] = $closure;
         }
     }
 
@@ -47,11 +47,11 @@ class Router
      */
     public static function match(string $url, string $method = Request::GET): Route
     {
-        $url = static::$_aliases[$url] ?? $url;
+        $url = static::$aliases[$url] ?? $url;
 
-        if (isset(static::$_routes[$method])) {
-            if (isset(static::$_routes[$method][$url])) {
-                return new Route($url, static::$_routes[$method][$url]);
+        if (isset(static::$routes[$method])) {
+            if (isset(static::$routes[$method][$url])) {
+                return new Route($url, static::$routes[$method][$url]);
             }
 
             // TODO cache of previous matched dynamic routes
@@ -69,7 +69,7 @@ class Router
 
     private static function matchDynamicRoute(string $url, string $method = Request::GET): ?Route
     {
-        foreach (static::$_routes[$method] as $route => $cb) {
+        foreach (static::$routes[$method] as $route => $cb) {
             if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) {
                 continue;
             }

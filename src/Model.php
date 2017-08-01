@@ -2,16 +2,15 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\{
-    data\Source, exceptions\ConfigMissing
-};
+use alkemann\h2l\data\Source;
+use alkemann\h2l\exceptions\ConfigMissing;
 
 /**
  * Class Model
  *
  * Use this for prototyping only, use a real ORM for production studd
  *
- * Depends on alkemann\h2l\Entity trait
+ * Depends on \alkemann\h2l\Entity trait
  *
  * @package alkemann\h2l
  */
@@ -31,9 +30,6 @@ trait Model
         return isset(static::$pk) ? static::$pk : 'id';
     }
 
-    /**
-     * @return bool
-     */
     public function exists(): bool
     {
         // @TODO set a "read from db" property?
@@ -59,7 +55,7 @@ trait Model
     public static function get($id, array $conditions = [], array $options = []) //: ?Model
     {
         if ($conditions) {
-            throw new \InvalidArgumentException("Conditions is not implmenented on get");
+            throw new \InvalidArgumentException("Conditions is not implemented on get");
         }
         $pk = static::pk();
         $conditions[$pk] = $id;
@@ -122,9 +118,6 @@ trait Model
     }
 
     /**
-     * @param array $data
-     * @param array $options
-     * @return bool
      * @throws ConfigMissing
      */
     public function save(array $data = [], array $options = []): bool
@@ -157,8 +150,6 @@ trait Model
     }
 
     /**
-     * @param array $options
-     * @return bool
      * @throws exceptions\ConfigMissing
      */
     public function delete(array $options = []): bool

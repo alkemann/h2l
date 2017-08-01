@@ -2,9 +2,9 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\{
-    Request, Response
-};
+use alkemann\h2l\exceptions\InvalidUrl;
+use alkemann\h2l\Request;
+use alkemann\h2l\Response;
 
 /**
  * Class Page
@@ -28,7 +28,7 @@ class Page extends Response
     protected $template = 'error';
     protected $code = 200;
 
-    protected $_config = [];
+    protected $config = [];
 
     public function __construct($data = [], array $config = [])
     {
@@ -41,7 +41,7 @@ class Page extends Response
         if (isset($config['template'])) {
             $this->setTemplate($config['template']);
         }
-        $this->_config = $config;
+        $this->config = $config;
     }
 
     /**
@@ -113,7 +113,7 @@ class Page extends Response
 
     private function getLayoutFile(string $name): string
     {
-        $path = $this->_config['layout_path'] ?? LAYOUT_PATH;
+        $path = $this->config['layout_path'] ?? LAYOUT_PATH;
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
@@ -141,18 +141,18 @@ class Page extends Response
     // @TODO refactor, and cache
 
     /**
-     * @return string
-     * @throws alkemann\h2l\exceptions\InvalidUrl
+     * @throws InvalidUrl
      */
     public function view($view): string
     {
         $file = $this->getContentFile($view);
         if (!file_exists($file)) {
-            throw new \alkemann\h2l\exceptions\InvalidUrl($file);
+            throw new InvalidUrl($file);
         }
         ob_start();
         try {
-            (function ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) { // or another way to hide the file variable?
+            // or another way to hide the file variable?
+            (function ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
                 extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })($file);
@@ -165,7 +165,7 @@ class Page extends Response
 
     private function getContentFile($view): string
     {
-        $path = $this->_config['content_path'] ?? CONTENT_PATH;
+        $path = $this->config['content_path'] ?? CONTENT_PATH;
         return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
@@ -174,13 +174,13 @@ class Page extends Response
      *
      * @TODO injectable header function
      * @return string fully rendered string, ready to be echo'ed
-     * @throws \alkemann\h2l\exceptions\InvalidUrl if the view template does not exist
+     * @throws InvalidUrl if the view template does not exist
      */
     public function render(): string
     {
         $contentType = $this->contentType();
 
-        $h = $this->_config['header_func'] ?? 'header';
+        $h = $this->config['header_func'] ?? 'header';
         $h("Content-type: $contentType");
         $view = $this->view($this->template);
         $response = $this->head();
@@ -203,7 +203,7 @@ class Page extends Response
         $period = strrpos($view, '.');
         if ($period) {
             $type = substr($view, $period + 1);
-            if (in_array($type, $this->_validTypes)) {
+            if (in_array($type, $this->validTypes)) {
                 $this->type = $type;
                 $view = substr($view, 0, $period);
             }

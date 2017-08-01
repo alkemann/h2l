@@ -12,7 +12,7 @@ class Mysql implements Source
     /**
      * @var array
      */
-    protected $_config = [];
+    protected $config = [];
 
     /**
      * @var PDO

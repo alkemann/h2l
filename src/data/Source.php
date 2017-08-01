@@ -18,4 +18,3 @@ interface Source
 
     public function delete(string $table, array $conditions, array $options = []);
 }
-
