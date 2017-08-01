@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\exceptions\ConfigMissing;
+
 /**
  * Class Log
  *
@@ -96,8 +98,14 @@ class Log
      */
     private static function file(string $level, string $message, array $context = []): void
     {
-        $default_path = ROOT . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
-        $path = Environment::get('logs_path', $default_path);
+        $path = Environment::get('logs_path', null);
+        if (is_null($path)) {
+            if (defined('ROOT')) {
+                $path = ROOT . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
+            } else {
+                throw new ConfigMissing("File handler requires a `logs_path` in Environment or a `ROOT` defined!");
+            }
+        }
         $file = $path . 'app.log';
         $fileHandler = fopen($file, 'a');
         $string = date('Y-m-d H:i:s') . " " . strtoupper($level) . " " . $message . PHP_EOL;

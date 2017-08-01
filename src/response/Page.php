@@ -114,18 +114,28 @@ class Page extends Response
 
     private function getLayoutFile(string $name): string
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $default_layout_path = ROOT . $ds . 'content' . $ds . 'layouts' . $ds;
-        $path = $this->config['layout_path'] ?? Environment::get('layout_path', $default_layout_path);
-        return $path . $this->layout . $ds . $name . '.' . $this->type . '.php';
+        $path = $this->config['layout_path'] ?? Environment::get('layout_path', null);
+        if (is_null($path)) {
+            if (defined('ROOT')) {
+                $path = ROOT . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR;
+            } else {
+                throw new ConfigMissing("Page requires a `layout_path` in Environment or a `ROOT` defined!");
+            }
+        }
+        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
     private function getContentFile($view): string
     {
-        $ds = DIRECTORY_SEPARATOR;
-        $default_content_path = ROOT . $ds . 'content' . $ds;
-        $path = $this->config['content_path'] ?? Environment::get('content_path', $default_content_path);
-        return $path . 'pages' . $ds . $view . '.php';
+        $path = $this->config['content_path'] ?? Environment::get('content_path', null§);
+        if (is_null($path)) {
+            if (defined('ROOT')) {
+                $path = ROOT . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR;
+            } else {
+                throw new ConfigMissing("Page requires a `content_path` in Environment or a `ROOT` defined!");
+            }
+        }
+        return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
     }
 
     // @TODO refactor, and cache
