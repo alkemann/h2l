@@ -62,6 +62,7 @@ class Request
 
     /**
      * @TODO inspect request headers for content type, auto parse the body
+     * @codeCoverageIgnore
      * @return string the raw 'php://input' post
      */
     public function getPostBody(): string

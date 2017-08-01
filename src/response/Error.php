@@ -33,16 +33,24 @@ class Error extends Response
         if ($this->request) {
             $this->type = $this->request->type();
         } else {
-            // @TODO dependency injection?
-            $httaccept = $_SERVER['HTTP_ACCEPT'] ?? '*/*';
-            if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
-                $this->type = 'json';
-            }
+            $this->grabTypeFromGlobals();
         }
 
         $this->_config = $config + [
                 'page_class' => Page::class
             ];
+    }
+
+    /**
+     * @TODO dependency injection?
+     * @codeCoverageIgnore
+     */
+    private function grabTypeFromGlobals()
+    {
+        $httaccept = $_SERVER['HTTP_ACCEPT'] ?? '*/*';
+        if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
+            $this->type = 'json';
+        }
     }
 
     /**

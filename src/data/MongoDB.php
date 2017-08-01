@@ -121,9 +121,9 @@ class MongoDb implements Source
     {
         $collection = $this->collection($collection_name);
         $result = $collection->updateMany($conditions, $data, $options);
-        if (($result instanceof UpdateResult) === false) {
-            die('Result of updateMany is NOT [UpdateResult] it is [' . get_class($result) . ']');
-        }
+//        if (($result instanceof UpdateResult) === false) {
+//            die('Result of updateMany is NOT [UpdateResult] it is [' . get_class($result) . ']');
+//        }
         if ($result->isAcknowledged() == false) {
             // Throw exception or error?
             return 0;
@@ -136,9 +136,9 @@ class MongoDb implements Source
     {
         $collection = $this->collection($collection);
         $result = $collection->insertOne($data, $options);
-        if (($result instanceof InsertOneResult) == false) {
-            die('Result of InsertOne is NOT [InsertOneResult] it is [' . get_class($result) . ']');
-        }
+//        if (($result instanceof InsertOneResult) == false) {
+//            die('Result of InsertOne is NOT [InsertOneResult] it is [' . get_class($result) . ']');
+//        }
         if ($result->isAcknowledged() == false) {
             // Throw exception or error?
             return null;
@@ -154,9 +154,9 @@ class MongoDb implements Source
     {
         $collection = $this->collection($collection);
         $result = $collection->deleteMany($conditions, $options);
-        if (($result instanceof DeleteResult) == false) {
-            die('Result of DeleteMany is NOT [DeleteResult] it is [' . get_class($result) . ']');
-        }
+//        if (($result instanceof DeleteResult) == false) {
+//            die('Result of DeleteMany is NOT [DeleteResult] it is [' . get_class($result) . ']');
+//        }
         if ($result->isAcknowledged() == false) {
             // Throw exception or error?
             return 0;
