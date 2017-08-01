@@ -3,6 +3,7 @@
 namespace alkemann\h2l\response;
 
 use alkemann\h2l\exceptions\InvalidUrl;
+use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\Environment;
@@ -114,28 +115,20 @@ class Page extends Response
 
     private function getLayoutFile(string $name): string
     {
-        $path = $this->config['layout_path'] ?? Environment::get('layout_path', null);
+        $path = $this->config['layout_path'] ?? Environment::get('layout_path');
         if (is_null($path)) {
-            if (defined('ROOT')) {
-                $path = ROOT . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR;
-            } else {
-                throw new ConfigMissing("Page requires a `layout_path` in Environment or a `ROOT` defined!");
-            }
+            throw new ConfigMissing("Page requires a `layout_path` in Environment");
         }
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
     private function getContentFile($view): string
     {
-        $path = $this->config['content_path'] ?? Environment::get('content_path', null);
+        $path = $this->config['content_path'] ?? Environment::get('content_path');
         if (is_null($path)) {
-            if (defined('ROOT')) {
-                $path = ROOT . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR;
-            } else {
-                throw new ConfigMissing("Page requires a `content_path` in Environment or a `ROOT` defined!");
-            }
+            throw new ConfigMissing("Page requires a `content_path` in Environment");
         }
-        return $path . 'pages' . DIRECTORY_SEPARATOR . $view . '.php';
+        return $path . $view . '.php';
     }
 
     // @TODO refactor, and cache

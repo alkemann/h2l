@@ -78,7 +78,7 @@ class Error extends Response
             return $page->render();
         } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());
-            if (Environment::current() === Environment::DEV) {
+            if (Environment::get('debug')) {
                 return "No error page made at " . $e->getMessage();
             }
         }

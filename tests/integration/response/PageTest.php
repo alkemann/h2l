@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\integration\response;
 
-use alkemann\h2l\{response\Page, Route, Request, Response, exceptions\InvalidUrl};
+use alkemann\h2l\{response\Page, Route, Request, Response, exceptions\InvalidUrl, Environtment};
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,11 +10,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        $base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'mocks' . DIRECTORY_SEPARATOR . 'page' . DIRECTORY_SEPARATOR;
-        static::$config = [
-            'content_path' => $base . 'content' . DIRECTORY_SEPARATOR,
-            'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
-        ];
+        Environtment::setEnvironment(Environtment::TEST);
     }
 
     public function testRenderingSimple()
@@ -50,9 +46,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
     public function testMissingViewFile()
     {
         $request = $this->getMockBuilder(Request::class)
-            // ->setMockClassName('Request')
             ->disableOriginalConstructor()
-            ->setMethods(['type', 'route', 'method']) // mocked methods
+            ->setMethods(['type', 'route', 'method'])
             ->getMock();
 
         $request->expects($this->once())->method('type')->willReturn('html');
@@ -63,6 +58,5 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->expectException(InvalidUrl::class);
         $page = Page::fromRequest($request, static::$config);
         $result = $page->render();
-
     }
 }

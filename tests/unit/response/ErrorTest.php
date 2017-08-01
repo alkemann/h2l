@@ -81,6 +81,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $code = 404;
         $e = new Error([], compact('header_func', 'page_class', 'code'));
         Environment::put('content_path', '/tmp', Environment::TEST);
+        Environment::put('debug', true, Environment::TEST);
         $expected = "No error page made at NO/PAGE";
         Environment::setEnvironment(Environment::TEST);
         $result = $e->render();
