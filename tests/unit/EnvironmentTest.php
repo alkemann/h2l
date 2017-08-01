@@ -12,11 +12,12 @@ use alkemann\h2l\Environment;
 
 class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {
-    static $defaults = [
-        Environment::DEV => ['debug' => true],
-        Environment::TEST => ['debug' => false],
-        Environment::PROD => ['debug' => false],
-    ];
+    static $defaults = null;
+
+    public static function setUpBeforeClass()
+    {
+        static::$defaults = Environment::grab(Environment::ALL);
+    }
 
     public function setUp()
     {
@@ -82,6 +83,17 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
 
         Environment::set(['d' => 1, 'a' => 2]);
         $this->assertEquals(['d' => 1, 'a' => 2], Environment::grab());
+    }
+
+    public function testAddAll()
+    {
+        Environment::add(['thang' => 'thong'], Environment::ALL);
+        $expected = static::$defaults;
+        foreach ($expected as $env => $v) {
+            $expected[$env]['thang'] = 'thong';
+        }
+        $result = Environment::grab(Environment::ALL);
+        $this->assertEquals($expected, $result);
     }
 
     public function testGrabAll()

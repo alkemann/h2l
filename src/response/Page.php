@@ -4,6 +4,7 @@ namespace alkemann\h2l\response;
 
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\ConfigMissing;
+use alkemann\h2l\Log;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\Environment;
@@ -117,7 +118,7 @@ class Page extends Response
     {
         $path = $this->config['layout_path'] ?? Environment::get('layout_path');
         if (is_null($path)) {
-            throw new ConfigMissing("Page requires a `layout_path` in Environment");
+            Log::debug("As there is no configured `layout_path` in Environment, layouts are skipped");
         }
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }

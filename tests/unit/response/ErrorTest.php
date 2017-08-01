@@ -67,7 +67,11 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 
     public function test404WithDebug()
     {
-        Environment::put('debug', true);
+        Environment::set([
+            'debug' => true,
+            'content_path' => '/tmp/',
+        ], "test404WithDebug");
+        Environment::setEnvironment('test404WithDebug');
 
         $p = new class() {
             public function setData() {}
@@ -80,12 +84,11 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $page_class = get_class($p);
         $code = 404;
         $e = new Error([], compact('header_func', 'page_class', 'code'));
-        Environment::put('content_path', '/tmp/', Environment::TEST);
-        Environment::put('debug', true, Environment::TEST);
         $expected = "No error page made at NO/PAGE";
-        Environment::setEnvironment(Environment::TEST);
         $result = $e->render();
         $this->assertEquals($expected, $result);
+
+        Environment::setEnvironment(Environment::TEST);
     }
 
     /**
