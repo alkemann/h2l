@@ -25,8 +25,8 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         static::$handler_method->setAccessible(true);
         $host = $c['host'];
         $db = $c['db'];
-        $user = $c['user'];
-        $pass = $c['pass'];
+        $user = $c['user'] ?? null;
+        $pass = $c['pass'] ?? null;
         $db = new PDO("mysql:host={$host};dbname={$db}", $user, $pass);
         $db->query('TRUNCATE `tests`;');
     }
