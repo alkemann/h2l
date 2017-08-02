@@ -108,7 +108,7 @@ class MongoDb implements Source
         return $a;
     }
 
-    public function find(string $collection_name, array $conditions, array $options = []): \Traversable
+    public function find(string $collection_name, array $conditions, array $options = []): \Generator
     {
         $collection = $this->collection($collection_name);
         $conditions = $this->idReplaceConditions($conditions);

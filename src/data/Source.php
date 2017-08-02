@@ -10,7 +10,7 @@ interface Source
 
     public function one(string $table, array $conditions, array $options = []):?array;
 
-    public function find(string $table, array $conditions, array $options = []): \Traversable;
+    public function find(string $table, array $conditions, array $options = []);
 
     public function update(string $table, array $conditions, array $data, array $options = []);
 

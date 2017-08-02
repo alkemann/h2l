@@ -76,7 +76,7 @@ class Mysql implements Source
         return $result[0];
     }
 
-    public function find(string $table, array $conditions, array $options = []): \Traversable
+    public function find(string $table, array $conditions, array $options = []): iterable
     {
         $where = $this->where($conditions);
         $limit = $this->limit($options);

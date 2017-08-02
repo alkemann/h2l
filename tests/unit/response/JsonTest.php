@@ -40,7 +40,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $headers);
     }
 
-    private function mock_gen()
+    private function mock_gen(): iterable
     {
         for ($i=0; $i < 3; $i++) {
             yield ['id' => $i];
