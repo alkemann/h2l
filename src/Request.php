@@ -50,8 +50,8 @@ class Request
         $this->parameters = [];
 
         // override html type with json
-        $httaccept = $this->server['HTTP_ACCEPT'] ?? '*/*';
-        if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
+        $http_accept = $this->server['HTTP_ACCEPT'] ?? '*/*';
+        if ($http_accept !== '*/*' && strpos($http_accept, 'application/json') !== false) {
             $this->type = 'json';
         }
 
