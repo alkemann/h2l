@@ -53,27 +53,24 @@ Router::add('|version|' function($r) {
 
 ## Raw usage
 
-A minimal index.php could look something like this
+A minimal `webroot\index.php` could look something like this
 ```php
 $root_path = realpath(dirname(dirname(__FILE__)));
-$vendor_path = $root_path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR;
-require_once($vendor_path . 'autoload.php');
+require_once($root_path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
 use alkemann\h2l\{Environment, Request};
 
 Environment::set([
     'debug' => false,
-    'logs_path' => $root_path . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR,
+    'logs_path' => $root_path . 'logs' . DIRECTORY_SEPARATOR,
     'layout_path'  => $root_path . 'layouts' . DIRECTORY_SEPARATOR,
     'content_path' => $root_path .  'pages' . DIRECTORY_SEPARATOR,
 ], Environment::PROD);
 Environment::setEnvironment(Environment::PROD);
 
-$request = new Request($_REQUEST, $_SERVER, $_GET, $_POST);
-$response = $request->response();
+$response = (new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST))->response();
 if ($response) echo $response->render();
 ```
-
 
 ## Tests
 
