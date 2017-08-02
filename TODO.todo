@@ -8,7 +8,7 @@ Features:
  ☐ Wrap layout parts into one template that echos view in it
 
 Model relation:
- ☐ use magic method
+ ✔ use magic method @done (17-08-02 17:18)
  ☐ with(..$namesOfRelated)
 
 Cache:
