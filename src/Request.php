@@ -170,7 +170,7 @@ class Request
         }
 
         if ($key && is_string($key) && strpos($key, '.') !== false) {
-            Util::getFromArrayByDot($key, $_SESSION);
+            Util::getFromArrayByKey($key, $_SESSION);
         }
     }
 
