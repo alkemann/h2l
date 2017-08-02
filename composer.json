@@ -25,7 +25,8 @@
     "bin": ["bin/h2l", "bin/testh2l"],
     "autoload": {
         "psr-4": {
-            "alkemann\\h2l\\": "src/"
+            "alkemann\\h2l\\": "src/",
+            "alkemann\\h2l\\tests\\": "tests/"
         }
     }
 }

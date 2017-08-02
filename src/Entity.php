@@ -15,6 +15,8 @@ trait Entity
      */
     protected $data = [];
 
+    protected $relationships = [];
+
     /**
      * Entity constructor.
      *
@@ -32,6 +34,81 @@ trait Entity
     public function __get(string $name)
     {
         return array_key_exists($name, $this->data) ? $this->data[$name] : null;
+    }
+
+    public function __call(string $method, array $args = [])
+    {
+        array_unshift($args, $method);
+        return call_user_func_array([self::class, 'getRelatedModel'], $args);
+    }
+
+    private function getRelatedModel(string $name, bool $refresh = false)
+    {
+        if (array_key_exists($name, static::$relations) === false) {
+            $class = get_class($this);
+            throw new \Exception("The [$name] relation is not specified for [$class]");
+        }
+        if ($refresh === false && array_key_exists($name, $this->relationships)) {
+            return $this->relationships[$name];
+        }
+        return $this->populateRelation($name);
+    }
+
+    /**
+     * @return object|array array in case of has_many
+     */
+    private function populateRelation(string $relation_name)
+    {
+        $relationship = $this->describeRelationship($relation_name);
+        $relation_class = $relationship['class'];
+        $relation_id = $this->{$relationship['local']};
+        if ($relationship['type'] === 'belongs_to') {
+            $related = $relation_class::get($relation_id);
+        } elseif ($relationship['type'] === 'has_one') {
+            $related_by = $relationship['foreign'];
+            $result = $relation_class::findAsArray([$related_by => $relation_id], ['limit' => 1]);
+            $related = $result ? $result[0] : null;
+        } elseif ($relationship['type'] === 'has_many') { // type must be has_many
+            $related_by = $relationship['foreign'];
+            $related = $relation_class::findAsArray([$related_by => $relation_id]);
+        } else {
+            throw new \Exception("Not a valid relationship type [" . $relationship['type'] . ']');
+        }
+        $relationships[$relation_name] = $related;
+        return $related;
+    }
+
+    public function describeRelationship(string $name): array
+    {
+        $settings = static::$relations[$name];
+        if (sizeof($settings) === 1) {
+            $field = current($settings);
+            $field_is_local = in_array($field, static::$fields); // @TODO hack to use Model data?
+            if ($field_is_local) {
+                $settings = [
+                    'class' => key($settings),
+                    'type' => 'belongs_to',
+                    'local' => $field,
+                    'foreign' => 'id'
+                ];
+            } else {
+                $settings = [
+                    'class' => key($settings),
+                    'type' => 'has_many',
+                    'local' => 'id',
+                    'foreign' => $field
+                ];
+            }
+
+        }
+        if (!array_key_exists('local', $settings)) {
+            $settings['local'] = 'id';
+        }
+        if (!array_key_exists('type', $settings)) {
+            $settings['type'] = $settings['local'] === 'id' ? 'has_many' : 'belongs_to';
+        }
+
+        return $settings;
     }
 
     /**
