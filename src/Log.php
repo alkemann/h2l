@@ -98,13 +98,9 @@ class Log
      */
     private static function file(string $level, string $message, array $context = []): void
     {
-        $path = Environment::get('logs_path', null);
+        $path = Environment::get('logs_path');
         if (is_null($path)) {
-            if (defined('ROOT')) {
-                $path = ROOT . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR;
-            } else {
-                throw new ConfigMissing("File handler requires a `logs_path` in Environment or a `ROOT` defined!");
-            }
+            throw new ConfigMissing("File handler requires a `logs_path` in Environment");
         }
         $file = $path . 'app.log';
         $fileHandler = fopen($file, 'a');

@@ -52,7 +52,7 @@ function handleError(\Throwable $e) : void
  */
 function handleWarning($errno, $message, $file, $line, $meta) : void
 {
-    if (alkemann\h2l\Environment::get('debug')) {
+    if (Environment::get('debug')) {
         header("Content-type: text/html");
         echo '<h1 style="color:red;">' . $message . '</h1>';
         echo '<h3>' . $file. ' :: ' . $line . '</h3>';
