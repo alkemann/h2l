@@ -7,14 +7,11 @@ Features:
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
 
-Model relation:
- ✔ use magic method @done (17-08-02 17:18)
- ☐ with(..$namesOfRelated)
-
 Cache:
  ☐ Cached routes
  ☐ Cached templates
  ☐ Join templates
+ ☐ Cached model relations?
 
 Debug:
  ☐ Refactored to PHP7
@@ -43,6 +40,8 @@ Packaging:
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ with(..$namesOfRelated) @done (17-08-02 21:24) @project(Model relation)
+ ✔ use magic method @done (17-08-02 17:18) @project(Model relation)
  ✔ Environment config to replace use of DEFINE @done (17-08-01 23:16) @project(Features)
  ✔ Debug @done (17-08-01 12:23) @project(Features)
  ✔ Coverage @done (17-08-01 12:23) @project(Tests)

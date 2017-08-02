@@ -87,4 +87,40 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testFindWith()
+    {
+        $db = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
+            ->getMock();
+
+        $db->expects($this->exactly(2))
+            ->method('one')
+            ->withConsecutive(
+                ['sons', ['id' => 10], []],
+                ['fathers', ['id' => 20], []]
+            )
+            ->willReturnOnConsecutiveCalls(
+                ['id' => 10, 'father_id' => 20, 'name' => 'John', 'age' => 12],
+                ['id' => 20, 'name' => 'Jake', 'job' => 'Captain']
+            );
+        $db->expects($this->once())
+            ->method('find')
+            ->with('cars', ['owner_id' => 10], ['limit' => 1])
+            ->willReturn([['id' => 30, 'owner_id' => 10, 'brand' => 'Tesla']]);
+
+        Connections::add('EntityRelationshipTest::testFindWith', function() use ($db) {
+            return $db;
+        });
+        Father::$connection = 'EntityRelationshipTest::testFindWith';
+        Son::$connection = 'EntityRelationshipTest::testFindWith';
+        Car::$connection = 'EntityRelationshipTest::testFindWith';
+
+        $expected = new Son(['id' => 10, 'father_id' => 20, 'name' => 'John', 'age' => 12]);
+        $father = new Father(['id' => 20, 'name' => 'Jake', 'job' => 'Captain']);
+        $expected->populateRelation('father', $father);
+        $car = new Car(['id' => 30, 'owner_id' => 10, 'brand' => 'Tesla']);
+        $expected->populateRelation('car', $car);
+        $result = Son::get(10)->with('father', 'car');
+        $this->assertEquals($expected, $result);
+    }
 }

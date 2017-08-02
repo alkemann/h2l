@@ -56,10 +56,26 @@ trait Entity
     }
 
     /**
+     * @param string[] ...$relation_names any list of relations to return
+     * @return instance of Entity object
+     */
+    public function with(string ...$relation_names)
+    {
+        foreach ($relation_names as $name) {
+            $this->populateRelation($name);
+        }
+        return $this;
+    }
+
+    /**
      * @return object|array array in case of has_many
      */
-    private function populateRelation(string $relation_name)
+    public function populateRelation(string $relation_name, $data = null)
     {
+        if ($data !== null) {
+            $this->relationships[$relation_name] = $data;
+            return;
+        }
         $relationship = $this->describeRelationship($relation_name);
         $relation_class = $relationship['class'];
         $relation_id = $this->{$relationship['local']};
