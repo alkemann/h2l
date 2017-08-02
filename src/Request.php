@@ -170,47 +170,7 @@ class Request
         }
 
         if ($key && is_string($key) && strpos($key, '.') !== false) {
-            $keys = explode('.', $key);
-            try {
-                return $this->getArrayValue($keys, $_SESSION);
-            } catch (\OutOfBoundsException $e) {
-                return null;
-            }
-        }
-    }
-
-    /**
-     * Look for a deep value in a data array.
-     *
-     * Given $data = ['one' => ['two' => ['three' => 55)), 'four' => [];
-     *
-     * _getArrayValue(['one','two','three'], $data) will return 55
-     * _getArrayValue(['four','five'], $data) will throw exception with code 999
-     *
-     * @param  mixed $keys
-     * @param  mixed $data
-     * @return mixed
-     * @throws OutOfBoundsException if the key does not exist in data
-     * @codeCoverageIgnore
-     */
-    private function getArrayValue($keys, &$data)
-    {
-        $key = array_shift($keys);
-        if (!is_array($data) || empty($key)) {
-            return $data;
-        }
-        if (empty($keys)) {
-            if (array_key_exists($key, $data)) {
-                return $data[$key];
-            } else {
-                array_unshift($keys, $key);
-                throw new \OutOfBoundsException("Key [" . join('.', $keys) . "] not set in " . print_r($data, 1));
-            }
-        } else {
-            if (!array_key_exists($key, $data)) {
-                throw new \OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
-            }
-            return $this->getArrayValue($keys, $data[$key]);
+            Util::getFromArrayByDot($key, $_SESSION);
         }
     }
 
