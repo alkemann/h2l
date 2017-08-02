@@ -74,11 +74,16 @@ trait Model
     public static function find(array $conditions = [], array $options = []): \Generator
     {
         $conditions = self::filterByFields($conditions);
+        $with = array_key_exists('with', $options) ? (array)$options['with'] : false;
+        unset($options['with']);
         $result = static::db()->find(static::table(), $conditions, $options);
         $pk = static::pk();
-        $gen = function () use ($result, $pk) {
+        $gen = function () use ($result, $pk, $with) {
             foreach ($result as $row) {
                 $model = new static($row);
+                if ($with) {
+                    $model->with(...$with);
+                }
                 $id = $row[$pk];
                 yield $id => $model;
             }
