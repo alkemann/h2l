@@ -26,7 +26,7 @@ Get started quickly with static pages and small apis
    `vendor/bin/h2l skeleton base`
 
 
-## Usage
+## Usage from skeleton
 
  + Change the homepage by changing the file `content/pages/home.html.php`
  + Add files and folders to `content/pages` to add fixed routed content
@@ -34,7 +34,7 @@ Get started quickly with static pages and small apis
  + Add dynamic routes there by supplying a regex match on url and a closure handler:
 
 Some example routes:
- ```php
+```php
 use alkemann\h2l\{Request, Router, Result};
 
 // Get task by id, i.e. http://example.com/api/tasks/12
@@ -49,7 +49,30 @@ Router::add('|version|' function($r) {
 	return new Result(['version' => '1.3']);
 });
 
- ```
+```
+
+## Raw usage
+
+A minimal index.php could look something like this
+```php
+$root_path = realpath(dirname(dirname(__FILE__)));
+$vendor_path = $root_path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR;
+require_once($vendor_path . 'autoload.php');
+
+use alkemann\h2l\{Environment, Request};
+
+Environment::set([
+    'debug' => false,
+    'logs_path' => $root_path . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR,
+    'layout_path'  => $root_path . 'layouts' . DIRECTORY_SEPARATOR,
+    'content_path' => $root_path .  'pages' . DIRECTORY_SEPARATOR,
+], Environment::PROD);
+Environment::setEnvironment(Environment::PROD);
+
+$request = new Request($_REQUEST, $_SERVER, $_GET, $_POST);
+$response = $request->response();
+if ($response) echo $response->render();
+```
 
 
 ## Tests
