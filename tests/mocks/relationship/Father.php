@@ -16,9 +16,9 @@ class Father
         ],
         'sons' => [
             'class' => Son::class,
-            'local' => 'id',
             'foreign' => 'father_id',
+            'local' => 'id',
             'type' => 'has_many'
-        ]
+        ],
     ];
 }

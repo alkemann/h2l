@@ -19,6 +19,12 @@ class Son
         ],
         'dad' => [
             Father::class => 'father_id'
+        ],
+        'car' => [
+            'class' => Car::class,
+            'local' => 'id',
+            'foreign' => 'owner_id',
+            'type' => 'has_one'
         ]
     ];
 }

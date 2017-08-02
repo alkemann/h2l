@@ -44,9 +44,10 @@ trait Entity
 
     private function getRelatedModel(string $name, bool $refresh = false)
     {
-        if (array_key_exists($name, static::$relations) === false) {
+        if (isset(static::$relations) === false ||
+            array_key_exists($name, static::$relations) === false) {
             $class = get_class($this);
-            throw new \Exception("The [$name] relation is not specified for [$class]");
+            throw new \Error("Call to undefined method {$class}::{$name}()");
         }
         if ($refresh === false && array_key_exists($name, $this->relationships)) {
             return $this->relationships[$name];
@@ -67,14 +68,14 @@ trait Entity
         } elseif ($relationship['type'] === 'has_one') {
             $related_by = $relationship['foreign'];
             $result = $relation_class::findAsArray([$related_by => $relation_id], ['limit' => 1]);
-            $related = $result ? $result[0] : null;
+            $related = $result ? current($result) : null;
         } elseif ($relationship['type'] === 'has_many') { // type must be has_many
             $related_by = $relationship['foreign'];
             $related = $relation_class::findAsArray([$related_by => $relation_id]);
         } else {
             throw new \Exception("Not a valid relationship type [" . $relationship['type'] . ']');
         }
-        $relationships[$relation_name] = $related;
+        $this->relationships[$relation_name] = $related;
         return $related;
     }
 
@@ -103,6 +104,9 @@ trait Entity
         }
         if (!array_key_exists('local', $settings)) {
             $settings['local'] = 'id';
+        }
+        if (!array_key_exists('foreign', $settings)) {
+            $settings['foreign'] = 'id';
         }
         if (!array_key_exists('type', $settings)) {
             $settings['type'] = $settings['local'] === 'id' ? 'has_many' : 'belongs_to';

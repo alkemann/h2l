@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\acceptance;
 
 use alkemann\h2l\Connections;
 use alkemann\h2l\data\Source;
-use alkemann\h2l\tests\mocks\relationship\{Father, Son};
+use alkemann\h2l\tests\mocks\relationship\{Father, Son, Car};
 
 class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 {
@@ -28,6 +28,8 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 
         $expected = new Father(['id' => 20, 'name' => 'Jake', 'job' => 'Captain']);
         $result = $son->father();
+        $this->assertEquals($expected, $result);
+        $result = $son->dad();
         $this->assertEquals($expected, $result);
         $result = $son->dad();
         $this->assertEquals($expected, $result);
@@ -59,6 +61,29 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
         $result = $father->sons();
         $this->assertEquals($expected, $result);
         $result = $father->children();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testHasOne()
+    {
+        $db = $this->getMockBuilder(Source::class)
+            ->setMethods(['__construct','one','query','find','update','insert','delete'])
+            ->getMock();
+        $db->expects($this->once())
+            ->method('find')
+            ->with('cars', ['owner_id' => 10], ['limit' => 1])
+            ->willReturn(new \ArrayIterator([
+                ['id' => 30, 'owner_id' => 10, 'brand' => 'Tesla']
+            ]));
+
+        Connections::add('EntityRelationshipTest::testHasOne', function() use ($db) {
+            return $db;
+        });
+        Car::$connection = 'EntityRelationshipTest::testHasOne';
+        Son::$connection = 'EntityRelationshipTest::testHasOne';
+        $son = new Son(['id' => 10, 'father_id' => 20, 'name' => 'John', 'age' => 12]);
+        $expected = new Car(['id' => 30, 'owner_id' => 10, 'brand' => 'Tesla']);
+        $result = $son->car();
         $this->assertEquals($expected, $result);
     }
 

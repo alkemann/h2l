@@ -3,6 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\Entity;
+use alkemann\h2l\tests\mocks\relationship\Car;
 
 class MockEntity implements \JsonSerializable { use Entity; };
 
@@ -53,5 +54,79 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $expected = json_encode($data);
         $result = json_encode($e);
         $this->assertEquals($expected, $result);
+    }
+
+    public function testUnknownRelationClass()
+    {
+        $this->expectException(\Exception::class);
+        $ref_class = new \ReflectionClass(Entity::class);
+        $ref_method = $ref_class->getMethod('getRelatedModel');
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; };
+        $ref_method->invoke($e);
+    }
+
+    public function testUnknownRelationName()
+    {
+        $this->expectException(\Error::class);
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; static $relations = []; };
+        $e->mothers();
+    }
+
+    public function testNoRelations()
+    {
+        $this->expectException(\Error::class);
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; };
+        $e->mothers();
+    }
+
+    public function testUnknownRelationType()
+    {
+        $this->expectException(\Exception::class);
+        $e = new class(['id' => 1, 'name' => 'John']) {
+            use Entity;
+            static $relations = [ 'cars' => [
+                'class' => Car::class,
+                'foreign' => 'owner_id',
+                'type' => 'has_two'
+            ]];
+        };
+        $e->cars();
+    }
+
+    public function testAutomaticRelationValues()
+    {
+        $e = new class(['id' => 1, 'name' => 'John']) {
+            use Entity;
+            static $relations = [ 'cars' => [
+                'class' => Car::class,
+                'foreign' => 'owner_id',
+            ]];
+        };
+        $expected = [
+            'class' => Car::class,
+            'foreign' => 'owner_id',
+            'local' => 'id',
+            'type' => 'has_many'
+        ];
+        $result = $e->describeRelationship('cars');
+        $this->assertEquals($expected, $result);
+
+        $e = new class(['id' => 1, 'car_id' => 12]) {
+            use Entity;
+            static $relations = [ 'cars' => [
+                'class' => Car::class,
+                'local' => 'car_id',
+            ]];
+        };
+        $expected = [
+            'class' => Car::class,
+            'foreign' => 'id',
+            'local' => 'car_id',
+            'type' => 'belongs_to'
+        ];
+        $result = $e->describeRelationship('cars');
+        $this->assertEquals($expected, $result);
+
+
     }
 }
