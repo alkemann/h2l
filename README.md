@@ -12,6 +12,9 @@ Get started quickly with static pages and small apis
 
  + PHP 7.1
 
+## Documentation
+
+Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.github.io/h2l/)
 
 ## Install
 
@@ -35,20 +38,19 @@ Get started quickly with static pages and small apis
 
 Some example routes:
 ```php
-use alkemann\h2l\{Request, Router, Result};
+use alkemann\h2l\{Request, Router, response\Json};
 
 // Get task by id, i.e. http://example.com/api/tasks/12
 Router::add('|^api/tasks/(?<id>\d+)$|', function(Request $request) {
 	$id = $request->param('id'); // from the regex matched url part
 	$data_model = app\Task::get($id);
-	return new Result($data_model); // since Task model implements \JsonSerializable
+	return new Json($data_model); // since Task model implements \JsonSerializable
 }, Request::GET);
 
 // Any url with `version` in it, i.e. http://example.com/somethi/versionista
-Router::add('|version|' function($r) {
-	return new Result(['version' => '1.3']);
+Router::add('|version|', function($r) {
+	return new Json(['version' => '1.3']);
 });
-
 ```
 
 ## Raw usage
