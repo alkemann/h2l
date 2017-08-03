@@ -10,7 +10,7 @@ Welcome to H2L a micro framework for PHP 7.1+
 
 ## Framework documentation
 
-You can see (the structure page)[structure.md] for more details about what is included in the library. And
-there is also (the advanced topic)[advanced.md] for how to extend it.
+You can see [the structure page](structure.md) for more details about what is included in the library. And
+there is also [the advanced topic](advanced.md) for how to extend it.
 
 I hope you enjoy!
