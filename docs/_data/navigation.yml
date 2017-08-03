@@ -1,0 +1,10 @@
+- link: /
+  name: Home
+- link: /structure.html
+  name: Structure
+- link: /advanced.html
+  name: Advanced
+- link: /guides
+  name: Guides
+- link: /concepts
+  name: Concepts
