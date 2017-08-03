@@ -40,7 +40,6 @@ class Api
 {
     static $routes = [
         // Url                          function    request method
-        ["%/(?<type>\w+)/(?<id>\d+)%",  'get',      Request::GET],
         [
             // Url match
             '|^/api/tasks/(?<id>\d+)$|',

@@ -4,19 +4,30 @@ Welcome to H2L a micro framework for PHP 7.1+
 
 ## Structure
 
+ - cache
+   - Memory
  - data
+   - MongoDB
+   - MySQL
+   - Source
  - exceptions
- - internals
+   - ConfigMissing
+   - ConnectionError
+   - InvalidUrl
+ - response
+   - Error
+   - Json
+   - Page
+ - bootstrap.php
+ - Cache
  - Connections
  - Entity
- - Error
  - Log
  - Model
  - Page
  - Request
  - Response
- - Result
  - Route
  - Router
+ - Util
 
- 
