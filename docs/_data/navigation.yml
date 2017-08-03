@@ -1,10 +1,10 @@
-- link: /
+- link: /h2l/
   name: Home
-- link: /structure.html
+- link: /h2l/structure.html
   name: Structure
-- link: /advanced.html
+- link: /h2l/advanced.html
   name: Advanced
-- link: /guides
+- link: /h2l/guides
   name: Guides
-- link: /concepts
+- link: /h2l/concepts
   name: Concepts
