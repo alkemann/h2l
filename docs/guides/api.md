@@ -10,6 +10,8 @@ that respond to the matched urls.
 ### For example:
 
 ```php
+<?php
+
 use alkemann\h2l\{Request, Router, response\Json};
 use app\Task; // Your model class  that maybe uses the Model and Entity traits
 
@@ -29,6 +31,8 @@ Router::add('/version', function($r) {
 If you wish to structure your controller code a little more, you can use the new feature of the PHP Closure class, like so:
 
 ```php
+<?php
+
 namespace app;
 
 use alkemann\h2l\{Request, Response, Router};
