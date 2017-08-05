@@ -18,6 +18,7 @@ class Request
     private $request;
     private $server;
     private $parameters;
+    private $headers;
     private $get;
     private $post;
     private $url;
@@ -48,6 +49,7 @@ class Request
         $this->get = $get;
         unset($this->get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
         $this->parameters = [];
+        $this->headers = Util::getRequestHeaders($server);
 
         // override html type with json
         $http_accept = $this->server['HTTP_ACCEPT'] ?? '*/*';
@@ -58,6 +60,16 @@ class Request
         $this->url = $this->request['url'] ?? '/';
         $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
         $this->route = Router::match($this->url, $this->method);
+    }
+
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[$name] ?? null;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
     }
 
     /**

@@ -74,4 +74,16 @@ class Util
             return self::getArrayValueByKeys($keys, $data[$key]);
         }
     }
+
+    public static function getRequestHeaders(array $server_array)
+    {
+        $out = [];
+        foreach ($server_array as $key => $value) {
+            if (substr($key, 0, 5) == "HTTP_") {
+                $key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
+                $out[$key] = $value;
+            }
+        }
+        return $out;
+    }
 }
