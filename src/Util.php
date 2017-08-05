@@ -78,12 +78,17 @@ class Util
     public static function getRequestHeaders(array $server_array)
     {
         $out = [];
-        foreach ($server_array as $key => $value) {
-            if (substr($key, 0, 5) == "HTTP_") {
-                $key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
-                $out[$key] = $value;
+        foreach ($server_array as $name => $value) {
+            if (substr($name, 0, 5) == "HTTP_") {
+                $name = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($name, 5)))));
+                $out[$name] = $value;
+            } elseif ($name == "CONTENT_TYPE") {
+                $out["Content-Type"] = $value;
+            } else if ($name == "CONTENT_LENGTH") {
+                $out["Content-Length"] = $value;
             }
         }
+
         return $out;
     }
 }

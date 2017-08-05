@@ -35,6 +35,31 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result instanceof Response);
     }
 
+    public function testHeaders()
+    {
+        $r = new Request(
+            [ // $_REQUEST
+                'url' => 'place',
+                'filter' => 'all'
+            ],
+            [ // $_SERVER
+                'HTTP_ACCEPT' => 'text/html,*/*;q=0.8',
+                'HTTP_API_KEY' => 'asdf123',
+                'REQUEST_URI' => '/place?filter=all',
+                'REQUEST_METHOD' => 'GET',
+            ],
+            [ // GET
+                'url' => 'place',
+                'filter' => 'all'
+            ]
+        );
+        $this->assertTrue($r instanceof Request);
+        $expected = ['Accept' => 'text/html,*/*;q=0.8', 'Api-Key' => 'asdf123'];
+        $result = $r->getHeaders();
+        $this->assertEquals($expected, $result);
+        $this->assertEquals('asdf123', $r->getHeader('Api-Key'));
+    }
+
     public function testPostJson()
     {
         $r = new Request(
