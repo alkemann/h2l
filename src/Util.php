@@ -84,7 +84,7 @@ class Util
                 $out[$name] = $value;
             } elseif ($name == "CONTENT_TYPE") {
                 $out["Content-Type"] = $value;
-            } else if ($name == "CONTENT_LENGTH") {
+            } elseif ($name == "CONTENT_LENGTH") {
                 $out["Content-Length"] = $value;
             }
         }

@@ -116,7 +116,6 @@ trait Entity
                     'foreign' => $field
                 ];
             }
-
         }
         if (!array_key_exists('local', $settings)) {
             $settings['local'] = 'id';
