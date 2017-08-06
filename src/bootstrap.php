@@ -2,10 +2,14 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\{exceptions\InvalidUrl, response\Error, Environment};
+use alkemann\h2l\exceptions\InvalidUrl;
+use alkemann\h2l\response\Error;
+use alkemann\h2l\Environment;
 use Error as PhpError;
 
-if (Environment::get('debug')) require_once 'internals/functions.php';
+if (Environment::get('debug')) {
+    require_once 'internals/functions.php';
+}
 
 /**
  * May be set as exception handler, i.e. set_exception_handler('alkemann\h2l\handleError');

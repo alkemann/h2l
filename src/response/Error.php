@@ -13,7 +13,6 @@ use alkemann\h2l\Environment;
  */
 class Error extends Response
 {
-
     protected $code = 500;
     protected $data = [];
     protected $request = null;
