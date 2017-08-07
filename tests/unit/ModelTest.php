@@ -10,7 +10,13 @@ class ModelTest extends \PHPUnit_Framework_TestCase
 
     public function testUse()
     {
-        $p = new class { use Model; };
+        $p = new class {
+            use Model;
+
+            public function with(string ...$relation_names) {}
+            public function reset(): void {}
+            public function data(array $data = null): array {}
+        };
         $this->assertTrue(method_exists($p, 'exists'));
     }
 
@@ -18,7 +24,13 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(ConfigMissing::class);
         $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
-        $p = new class { use Model; };
+        $p = new class {
+            use Model;
+
+            public function with(string ...$relation_names) {}
+            public function reset(): void {}
+            public function data(array $data = null): array {}
+        };
         $p->save(['something' => 'here']);
     }
 
@@ -33,7 +45,14 @@ class ModelTest extends \PHPUnit_Framework_TestCase
             return $con;
         });
 
-        $p = new class { use Model; static $connection = 'ModelTest testMissingTableConfig'; };
+        $p = new class {
+            use Model;
+            static $connection = 'ModelTest testMissingTableConfig';
+
+            public function with(string ...$relation_names) {}
+            public function reset(): void {}
+            public function data(array $data = null): array {}
+        };
 
         $this->expectException(ConfigMissing::class);
         $this->expectExceptionCode(ConfigMissing::MISSING_TABLE);

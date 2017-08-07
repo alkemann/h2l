@@ -16,6 +16,7 @@ class Person {
     // Methods normally provided by \alkemann\h2l\Entity
     public function __construct(array $data = []) { $this->data($data); }
     public function reset() { $this->data = []; }
+    public function with(string ...$relation_names) {}
     public function data(?array $data = null)
     {
         if ($data === null) return $this->data;
