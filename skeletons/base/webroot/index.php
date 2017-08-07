@@ -8,9 +8,9 @@ $CONFIG_PATH = $ROOT . $DS . 'resources' . $DS . 'configs' . $DS;
 require_once($VENDOR_PATH . 'autoload.php');
 
 // Default error handling
-require_once($VENDOR_PATH . 'alkemann' . $DS . 'h2l' . $DS . 'src' . $DS . 'bootstrap.php');
-set_exception_handler('alkemann\h2l\handleError');
-set_error_handler('alkemann\h2l\handleWarning', E_WARNING);
+require_once($CONFIG_PATH . 'error_handlers.php');
+set_exception_handler('app\handleError');
+set_error_handler('app\handleWarning', E_WARNING);
 
 // Include configuration files
 require_once($CONFIG_PATH . 'environments.php');
