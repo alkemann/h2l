@@ -38,26 +38,31 @@ trait Entity
 
     public function __call(string $method, array $args = [])
     {
-        array_unshift($args, $method);
-        return call_user_func_array([self::class, 'getRelatedModel'], $args);
+        $refresh = (bool) array_shift($args);
+        return $this->getRelatedModel($method, $refresh);
     }
 
     private function getRelatedModel(string $name, bool $refresh = false)
     {
-        if (isset(static::$relations) === false ||
-            array_key_exists($name, static::$relations) === false) {
-            $class = get_class($this);
-            throw new \Error("Call to undefined method {$class}::{$name}()");
-        }
+        $this->checkIfRelationIsSet($name);
         if ($refresh === false && array_key_exists($name, $this->relationships)) {
             return $this->relationships[$name];
         }
         return $this->populateRelation($name);
     }
 
+    private function checkIfRelationIsSet(string $name): void
+    {
+        if (isset(static::$relations) === false ||
+            array_key_exists($name, static::$relations) === false) {
+            $class = get_class($this);
+            throw new \Error("Call to undefined method {$class}::{$name}()");
+        }
+    }
+
     /**
      * @param string[] ...$relation_names any list of relations to return
-     * @return instance of Entity object
+     * @return Entity self
      */
     public function with(string ...$relation_names)
     {
@@ -105,11 +110,7 @@ trait Entity
      */
     public function describeRelationship(string $name): array
     {
-        if (isset(static::$relations) === false ||
-            array_key_exists($name, static::$relations) === false) {
-            $class = get_class($this);
-            throw new \Error("No relation [{$name}] specified for [{$class}]");
-        }
+        $this->checkIfRelationIsSet($name);
         $settings = static::$relations[$name];
         if (sizeof($settings) === 1) {
             return $this->generateRelationshipFromShorthand($settings);
@@ -205,7 +206,6 @@ trait Entity
                 return json_encode($this->data);
             default:
                 throw new \InvalidArgumentException("Unkown type $type");
-                break;
         }
     }
 

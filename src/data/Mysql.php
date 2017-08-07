@@ -79,7 +79,7 @@ class Mysql implements Source
     public function find(string $table, array $conditions, array $options = []): iterable
     {
         $where = $this->where($conditions);
-        $limit = array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : false;
+        $limit = array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : '';
         $query = "SELECT * FROM `{$table}` {$where}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
@@ -88,7 +88,7 @@ class Mysql implements Source
         foreach ($conditions as $key => $value) {
             $stmt->bindValue(":c_{$key}", $value);
         }
-        if ($limit) {
+        if (empty($limit) === false) {
             $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
             $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
         }
@@ -185,7 +185,7 @@ class Mysql implements Source
             return 0;
         }
 
-        $limit = array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : false;
+        $limit = array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : '';
         $query = "DELETE FROM `{$table}` {$where}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
@@ -194,7 +194,7 @@ class Mysql implements Source
         foreach ($conditions as $key => $value) {
             $stmt->bindValue(":c_{$key}", $value);
         }
-        if ($limit) {
+        if (empty($limit) === false) {
             $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
             $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
         }
