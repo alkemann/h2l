@@ -133,11 +133,15 @@ class Mysql implements Source
         return join(", ", $out);
     }
 
+    /**
+     * @param array $options
+     * @param \PDOStatement $stmt
+     */
     private function bindPaginationToStatement(array $options, $stmt): void
     {
         if (array_key_exists('limit', $options)) {
-            $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
-            $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
+            $stmt->bindValue(":o_offset", (int)($options['offset'] ?? 0), PDO::PARAM_INT);
+            $stmt->bindValue(":o_limit", (int)$options['limit'], PDO::PARAM_INT);
         }
     }
 
