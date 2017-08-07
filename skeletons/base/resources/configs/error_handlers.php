@@ -2,6 +2,8 @@
 
 namespace app;
 
+use alkemann\h2l\Log;
+use alkemann\h2l\Environment;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\response\Error;
 use Error as PhpError;
