@@ -10,10 +10,10 @@ namespace alkemann\h2l;
 abstract class Response
 {
     public static $code_to_message = [
-         // Informational 1xx
+        // Informational 1xx
         100 => 'Continue',
         101 => 'Switching Protocols',
-         // Successful 2xx
+        // Successful 2xx
         200 => 'OK',
         201 => 'Created',
         202 => 'Accepted',
@@ -21,7 +21,7 @@ abstract class Response
         204 => 'No Content',
         205 => 'Reset Content',
         206 => 'Partial Content',
-         // Redirection 3xx
+        // Redirection 3xx
         300 => 'Multiple Choices',
         301 => 'Moved Permanently',
         302 => 'Found',
@@ -29,7 +29,7 @@ abstract class Response
         304 => 'Not Modified',
         305 => 'Use Proxy',
         307 => 'Temporary Redirect',
-         // Client Error 4xx
+        // Client Error 4xx
         400 => 'Bad Request',
         401 => 'Unauthorized',
         402 => 'Payment Required',
@@ -48,7 +48,7 @@ abstract class Response
         415 => 'Unsupported Media Type',
         416 => 'Requested Range Not Satisfiable',
         417 => 'Expectation Failed',
-         // Server Error 5xx
+        // Server Error 5xx
         500 => 'Internal Server Error',
         501 => 'Not Implemented',
         502 => 'Bad Gateway',

@@ -123,7 +123,7 @@ class Page extends Response
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
     }
 
-    private function getContentFile($view): string
+    private function getContentFile(string $view): string
     {
         $path = $this->config['content_path'] ?? Environment::get('content_path');
         if (is_null($path)) {
@@ -156,9 +156,11 @@ class Page extends Response
     // @TODO refactor, and cache
 
     /**
+     * @param string $view
+     * @return string
      * @throws InvalidUrl
      */
-    public function view($view): string
+    public function view(string $view): string
     {
         $file = $this->getContentFile($view);
         if (!file_exists($file)) {
@@ -198,11 +200,18 @@ class Page extends Response
         return $response;
     }
 
+    /**
+     * @param string $template
+     */
     public function setTemplate(string $template): void
     {
         $this->template = "{$template}.{$this->type}";
     }
 
+    /**
+     * @param null|string $url
+     * @return string
+     */
     private function templateFromUrl(?string $url = null): string
     {
         $parts = \explode('/', $url);

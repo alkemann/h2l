@@ -79,7 +79,7 @@ class Mysql implements Source
     public function find(string $table, array $conditions, array $options = []): iterable
     {
         $where = $this->where($conditions);
-        $limit = $this->limit($options);
+        $limit = array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : '';
         $query = "SELECT * FROM `{$table}` {$where}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
@@ -88,7 +88,7 @@ class Mysql implements Source
         foreach ($conditions as $key => $value) {
             $stmt->bindValue(":c_{$key}", $value);
         }
-        if ($limit) {
+        if (empty($limit) === false) {
             $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
             $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
         }
@@ -130,23 +130,9 @@ class Mysql implements Source
         return "WHERE {$where} ";
     }
 
-    private function limit(array $options): string
-    {
-        if (array_key_exists('limit', $options)) {
-            if (array_key_exists('offset', $options)) {
-                $values[] = (int)$options['offset'];
-            } else {
-                $values[] = 0;
-            }
-            $values[] = (int)$options['limit'];
-            return "LIMIT :o_offset,:o_limit ";
-        }
-        return "";
-    }
-
     public function update(string $table, array $conditions, array $data, array $options = []): int
     {
-        if (!$conditions || !$data) {
+        if (empty($conditions) || empty($data)) {
             return 0;
         }
 
@@ -165,7 +151,7 @@ class Mysql implements Source
             $stmt->bindValue(":c_{$key}", $value);
         }
         $result = $stmt->execute();
-        return ($result == true) ? $stmt->rowCount() : 0;
+        return ($result === true) ? $stmt->rowCount() : 0;
     }
 
     private function data(array $data): string
@@ -189,7 +175,7 @@ class Mysql implements Source
             $stmt->bindValue(':d_' . $key, $value);
         }
         $result = $stmt->execute();
-        return ($result == true) ? $dbh->lastInsertId() : null;
+        return ($result === true) ? $dbh->lastInsertId() : null;
     }
 
     public function delete(string $table, array $conditions, array $options = []): int
@@ -199,7 +185,7 @@ class Mysql implements Source
             return 0;
         }
 
-        $limit = $this->limit($options);
+        $limit = array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : '';
         $query = "DELETE FROM `{$table}` {$where}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
@@ -208,11 +194,11 @@ class Mysql implements Source
         foreach ($conditions as $key => $value) {
             $stmt->bindValue(":c_{$key}", $value);
         }
-        if ($limit) {
+        if (empty($limit) === false) {
             $stmt->bindValue(":o_offset", $options['offset'] ?? 0, PDO::PARAM_INT);
             $stmt->bindValue(":o_limit", $options['limit'], PDO::PARAM_INT);
         }
         $result = $stmt->execute();
-        return ($result == true) ? $stmt->rowCount() : 0;
+        return ($result === true) ? $stmt->rowCount() : 0;
     }
 }

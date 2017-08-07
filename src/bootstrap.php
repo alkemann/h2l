@@ -4,7 +4,6 @@ namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\response\Error;
-use alkemann\h2l\Environment;
 use Error as PhpError;
 
 if (Environment::get('debug')) {
@@ -16,7 +15,7 @@ if (Environment::get('debug')) {
  *
  * @param \Throwable $e
  */
-function handleError(\Throwable $e) : void
+function handleError(\Throwable $e): void
 {
     if ($e instanceof InvalidUrl) {
         Log::info("InvalidUrl: " . $e->getMessage());
@@ -54,15 +53,16 @@ function handleError(\Throwable $e) : void
  * @param $line
  * @param $meta
  */
-function handleWarning($errno, $message, $file, $line, $meta) : void
+function handleWarning($errno, $message, $file, $line, $meta): void
 {
     if (Environment::get('debug')) {
         header("Content-type: text/html");
         echo '<h1 style="color:red;">' . $message . '</h1>';
-        echo '<h3>' . $file. ' :: ' . $line . '</h3>';
+        echo '<h3>' . $file . ' :: ' . $line . '</h3>';
         d($meta);
         die();
     } else {
-        error_log("WARNING: {$file}::{$line} : $errno : $message : " . preg_replace("|\s+|", " ", print_r($meta, true)));
+        error_log("WARNING: {$file}::{$line} : $errno : $message : " . preg_replace("|\s+|", " ",
+                print_r($meta, true)));
     }
 }

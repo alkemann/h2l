@@ -72,11 +72,18 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $e->mothers();
     }
 
-    public function testNoRelations()
+    public function testNoRelationsMagicMethod()
     {
         $this->expectException(\Error::class);
         $e = new class(['id' => 1, 'name' => 'John']) { use Entity; };
         $e->mothers();
+    }
+
+    public function testNoRelations()
+    {
+        $this->expectException(\Error::class);
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; static $relations = ['mother' => ['app\Mother' => 'mother_id']]; static $fields = ['id', 'mother_id']; };
+        $e->describeRelationship('mothers');
     }
 
     public function testUnknownRelationType()
