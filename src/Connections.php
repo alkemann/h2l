@@ -15,7 +15,6 @@ use UnderflowException;
  */
 class Connections
 {
-
     private static $connections = [];
     private static $open = [];
     private static $close = [];

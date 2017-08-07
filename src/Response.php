@@ -9,7 +9,6 @@ namespace alkemann\h2l;
  */
 abstract class Response
 {
-
     public static $code_to_message = [
          // Informational 1xx
         100 => 'Continue',

@@ -14,12 +14,10 @@ use alkemann\h2l\Response;
  */
 class Error extends Response
 {
-
     protected $type = 'html';
     protected $code = 500;
     protected $data = [];
     protected $request = null;
-
     protected $config = [];
 
     public function __construct(array $data = [], array $config = [])
