@@ -87,6 +87,13 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         return $m;
     }
 
+    public function testEmptyUpdate()
+    {
+        $m = new Mysql;
+        $this->assertEquals(0, $m->update('tab', [], ['status' => 'NEW']));
+        $this->assertEquals(0, $m->update('tab', ['id' => 1], []));
+    }
+
     public function testOne()
     {
         $ec = function($v) { return sizeof($v) === 0; };
@@ -166,5 +173,11 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $expected = 1;
         $result = $m->delete('things', ['id' => 12]);
         $this->assertEquals($expected, $result);
+    }
+
+    public function testEmptyDelete()
+    {
+        $m = new Mysql;
+        $this->assertEquals(0, $m->delete('tab', []));
     }
 }
