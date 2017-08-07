@@ -62,7 +62,7 @@ trait Entity
 
     /**
      * @param string[] ...$relation_names any list of relations to return
-     * @return Entity self
+     * @return object instance of class that has Entity trait
      */
     public function with(string ...$relation_names)
     {
