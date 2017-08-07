@@ -13,7 +13,8 @@
     ],
     "suggest": {
         "monolog/monolog": "Advanced logging that can be plugged into the logger",
-        "mongodb/mongodb": "A Mongo DB data connection is provided that uses this library"
+        "mongodb/mongodb": "A Mongo DB data connection is provided that uses this library",
+        "alkemann/debug": "Convenient var_dump replaces for debug and development, require-dev only"
     },
     "require": {
         "php": "^7.1.0"
