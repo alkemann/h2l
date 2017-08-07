@@ -49,7 +49,7 @@ class Request
         $this->get = $get;
         unset($this->get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
         $this->parameters = [];
-        $this->headers = Util::getRequestHeaders($server);
+        $this->headers = Util::getRequestHeadersFromServerArray($server);
 
         // override html type with json
         $http_accept = $this->server['HTTP_ACCEPT'] ?? '*/*';
@@ -167,21 +167,21 @@ class Request
      *
      * First call to this method will initiate the session
      *
-     * @TODO Implment dependency injection
+     * @TODO Implement dependency injection
      * @codeCoverageIgnore
      * @param string $key Dot notation for deeper values, i.e. `user.email`
-     * @return mixed/null
+     * @return mixed|null
      */
     public function session(?string $key = null)
     {
         if (session_status() != PHP_SESSION_ACTIVE) {
             session_start();
         }
-        if ($key && isset($_SESSION[$key])) {
+        if (is_null($key) === false && isset($_SESSION[$key])) {
             return $_SESSION[$key];
         }
 
-        if ($key && is_string($key) && strpos($key, '.') !== false) {
+        if (is_null($key) === false && is_string($key) && strpos($key, '.') !== false) {
             Util::getFromArrayByKey($key, $_SESSION);
         }
     }

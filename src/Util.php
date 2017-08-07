@@ -28,7 +28,7 @@ class Util
      * @param string $delimiter
      * @return mixed|null
      */
-    public static function getFromArrayByKey(string $key, array &$data, string $delimiter = '.')
+    public static function getFromArrayByKey(string $key, array $data, string $delimiter = '.')
     {
         $keys = explode($delimiter, $key);
         try {
@@ -49,10 +49,9 @@ class Util
      * ```
      *
      * @param  mixed $keys
-     * @param  mixed $data
+     * @param  mixed $data passed by reference
      * @return mixed
      * @throws OutOfBoundsException if the key does not exist in data
-     * @codeCoverageIgnore
      */
     public static function getArrayValueByKeys(array $keys, &$data)
     {
@@ -60,35 +59,31 @@ class Util
         if (!is_array($data) || empty($key)) {
             return $data;
         }
+        if (array_key_exists($key, $data) === false) {
+            throw new OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
+        }
         if (empty($keys)) {
-            if (array_key_exists($key, $data)) {
-                return $data[$key];
-            } else {
-                array_unshift($keys, $key);
-                throw new OutOfBoundsException("Key [" . join('.', $keys) . "] not set in " . print_r($data, 1));
-            }
+            return $data[$key];
         } else {
-            if (!array_key_exists($key, $data)) {
-                throw new OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
-            }
             return self::getArrayValueByKeys($keys, $data[$key]);
         }
     }
 
-    public static function getRequestHeaders(array $server_array)
+    public static function getRequestHeadersFromServerArray(array $server_array)
     {
         $out = [];
         foreach ($server_array as $name => $value) {
             if (substr($name, 0, 5) == "HTTP_") {
                 $name = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($name, 5)))));
                 $out[$name] = $value;
-            } elseif ($name == "CONTENT_TYPE") {
-                $out["Content-Type"] = $value;
-            } else if ($name == "CONTENT_LENGTH") {
-                $out["Content-Length"] = $value;
             }
         }
-
+        if (array_key_exists("CONTENT_TYPE", $server_array)) {
+            $out["Content-Type"] = $server_array['CONTENT_TYPE'];
+        }
+        if (array_key_exists("CONTENT_LENGTH", $server_array)) {
+            $out["Content-Length"] = $server_array['CONTENT_LENGTH'];
+        }
         return $out;
     }
 }

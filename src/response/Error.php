@@ -2,9 +2,10 @@
 
 namespace alkemann\h2l\response;
 
+use alkemann\h2l\Environment;
+use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\Log;
 use alkemann\h2l\Response;
-use alkemann\h2l\Environment;
 
 /**
  * Class Error
@@ -14,6 +15,7 @@ use alkemann\h2l\Environment;
 class Error extends Response
 {
 
+    protected $type = 'html';
     protected $code = 500;
     protected $data = [];
     protected $request = null;
@@ -59,7 +61,7 @@ class Error extends Response
     public function render(): string
     {
         $h = $this->config['header_func'] ?? 'header';
-        if (is_callable($h) == false) {
+        if (is_callable($h) === false) {
             throw new \Error("Header function injected to Error is not callable");
         }
         $page_class = $this->config['page_class'];
@@ -76,7 +78,7 @@ class Error extends Response
             $data = $this->data + ['code' => $this->code];
             $page = new $page_class($data, $page_config);
             return $page->render();
-        } catch (\alkemann\h2l\exceptions\InvalidUrl $e) {
+        } catch (InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());
             if (Environment::get('debug')) {
                 return "No error page made at " . $e->getMessage();

@@ -134,7 +134,7 @@ trait Model
         if ($this->exists()) {
             $id = $this->$pk;
             $data = self::filterByFields($data);
-            // TODO unset $data[$pk] ?
+            unset($data[$pk]);
             $rows = $db->update($table, [$pk => $id], $data, $options);
             if (!$rows) {
                 return false;
@@ -142,7 +142,7 @@ trait Model
         } else {
             $data += $this->data;
             $data = self::filterByFields($data);
-            $id = $db->insert($table, $data, $options); // todo filter fields of $data
+            $id = $db->insert($table, $data, $options);
             if (!$id) {
                 return false;
             }

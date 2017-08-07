@@ -68,7 +68,10 @@ trait Entity
     }
 
     /**
-     * @return object|array array in case of has_many
+     * @param string $relation_name
+     * @param array|object|null $data
+     * @return array|object|null array in case of has_many
+     * @throws \Exception
      */
     public function populateRelation(string $relation_name, $data = null)
     {
@@ -95,28 +98,21 @@ trait Entity
         return $related;
     }
 
+    /**
+     * @param string $name
+     * @return array
+     * @throws \Error if $name is for an unspecified relation
+     */
     public function describeRelationship(string $name): array
     {
+        if (isset(static::$relations) === false ||
+            array_key_exists($name, static::$relations) === false) {
+            $class = get_class($this);
+            throw new \Error("No relation [{$name}] specified for [{$class}]");
+        }
         $settings = static::$relations[$name];
         if (sizeof($settings) === 1) {
-            $field = current($settings);
-            $field_is_local = in_array($field, static::$fields); // @TODO hack to use Model data?
-            if ($field_is_local) {
-                $settings = [
-                    'class' => key($settings),
-                    'type' => 'belongs_to',
-                    'local' => $field,
-                    'foreign' => 'id'
-                ];
-            } else {
-                $settings = [
-                    'class' => key($settings),
-                    'type' => 'has_many',
-                    'local' => 'id',
-                    'foreign' => $field
-                ];
-            }
-
+            return $this->generateRelationshipFromShorthand($settings);
         }
         if (!array_key_exists('local', $settings)) {
             $settings['local'] = 'id';
@@ -129,6 +125,27 @@ trait Entity
         }
 
         return $settings;
+    }
+
+    private function generateRelationshipFromShorthand(array $settings): array
+    {
+        $field = current($settings);
+        $field_is_local = in_array($field, static::$fields); // @TODO hack to use Model data?
+        if ($field_is_local) {
+            return [
+                'class' => key($settings),
+                'type' => 'belongs_to',
+                'local' => $field,
+                'foreign' => 'id'
+            ];
+        } else {
+            return [
+                'class' => key($settings),
+                'type' => 'has_many',
+                'local' => 'id',
+                'foreign' => $field
+            ];
+        }
     }
 
     /**
