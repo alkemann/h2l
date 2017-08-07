@@ -38,17 +38,17 @@ class Log
      */
     public static function handler(string $name, $handler)
     {
-        if (is_callable($handler)) {
-            // check what?
-        } elseif (is_object($handler)) {
-            // TODO check if object implements interface?
-            if (!method_exists($handler, 'log')) {
-                throw new \InvalidArgumentException(
-                    "$name is not a valid handler, it must implement the Psr\Log\LoggerInterface"
-                );
+        if (is_callable($handler) === false) {
+            if (is_object($handler)) {
+                // TODO check if object implements interface?
+                if (!method_exists($handler, 'log')) {
+                    throw new \InvalidArgumentException(
+                        "$name is not a valid handler, it must implement the Psr\Log\LoggerInterface"
+                    );
+                }
+            } else {
+                throw new \InvalidArgumentException("$name is not a valid handler");
             }
-        } else {
-            throw new \InvalidArgumentException("$name is not a valid handler");
         }
         static::$handlers[$name] = $handler;
     }
@@ -95,6 +95,7 @@ class Log
      * @param string $level
      * @param string $message
      * @param array $context
+     * @throws ConfigMissing
      */
     private static function file(string $level, string $message, array $context = []): void
     {

@@ -55,7 +55,7 @@ class Router
             }
 
             // TODO cache of previous matched dynamic routes
-            $route = static::matchDynamicRoute($url, $method);
+            $route = self::matchDynamicRoute($url, $method);
             if ($route) {
                 return $route;
             }

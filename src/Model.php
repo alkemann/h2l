@@ -54,7 +54,7 @@ trait Model
      */
     public static function get($id, array $conditions = [], array $options = []) //: ?Model
     {
-        if ($conditions) {
+        if (empty($conditions) === false) {
             throw new \InvalidArgumentException("Conditions is not implemented on get");
         }
         $pk = static::pk();
@@ -92,6 +92,16 @@ trait Model
     }
 
     /**
+     * The implementation of this method will come from the Entity trait.
+     *
+     * @param string[] ...$relation_names list of names of relationships
+     * @return object Instance of class that uses this trait
+     */
+    abstract public function with(string ...$relation_names);
+    abstract public function reset(): void;
+    abstract public function data(array $data = null): array;
+
+    /**
      * Find all records matching `$conditions`, returns an array with key being the pk value
      *
      * @throws ConfigMissing
@@ -110,7 +120,7 @@ trait Model
     private static function filterByFields(array $data): array
     {
         $fields = static::fields();
-        if ($fields) {
+        if (empty($fields) === false) {
             $data = array_filter(
                 $data,
                 function ($key) use ($fields) {
@@ -160,6 +170,6 @@ trait Model
     public function delete(array $options = []): bool
     {
         $pk = static::pk();
-        return static::db()->delete(static::table(), [$pk => $this->$pk]);
+        return static::db()->delete(static::table(), [$pk => $this->$pk], $options);
     }
 }
