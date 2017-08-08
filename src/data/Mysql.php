@@ -3,8 +3,8 @@
 namespace alkemann\h2l\data;
 
 use alkemann\h2l\exceptions\ConnectionError;
-use PDO;
 use alkemann\h2l\Log;
+use PDO;
 
 class Mysql implements Source
 {
@@ -174,10 +174,10 @@ class Mysql implements Source
         $fun = function ($o, $v) {
             return "{$o}{$v} = :d_{$v}";
         };
-        return array_reduce(array_keys($data), $fun, "");
+        return (string)array_reduce(array_keys($data), $fun, "");
     }
 
-    public function insert(string $table, array $data, array $options = []): ?int
+    public function insert(string $table, array $data, array $options = []): ?string
     {
         $keys = implode(', ', array_keys($data));
         $data_phs = ':d_' . implode(', :d_', array_keys($data));
