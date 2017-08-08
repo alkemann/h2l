@@ -125,7 +125,7 @@ class Request
     /**
      * Get request parameters from url as url parats, get queries or post, in that order
      *
-     * @param $name the name of the parameter
+     * @param string $name the name of the parameter
      * @return mixed|null the value or null if not set
      */
     public function param(string $name)

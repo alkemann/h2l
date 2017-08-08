@@ -68,7 +68,7 @@ class Page extends Response
     /**
      * Provide data (variables) that are to be extracted into the view (and layout) templates
      *
-     * @param string /array $key an array of data or the name for $value
+     * @param string|array $key an array of data or the name for $value
      * @param null $value if $key is a string, this can be the value of that var
      */
     public function setData($key, $value = null): void
