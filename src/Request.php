@@ -155,11 +155,12 @@ class Request
      *
      * @return Response
      */
-    public function response(): Response
+    public function response(): ?Response
     {
         $cb = $this->route->callback;
         $this->parameters = $this->route->parameters;
-        return call_user_func_array($cb, [$this]);
+        $response = call_user_func_array($cb, [$this]);
+        return ($response instanceof Response) ? $response : null;
     }
 
     /**
