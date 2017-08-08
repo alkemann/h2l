@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use Closure;
+
 /**
  * Class Router
  *
@@ -27,12 +29,17 @@ class Router
      * Add new dynamic route to application
      *
      * @param string $url Regex that is valid for preg_match, including named groups
-     * @param \Closure $closure Code to run on this match
+     * @param callable $callable
      * @param mixed $methods a single Request::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
+     * @internal param Closure $closure Code to run on this match
      */
-    public static function add(string $url, \Closure $closure, $methods = [Request::GET]): void
+    public static function add(string $url, callable $callable, $methods = [Request::GET]): void
     {
-        // @TODO change from closure to just callable?
+        if ($callable instanceof Closure) {
+            $closure = $callable;
+        } else {
+            $closure = Closure::fromCallable($callable);
+        }
         foreach ((array)$methods as $method) {
             self::$routes[$method][$url] = $closure;
         }

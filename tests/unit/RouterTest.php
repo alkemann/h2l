@@ -15,6 +15,27 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/things', $result->url);
     }
 
+    public function testRouteWithCallables()
+    {
+        $f = function() { return ""; };
+        Router::add('/testRouteWithCallables/f', $f);
+        $route = Router::match('/testRouteWithCallables/f');
+        $this->assertEquals($f, $route->callback);
+
+        $c = new class() {
+            public function meth() { return ""; }
+            public static function stats() { return ""; }
+        };
+        Router::add('/testRouteWithCallables/c', [$c, 'meth']);
+        $route = Router::match('/testRouteWithCallables/c');
+        $this->assertEquals(\Closure::fromCallable([$c, 'meth']), $route->callback);
+
+        $cname = get_class($c);
+        Router::add('/testRouteWithCallables/s', "{$cname}::stats");
+        $route = Router::match('/testRouteWithCallables/s');
+        $this->assertEquals(\Closure::fromCallable("{$cname}::stats"), $route->callback);
+    }
+
     public function testAlias()
     {
         Router::alias('/', 'home.html');

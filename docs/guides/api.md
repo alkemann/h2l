@@ -28,7 +28,17 @@ Router::add('/version', function($r) {
 });
 ```
 
-If you wish to structure your controller code a little more, you can use the new feature of the PHP Closure class, like so:
+If you wish to structure your controller code a little more, we can create closures from callables so:
+
+```php
+use alkemann\h2l\{Router, Request, response\Json };
+class Api {
+    public static function version(Request $r) { return new Json(['version' => '1.0']); }
+}
+Router::add('/version', 'Api::version');
+```
+
+Or a slightly more complex version that doesnt use static methods
 
 ```php
 <?php
@@ -38,7 +48,6 @@ namespace app;
 use alkemann\h2l\{Request, Response, Router};
 use alkemann\h2l\response\Json;
 use app\Task;
-use Closure;
 
 class Api
 {
@@ -64,7 +73,8 @@ class Api
     public function addRoutes(): void
     {
         foreach (static::$routes as [$url, $func, $method]) {
-            Router::add($url, Closure::fromCallable([$this, $func]), $method);
+            // [$this, $func] will be converted to closure with Closure::fromCallable
+            Router::add($url, [$this, $func], $method);
         }
     }
 
