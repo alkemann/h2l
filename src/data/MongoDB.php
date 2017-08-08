@@ -12,7 +12,7 @@ use MongoDB\Model\BSONDocument;
 
 class MongoDb implements Source
 {
-    public static $operators = array(
+    public static $operators = [
         '$all',
         '$gt',
         '$gte',
@@ -30,7 +30,7 @@ class MongoDb implements Source
         'type',
         '$elemMatch',
         '$size'
-    );
+    ];
 
     protected $config = [];
     protected $client = null;
