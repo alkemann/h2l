@@ -90,7 +90,7 @@ class Router
                 function ($v) {
                     return !is_int($v);
                 },
-                ARRAY_FILTER_USE_KEY
+                \ARRAY_FILTER_USE_KEY
             );
 
             return new Route($url, $cb, $parameters);
