@@ -12,7 +12,9 @@ class MongodbTest extends \PHPUnit_Framework_TestCase
     static $ref_client;
     public static function setUpBeforeClass()
     {
-        // TODO also skip if missing PDO extension
+        if (extension_loaded('mongodb') === false) {
+            return self::markTestSkipped("MongoDB driver not installed");
+        }
         static::$ref_client = new \ReflectionProperty('alkemann\h2l\data\MongoDB', 'client');
         static::$ref_client->setAccessible(true);
     }

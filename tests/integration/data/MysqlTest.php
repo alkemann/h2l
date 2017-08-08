@@ -17,7 +17,6 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         if (extension_loaded('pdo_mysql') === false) {
             return self::markTestSkipped("PHP extension 'pdo_mysql' not installed");
         }
-        // TODO also skip if missing PDO extension
         $f = dirname(dirname(__DIR__)) . '/config/pdo_mysql_connection.php';
         if (file_exists($f) == false) {
             self::markTestSkipped("Missing [ {$f} ] config file");
@@ -36,8 +35,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         } catch (\PDOException $e) {
             return self::markTestSkipped("Connection configured, but connection failed!");
         }
-
-}
+    }
 
     public function testConnectFail()
     {
