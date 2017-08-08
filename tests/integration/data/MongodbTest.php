@@ -14,8 +14,7 @@ class MongodbTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        // TODO also skip if missing MongoDB extension
-        if (class_exists(Client::class) == false) {
+        if (extension_loaded('mongodb') === false) {
             return self::markTestSkipped("MongoDB driver not installed");
         }
         $f = dirname(dirname(__DIR__)) . '/config/mongo_connection.php';
@@ -29,8 +28,12 @@ class MongodbTest extends \PHPUnit_Framework_TestCase
 
         $host = self::$config['host'] ?? 'localhost';
         $port = self::$config['port'] ?? 27017;
-        $mc = new Client("mongodb://{$host}:{$port}");
-        $mc->dropDatabase('test');
+        try {
+            $mc = new Client("mongodb://{$host}:{$port}");
+            $mc->dropDatabase('test');
+        } catch (\MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
+            return self::markTestSkipped("Connection configured, but connection failed!");
+        }
     }
 
     public function testConnectionFail()
