@@ -5,20 +5,20 @@ namespace alkemann\h2l\tests\unit;
 use alkemann\h2l\Entity;
 use alkemann\h2l\tests\mocks\relationship\Car;
 
-class MockEntity implements \JsonSerializable { use Entity; };
+class MockEntity implements \JsonSerializable { use Entity; public static function fields():?array {return null; } };
 
 class EntityTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testUse()
     {
-        $e = new class { use Entity; };
+        $e = new class { use Entity; public static function fields():?array {return null; } };
         $this->assertTrue(method_exists($e, 'data'));
     }
 
     public function testData()
     {
-        $e = new class { use Entity; };
+        $e = new class { use Entity; public static function fields():?array {return null; } };
         $e->data(['id' => 1, 'title' => "tittel"]);
         $this->assertEquals("tittel", $e->title);
         $e->title = "changed";
@@ -41,7 +41,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
     public function testException()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $e = new class { use Entity; };
+        $e = new class { use Entity; public static function fields():?array {return null; } };
         $e->data(['id' => 1, 'title' => "tittel"]);
         $this->assertEquals("tittel", $e->title);
         $e->to('XML');
@@ -61,28 +61,33 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\Exception::class);
         $ref_class = new \ReflectionClass(Entity::class);
         $ref_method = $ref_class->getMethod('getRelatedModel');
-        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; };
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; public static function fields():?array {return null; } };
         $ref_method->invoke($e);
     }
 
     public function testUnknownRelationName()
     {
         $this->expectException(\Error::class);
-        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; static $relations = []; };
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; static $relations = []; public static function fields():?array {return null; } };
         $e->mothers();
     }
 
     public function testNoRelationsMagicMethod()
     {
         $this->expectException(\Error::class);
-        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; };
+        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; public static function fields():?array {return null; }  };
         $e->mothers();
     }
 
     public function testNoRelations()
     {
         $this->expectException(\Error::class);
-        $e = new class(['id' => 1, 'name' => 'John']) { use Entity; static $relations = ['mother' => ['app\Mother' => 'mother_id']]; static $fields = ['id', 'mother_id']; };
+        $e = new class(['id' => 1, 'name' => 'John']) {
+            use Entity;
+            static $relations = ['mother' => ['app\Mother' => 'mother_id']];
+            static $fields = ['id', 'mother_id'];
+            public static function fields():?array {return self::$fields; }
+        };
         $e->describeRelationship('mothers');
     }
 
@@ -96,6 +101,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
                 'foreign' => 'owner_id',
                 'type' => 'has_two'
             ]];
+            public static function fields():?array {return null; }
         };
         $e->cars();
     }
@@ -108,6 +114,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
                 'class' => Car::class,
                 'foreign' => 'owner_id',
             ]];
+            public static function fields():?array {return null; }
         };
         $expected = [
             'class' => Car::class,
@@ -124,6 +131,7 @@ class EntityTest extends \PHPUnit_Framework_TestCase
                 'class' => Car::class,
                 'local' => 'car_id',
             ]];
+            public static function fields():?array {return null; }
         };
         $expected = [
             'class' => Car::class,

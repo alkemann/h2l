@@ -5,6 +5,7 @@ namespace alkemann\h2l;
 /**
  * Class Entity
  *
+ * @property string static $relations Specifications of relationships
  * @package alkemann\h2l
  */
 trait Entity
@@ -15,6 +16,11 @@ trait Entity
      */
     protected $data = [];
 
+    /**
+     * Cache of loaded relationships
+     *
+     * @var array
+     */
     protected $relationships = [];
 
     /**
@@ -26,6 +32,8 @@ trait Entity
     {
         $this->data = $data;
     }
+
+    abstract public static function fields(): ?array;
 
     /**
      * @param $name
@@ -53,7 +61,7 @@ trait Entity
 
     private function checkIfRelationIsSet(string $name): void
     {
-        if (isset(static::$relations) === false ||
+        if (isset(static::$relations) === false || is_array(static::$relations) === false ||
             array_key_exists($name, static::$relations) === false) {
             $class = get_class($this);
             throw new \Error("Call to undefined method {$class}::{$name}()");
@@ -131,7 +139,8 @@ trait Entity
     private function generateRelationshipFromShorthand(array $settings): array
     {
         $field = current($settings);
-        $field_is_local = in_array($field, static::$fields); // @TODO hack to use Model data?
+        $fields = static::fields() ?? [];
+        $field_is_local = in_array($field, $fields); // @TODO hack to use Model data?
         if ($field_is_local) {
             return [
                 'class' => key($settings),
@@ -193,7 +202,7 @@ trait Entity
     /**
      * Cast the data array to $type and return this
      *
-     * @param $type 'json', 'array'
+     * @param string $type json|array
      * @return mixed
      * @throws \InvalidArgumentException on unsupported type
      */

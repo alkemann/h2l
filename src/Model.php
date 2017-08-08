@@ -112,7 +112,7 @@ trait Model
         return iterator_to_array($generator);
     }
 
-    private static function fields(): ?array
+    public static function fields(): ?array
     {
         return isset(static::$fields) ? static::$fields : null;
     }
