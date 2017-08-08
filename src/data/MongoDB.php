@@ -86,7 +86,7 @@ class MongoDb implements Source
         if ($result === null) {
             return null;
         }
-        return $this->out($result);
+        return $result instanceof BSONDocument ? $this->out($result) : $result;
     }
 
     private function idReplaceConditions(array $conditions): array
@@ -118,22 +118,22 @@ class MongoDb implements Source
         }
     }
 
-    public function update(string $collection_name, array $conditions, array $data, array $options = []): string
+    public function update(string $collection_name, array $conditions, array $data, array $options = []): int
     {
         $collection = $this->collection($collection_name);
         $result = $collection->updateMany($conditions, $data, $options);
-        if ($result->isAcknowledged() == false) {
+        if ($result->isAcknowledged() === false) {
             // Throw exception or error?
             return 0;
         }
-        return $result->getModifiedCount();
+        return $result->getModifiedCount() ?? 0;
     }
 
     public function insert(string $collection, array $data, array $options = []): ?ObjectID
     {
         $collection = $this->collection($collection);
         $result = $collection->insertOne($data, $options);
-        if ($result->isAcknowledged() == false) {
+        if ($result->isAcknowledged() === false) {
             // Throw exception or error?
             return null;
         }
@@ -141,14 +141,15 @@ class MongoDb implements Source
             Log::error("Failed to insert!");
             return null;
         }
-        return $result->getInsertedId();
+        $id = $result->getInsertedId();
+        return $id instanceof ObjectID ? $id : null;
     }
 
     public function delete(string $collection, array $conditions, array $options = []): int
     {
         $collection = $this->collection($collection);
         $result = $collection->deleteMany($conditions, $options);
-        if ($result->isAcknowledged() == false) {
+        if ($result->isAcknowledged() === false) {
             // Throw exception or error?
             return 0;
         }
