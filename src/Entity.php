@@ -5,7 +5,6 @@ namespace alkemann\h2l;
 /**
  * Class Entity
  *
- * @property string static $relations Specifications of relationships
  * @package alkemann\h2l
  */
 trait Entity
