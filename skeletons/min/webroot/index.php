@@ -19,7 +19,7 @@ Environment::set([
     ]
 ], Environment::ALL);
 
-Router::alias('/', 'home.html');
+alkemann\h2l\Router::alias('/', 'home.html');
 
 $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
 $response = $request->response();
