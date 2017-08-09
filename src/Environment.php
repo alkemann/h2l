@@ -10,11 +10,15 @@ namespace alkemann\h2l;
 final class Environment
 {
     const ALL = "ALL";
+    const LOCAL = "LOCAL";
     const DEV = "DEV";
     const TEST = "TEST";
     const PROD = "PROD";
 
     private static $settings = [
+        Environment::LOCAL => [
+            'debug' => true,
+        ],
         Environment::DEV => [
             'debug' => true,
         ],
