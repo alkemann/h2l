@@ -11,9 +11,18 @@ use alkemann\h2l\exceptions\ConfigMissing;
  * See https://github.com/php-fig/log
  *
  *
+ * 0 Emergency: system is unusable
+ * 1 Alert: action must be taken immediately
+ * 2 Critical: critical conditions
+ * 3 Error: error conditions
+ * 4 Warning: warning conditions
+ * 5 Notice: normal but significant condition
+ * 6 Informational: informational messages
+ * 7 Debug: debug-level messages
+ *
  * @package alkemann\h2l
- * @method static void info($message, array $context = []) Log info level
  * @method static void debug($message, array $context = []) Log debug level
+ * @method static void info($message, array $context = []) Log info level
  * @method static void notice($message, array $context = []) Log notice level
  * @method static void warning($message, array $context = []) Log warning level
  * @method static void error($message, array $context = []) Log error level
@@ -36,7 +45,7 @@ class Log
      * @param string $name unique name for this handler
      * @param object|callable $handler an object that implement Psr\Log\LoggerInterface or a callable
      */
-    public static function handler(string $name, $handler)
+    public static function handler(string $name, $handler): void
     {
         if (is_callable($handler) === false) {
             if (is_object($handler)) {
@@ -86,6 +95,24 @@ class Log
                 $handler->$level($message, $context);
             }
         }
+    }
+
+    /**
+     * A standard output handler, INFO, DEBUG, NOTICE to `php://stdout` and rest to `php://stderr`
+     *
+     * You can enable it like this: `Log::handler('standard', [Log::class, 'std']);`
+     *
+     * @codeCoverageIgnore
+     * @param string $level
+     * @param string $message
+     * @param array $context
+     */
+    private static function std(string $level, string $message, array $context = []): void
+    {
+        $level = strtoupper($level);
+        $string = "{$level}: {$message}\n";
+        $channel = in_array($level, ['INFO', 'DEBUG', 'NOTICE']) ? 'php://stdout' : 'php://stderr';
+        file_put_contents($channel, $string);
     }
 
     /**
