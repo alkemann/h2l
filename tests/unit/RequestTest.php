@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{Request, Route, Response, response\Error};
+use alkemann\h2l\{
+    interfaces\SessionInterface, Request, Route, Response, response\Error
+};
 
 class RequestTests extends \PHPUnit_Framework_TestCase
 {
@@ -117,6 +119,25 @@ class RequestTests extends \PHPUnit_Framework_TestCase
 
     public function testSession()
     {
-        $this->markTestSkipped('Session does not have DI yet!');
+        $s = $this->getMockBuilder(SessionInterface::class)
+            ->setMethods(['set', 'get'])
+            ->getMock();
+        $s->expects($this->exactly(3))
+            ->method('get')
+            ->withConsecutive(['ask one'], ['ask two'], ['ask three'])
+            ->willReturnOnConsecutiveCalls(
+                'one',
+                'two',
+                null
+            );
+
+        $this->assertTrue($s instanceof SessionInterface);
+        $request = new Request([], [], [], [], $s);
+        $this->assertEquals('one', $request->session('ask one'));
+        $this->assertEquals('two', $request->session('ask two'));
+        $this->assertEquals(null, $request->session('ask three'));
+
+        $result = $request->session();
+        $this->assertEquals($s, $result);
     }
 }
