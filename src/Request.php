@@ -2,8 +2,7 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\interfaces\RouteInterface;
-use alkemann\h2l\interfaces\SessionInterface;
+use alkemann\h2l\interfaces\Route;
 
 /**
  * Class Request
@@ -27,10 +26,14 @@ class Request
     private $url;
     private $method;
     private $type = 'html';
+
+    /**
+     * @var interfaces\Session
+     */
     private $session;
 
     /**
-     * @var RouteInterface
+     * @var Route
      */
     protected $route;
 
@@ -44,9 +47,9 @@ class Request
      * @param array $server $_SERVER
      * @param array $get $_GET
      * @param array $post $_POST
-     * @param SessionInterface|null $session if null, a default Session with $_SESSION will be created
+     * @param null|interfaces\Session $session if null, a default Session with $_SESSION will be created
      */
-    public function __construct(array $request = [], array $server = [], array $get = [], array $post = [], SessionInterface $session = null)
+    public function __construct(array $request = [], array $server = [], array $get = [], array $post = [], interfaces\Session $session = null)
     {
         $this->request = $request;
         $this->server = $server;
@@ -95,17 +98,17 @@ class Request
     }
 
     /**
-     * @return RouteInterface identified for request
+     * @return Route identified for request
      */
-    public function route(): RouteInterface
+    public function route(): Route
     {
         return $this->route;
     }
 
     /**
-     * @param RouteInterface $route
+     * @param Route $route
      */
-    public function setRoute(RouteInterface $route): void
+    public function setRoute(Route $route): void
     {
         $this->route = $route;
         $this->parameters = $route->parameters();
@@ -180,7 +183,7 @@ class Request
      * First call to this method will initiate the session
      *
      * @param string $key Dot notation for deeper values, i.e. `user.email`
-     * @return mixed|SessionInterface
+     * @return mixed|interfaces\Session
      */
     public function session(?string $key = null)
     {

@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    interfaces\SessionInterface, Request, Route, Response, response\Error
+    interfaces\Session as SessionInterface, Request, Route, Response, response\Error, Session
 };
 
 class RequestTests extends \PHPUnit_Framework_TestCase

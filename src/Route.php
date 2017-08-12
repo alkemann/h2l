@@ -2,7 +2,6 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\interfaces\RouteInterface;
 use Closure;
 
 /**
@@ -10,7 +9,7 @@ use Closure;
  *
  * @package alkemann\h2l
  */
-class Route implements RouteInterface
+class Route implements interfaces\Route
 {
 
     /**

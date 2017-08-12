@@ -3,6 +3,7 @@
 namespace alkemann\h2l\data;
 
 use alkemann\h2l\exceptions\ConnectionError;
+use alkemann\h2l\interfaces\Source;
 use alkemann\h2l\Log;
 use PDO;
 

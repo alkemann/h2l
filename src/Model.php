@@ -2,8 +2,8 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\data\Source;
 use alkemann\h2l\exceptions\ConfigMissing;
+use alkemann\h2l\interfaces\Source;
 
 /**
  * Class Model

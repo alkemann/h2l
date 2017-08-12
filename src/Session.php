@@ -8,7 +8,7 @@ namespace alkemann\h2l;
  * @codeCoverageIgnore
  * @package alkemann\h2l
  */
-class Session implements interfaces\SessionInterface
+class Session implements interfaces\Session
 {
     /**
      * @param string $key

@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{Model, Connections, data\Source, exceptions\ConfigMissing};
+use alkemann\h2l\{
+    Connections, exceptions\ConfigMissing, interfaces\Source, Model
+};
 use alkemann\h2l\tests\mocks\model\Person;
 
 class ModelTest extends \PHPUnit_Framework_TestCase

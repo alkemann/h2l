@@ -3,8 +3,10 @@
 namespace alkemann\h2l\tests\acceptance;
 
 use alkemann\h2l\Connections;
-use alkemann\h2l\data\Source;
-use alkemann\h2l\tests\mocks\relationship\{Father, Son, Car};
+use alkemann\h2l\interfaces\Source;
+use alkemann\h2l\tests\mocks\relationship\{
+    Car, Father, Son
+};
 
 class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 {

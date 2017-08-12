@@ -1,6 +1,6 @@
 <?php
 
-namespace alkemann\h2l\data;
+namespace alkemann\h2l\interfaces;
 
 interface Source
 {

@@ -5,7 +5,7 @@ namespace alkemann\h2l\interfaces;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 
-interface RouteInterface
+interface Route
 {
     public function url(): string;
     public function parameters(): array;
