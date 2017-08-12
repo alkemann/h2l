@@ -101,18 +101,13 @@ class RequestTests extends \PHPUnit_Framework_TestCase
     public function testParameters()
     {
         $route = new Route('thing', function() {return new Error();}, ['place' => 'Oslo']);
-        $request = $this->getMockBuilder('alkemann\h2l\Request')
+        $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->setMockClassName('Request') // Mock class name
             ->setMethods(['method']) // mocked methods
             ->getMock();
 
         $request->setRoute($route);
-
-        $this->assertNull($request->param('place'));
-
-        $response = $request->response();
-
         $this->assertEquals("Oslo", $request->param('place'));
         $this->assertNull($request->param('paris'));
     }

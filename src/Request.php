@@ -107,6 +107,7 @@ class Request
     public function setRoute(Route $route): void
     {
         $this->route = $route;
+        $this->parameters = $route->parameters();
     }
 
     /**
