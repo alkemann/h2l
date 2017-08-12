@@ -9,5 +9,5 @@ interface Route
 {
     public function url(): string;
     public function parameters(): array;
-    public function __invoke(Request $request): Response;
+    public function __invoke(Request $request): ?Response;
 }

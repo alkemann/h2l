@@ -49,9 +49,18 @@ class Route implements interfaces\Route
         return $this->parameters;
     }
 
-    public function __invoke(Request $request): Response
+    /**
+     * @param Request $request
+     * @return Response|null
+     * @throws \Error if callback did not return Response|null
+     */
+    public function __invoke(Request $request): ?Response
     {
-        return call_user_func_array($this->callback, [$request]);
+        $response = call_user_func_array($this->callback, [$request]);
+        if (is_null($response) || $response instanceof Response) {
+            return $response;
+        }
+        throw new \Error("Route callbacks must only return null or a subclass of alkemann\h2l\Response");
     }
 
     public function __toString(): string

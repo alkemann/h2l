@@ -22,4 +22,17 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $result = $r(new Request);
         $this->assertEquals($e, $result);
     }
+
+    public function testBadRoute()
+    {
+        $this->expectException(\Error::class);
+        $cb = function(Request $r): int {
+          return 12;
+        };
+        $route = new Route('/bad', $cb);
+        $request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $response = $route($request);
+    }
 }
