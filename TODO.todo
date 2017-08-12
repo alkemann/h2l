@@ -2,7 +2,6 @@
 
 Features:
  ☐ Cache
- ☐ Session
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
 
@@ -11,9 +10,6 @@ Cache:
  ☐ Cached templates
  ☐ Join templates
  ☐ Cached model relations?
-
-Session:
- ☐ Implement dependency injection for Request class
 
 Documentation:
  ☐ Templates
@@ -27,14 +23,23 @@ Documentation:
  ☐ Example app & Skeletons
  ☐ Cache
  ☐ Environments
+ ☐ Session
+
+Skeletons:
+ ☐ Add a Heroku skeleton
+ ☐ Remove skeletons from .gitattributes ignore and add a task for removing
+ ☐ Alternately, add an option at end of task to remove when having installed one
 
 Tests:
+ ☐ Integration test for the default Session $_SESSION wrapper?
 
 Packaging:
  ☐ Add CHANGES (To be used only after 1.0)
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Session @done (17-08-11 17:25) @project(Features)
+ ✔ Implement dependency injection for Request class @done (17-08-11 17:24) @project(Session)
  ✔ Refactored to PHP7 @done (17-08-08 16:44) @project(Debug)
  ✔ Model relation @done (17-08-08 16:44) @project(Features)
  ✔ Loose depend on alkemann/debug as require-dev instead? @done (17-08-08 16:44) @project(Debug)

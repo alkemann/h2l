@@ -12,15 +12,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $result = Router::match('/things');
         $this->assertTrue($result instanceof Route);
-        $this->assertEquals('/things', $result->url);
+        $this->assertEquals('/things', $result->url());
     }
 
     public function testRouteWithCallables()
     {
+        $ref_prop = new \ReflectionProperty(Route::class, 'callback');
+        $ref_prop->setAccessible(true);
+
         $f = function() { return ""; };
         Router::add('/testRouteWithCallables/f', $f);
         $route = Router::match('/testRouteWithCallables/f');
-        $this->assertEquals($f, $route->callback);
+        $result = $ref_prop->getValue($route);
+        $this->assertEquals($f, $result);
 
         $c = new class() {
             public function meth() { return ""; }
@@ -28,12 +32,14 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         };
         Router::add('/testRouteWithCallables/c', [$c, 'meth']);
         $route = Router::match('/testRouteWithCallables/c');
-        $this->assertEquals(\Closure::fromCallable([$c, 'meth']), $route->callback);
+        $result = $ref_prop->getValue($route);
+        $this->assertEquals(\Closure::fromCallable([$c, 'meth']), $result);
 
         $cname = get_class($c);
         Router::add('/testRouteWithCallables/s', "{$cname}::stats");
         $route = Router::match('/testRouteWithCallables/s');
-        $this->assertEquals(\Closure::fromCallable("{$cname}::stats"), $route->callback);
+        $result = $ref_prop->getValue($route);
+        $this->assertEquals(\Closure::fromCallable("{$cname}::stats"), $result);
     }
 
     public function testAlias()
@@ -42,10 +48,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $result = Router::match('/');
         $this->assertTrue($result instanceof Route);
-        $this->assertEquals('home.html', $result->url);
-        $this->assertEquals([], $result->parameters);
-        $this->assertTrue(is_callable($result->callback));
-        $result = ($result->callback)(new Request);
+        $this->assertEquals('home.html', "$result");
+        $this->assertEquals([], $result->parameters());
+        $this->assertTrue(is_callable($result));
+        $result = $result(new Request);
         $this->assertTrue($result instanceof Page);
     }
 
@@ -53,7 +59,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $cb = function() { $a=1; };
         Router::add('|^api/tasks$|', $cb, Request::GET);
-        $reflection = new \ReflectionMethod('alkemann\h2l\Router', 'matchDynamicRoute');
+        $reflection = new \ReflectionMethod(Router::class, 'matchDynamicRoute');
         $reflection->setAccessible(true);
 
         $result = $reflection->invoke(null, 'api/tasks');
@@ -66,30 +72,30 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     {
         $id = null;
         $name = null;
-        Router::add('|^api/\w+/(?<name>\w+)/(?<id>\d+)$|', function($r) use (&$id, &$name) {
+        $h = function() {};
+        Router::add('|^api/\w+/(?<name>\w+)/(?<id>\d+)$|', function($r) use (&$id, &$name, $h) {
             $id = (int) $r->param('id');
             $name = $r->param('name');
-            return new Json(['id' => $id, 'name' => $name]);
+            return new Json(['id' => $id, 'name' => $name], 200, ['header_func' => $h]);
         });
 
-        $reflection = new \ReflectionMethod('alkemann\h2l\Router', 'matchDynamicRoute');
+        $reflection = new \ReflectionMethod(Router::class, 'matchDynamicRoute');
         $reflection->setAccessible(true);
         $route = $reflection->invoke(null, 'api/doesntmatter/tasks/12');
         $this->assertTrue($route instanceof Route);
-        $this->assertEquals(['id' => '12', 'name' => 'tasks'], $route->parameters);
+        $this->assertEquals(['id' => '12', 'name' => 'tasks'], $route->parameters());
 
-        // ResponseMock
-        $r = new class($route) {
-            private $route;
-            public function __construct(Route $route) {
-                $this->route = $route;
-            }
-            public function param(string $name) {
-                return $this->route->parameters[$name] ?? null;
-            }
-        };
+        $r = $this->getMockBuilder(Request::class)
+            ->setMethods(['param'])
+            ->getMock();
+        $r->expects($this->exactly(2))
+            ->method('param')
+            ->willReturnOnConsecutiveCalls(
+              12,
+              'tasks'
+            );
 
-        $response = call_user_func_array($route->callback, [$r]);
+        $response = $route($r);
         $this->assertEquals(12, $id);
         $this->assertEquals("tasks", $name);
         $this->assertEquals('{"id":12,"name":"tasks"}', $response->render());
@@ -101,7 +107,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         Router::add('/api/people', $cb, Request::GET);
         $route = Router::match('/api/people', Request::GET);
         $this->assertTrue($route instanceof Route);
-        $this->assertEquals($cb, $route->callback);
+        $this->assertEquals('/api/people', "$route");
     }
 
     public function testMatch()
@@ -110,7 +116,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
          Router::add('|/dynamic/(?<id>\d+)|', $cb, Request::GET);
         $route = Router::match('/dynamic/123', Request::GET);
         $this->assertTrue($route instanceof Route);
-        $this->assertEquals(['id' => 123], $route->parameters);
-        $this->assertEquals($cb, $route->callback);
+        $this->assertEquals(['id' => 123], $route->parameters());
+        $this->assertEquals('/dynamic/123', "$route");
     }
 }

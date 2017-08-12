@@ -61,7 +61,7 @@ class Page extends Response
             'type' => $request->type(),
         ];
         $page = new static([], $config);
-        $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url);
+        $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url());
         return $page;
     }
 

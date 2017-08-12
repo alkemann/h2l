@@ -14,6 +14,8 @@
     "suggest": {
         "monolog/monolog": "Advanced logging that can be plugged into the logger",
         "mongodb/mongodb": "A Mongo DB data connection is provided that uses this library",
+        "ext-mongo": "For the MongoDb Datasource. ",
+        "ext-pdo": "For the MySql, Postgres and Sqlite Datasources.",
         "alkemann/debug": "Convenient var_dump replaces for debug and development, require-dev only"
     },
     "require": {

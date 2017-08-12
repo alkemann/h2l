@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\interfaces\SessionInterface;
+
 /**
  * Class Request
  *
@@ -24,6 +26,7 @@ class Request
     private $url;
     private $method;
     private $type = 'html';
+    private $session;
 
     /**
      * @var Route
@@ -40,8 +43,9 @@ class Request
      * @param array $server $_SERVER
      * @param array $get $_GET
      * @param array $post $_POST
+     * @param SessionInterface|null $session if null, a default Session with $_SESSION will be created
      */
-    public function __construct(array $request = [], array $server = [], array $get = [], array $post = [])
+    public function __construct(array $request = [], array $server = [], array $get = [], array $post = [], SessionInterface $session = null)
     {
         $this->request = $request;
         $this->server = $server;
@@ -57,9 +61,16 @@ class Request
             $this->type = 'json';
         }
 
+        if (is_null($session)) {
+            $this->session = new Session;
+        } else {
+            $this->session = $session;
+        }
+
         $this->url = $this->request['url'] ?? '/';
         $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
         $this->route = Router::match($this->url, $this->method);
+        $this->parameters = $this->route->parameters();
     }
 
     public function getHeader(string $name): ?string
@@ -96,6 +107,7 @@ class Request
     public function setRoute(Route $route): void
     {
         $this->route = $route;
+        $this->parameters = $route->parameters();
     }
 
     /**
@@ -157,34 +169,24 @@ class Request
      */
     public function response(): ?Response
     {
-        $cb = $this->route->callback;
-        $this->parameters = $this->route->parameters;
-        $response = call_user_func_array($cb, [$this]);
+        $response = ($this->route)($this);
         return ($response instanceof Response) ? $response : null;
     }
 
     /**
-     * Returns the session var at $key
+     * Returns the session var at $key or the Session object
      *
      * First call to this method will initiate the session
      *
-     * @TODO Implement dependency injection
-     * @codeCoverageIgnore
      * @param string $key Dot notation for deeper values, i.e. `user.email`
-     * @return mixed|null
+     * @return mixed|SessionInterface
      */
     public function session(?string $key = null)
     {
-        if (session_status() != PHP_SESSION_ACTIVE) {
-            session_start();
+        if (is_null($key)) {
+            return $this->session;
         }
-        if (is_null($key) === false && isset($_SESSION[$key])) {
-            return $_SESSION[$key];
-        }
-
-        if (is_null($key) === false && is_string($key) && strpos($key, '.') !== false) {
-            Util::getFromArrayByKey($key, $_SESSION);
-        }
+        return $this->session->get($key);
     }
 
     /**
