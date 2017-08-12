@@ -2,6 +2,7 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\interfaces\RouteInterface;
 use Closure;
 
 /**
@@ -50,9 +51,9 @@ class Router
      *
      * @param string $url Request url, i.e. '/api/user/32'
      * @param string $method Request::<GET/POST/PATCH/PUT/DELETE>
-     * @return Route
+     * @return RouteInterface
      */
-    public static function match(string $url, string $method = Request::GET): Route
+    public static function match(string $url, string $method = Request::GET): RouteInterface
     {
         $url = self::$aliases[$url] ?? $url;
 
@@ -74,7 +75,7 @@ class Router
         });
     }
 
-    private static function matchDynamicRoute(string $url, string $method = Request::GET): ?Route
+    private static function matchDynamicRoute(string $url, string $method = Request::GET): ?RouteInterface
     {
         foreach (self::$routes[$method] as $route => $cb) {
             if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) {

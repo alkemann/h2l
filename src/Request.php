@@ -2,6 +2,7 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\interfaces\RouteInterface;
 use alkemann\h2l\interfaces\SessionInterface;
 
 /**
@@ -29,7 +30,7 @@ class Request
     private $session;
 
     /**
-     * @var Route
+     * @var RouteInterface
      */
     protected $route;
 
@@ -94,17 +95,17 @@ class Request
     }
 
     /**
-     * @return Route identified for request
+     * @return RouteInterface identified for request
      */
-    public function route(): Route
+    public function route(): RouteInterface
     {
         return $this->route;
     }
 
     /**
-     * @param Route $route
+     * @param RouteInterface $route
      */
-    public function setRoute(Route $route): void
+    public function setRoute(RouteInterface $route): void
     {
         $this->route = $route;
         $this->parameters = $route->parameters();
