@@ -3,7 +3,7 @@
 namespace alkemann\h2l;
 
 /**
- * Interface Response
+ * Abstract class Response
  *
  * @package alkemann\h2l
  */
