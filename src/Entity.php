@@ -139,7 +139,7 @@ trait Entity
     {
         $field = current($settings);
         $fields = static::fields() ?? [];
-        $field_is_local = in_array($field, $fields); // @TODO hack to use Model data?
+        $field_is_local = in_array($field, $fields);
         if ($field_is_local) {
             return [
                 'class' => key($settings),

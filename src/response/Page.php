@@ -183,7 +183,6 @@ class Page extends Response
     /**
      * Set header type, render the view, then optionally render layouts and wrap the template
      *
-     * @TODO injectable header function
      * @return string fully rendered string, ready to be echo'ed
      * @throws InvalidUrl if the view template does not exist
      */
