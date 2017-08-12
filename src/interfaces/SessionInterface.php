@@ -2,7 +2,6 @@
 
 namespace alkemann\h2l\interfaces;
 
-
 interface SessionInterface
 {
     public function get(string $key);
