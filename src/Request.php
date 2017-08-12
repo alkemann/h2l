@@ -70,6 +70,7 @@ class Request
         $this->url = $this->request['url'] ?? '/';
         $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
         $this->route = Router::match($this->url, $this->method);
+        $this->parameters = $this->route->parameters();
     }
 
     public function getHeader(string $name): ?string
@@ -167,9 +168,7 @@ class Request
      */
     public function response(): ?Response
     {
-        $cb = $this->route->callback;
-        $this->parameters = $this->route->parameters;
-        $response = call_user_func_array($cb, [$this]);
+        $response = ($this->route)($this);
         return ($response instanceof Response) ? $response : null;
     }
 

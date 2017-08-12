@@ -44,16 +44,25 @@ class Session implements interfaces\SessionInterface
         $_SESSION[$key] = $value;
     }
 
+    /**
+     * @param string $key
+     */
     public function unset(string $key): void
     {
         unset($_SESSION[$key]);
     }
 
+    /**
+     * @return bool
+     */
     private function active(): bool
     {
         return session_status() === \PHP_SESSION_ACTIVE;
     }
 
+    /**
+     * @return bool
+     */
     public function destroy(): bool
     {
         session_destroy();
@@ -66,6 +75,10 @@ class Session implements interfaces\SessionInterface
         return false;
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     */
     public function check(string $key): bool
     {
         return isset($_SESSION[$key]);

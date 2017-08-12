@@ -15,15 +15,15 @@ class Route
     /**
      * @var string
      */
-    public $url;
+    private $url;
     /**
      * @var Closure
      */
-    public $callback;
+    private $callback;
     /**
      * @var array
      */
-    public $parameters;
+    private $parameters;
 
     /**
      * Route constructor.
@@ -37,5 +37,25 @@ class Route
         $this->url = $url;
         $this->callback = $cb;
         $this->parameters = $parameters;
+    }
+
+    public function url(): string
+    {
+        return $this->url;
+    }
+
+    public function parameters(): array
+    {
+        return $this->parameters;
+    }
+
+    public function __invoke(Request $request): Response
+    {
+        return call_user_func_array($this->callback, [$request]);
+    }
+
+    public function __toString(): string
+    {
+        return $this->url;
     }
 }
