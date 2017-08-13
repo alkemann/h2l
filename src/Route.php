@@ -2,6 +2,7 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\exceptions\InvalidCallback;
 use Closure;
 
 /**
@@ -52,7 +53,7 @@ class Route implements interfaces\Route
     /**
      * @param Request $request
      * @return Response|null
-     * @throws \Error if callback did not return Response|null
+     * @throws InvalidCallback if callback did not return Response|null
      */
     public function __invoke(Request $request): ?Response
     {
@@ -60,7 +61,7 @@ class Route implements interfaces\Route
         if (is_null($response) || $response instanceof Response) {
             return $response;
         }
-        throw new \Error("Route callbacks must only return null or a subclass of alkemann\h2l\Response");
+        throw new InvalidCallback("Route callbacks must only return null or a subclass of alkemann\h2l\Response");
     }
 
     public function __toString(): string
