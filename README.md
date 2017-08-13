@@ -44,12 +44,17 @@ Some example routes:
 ```php
 use alkemann\h2l\{Request, Router, response\Json};
 
-// Get task by id, i.e. http://example.com/api/tasks/12
-Router::add('|^api/tasks/(?<id>\d+)$|', function(Request $request) {
-	$id = $request->param('id'); // from the regex matched url part
-	$data_model = app\Task::get($id);
-	return new Json($data_model); // since Task model implements \JsonSerializable
-}, Request::GET);
+// Get task by id, i.e. GET http://example.com/api/tasks/12
+Router::add(
+  '|^api/tasks/(?<id>\d+)$|',
+  function(Request $request): Response
+  {
+    $id = $request->param('id'); // from the regex matched url part
+    $data_model = app\Task::get($id);
+    return new Json($data_model); // since Task model implements \JsonSerializable
+  },
+  Request::GET
+);
 
 // Any url with `version` in it, i.e. http://example.com/somethi/versionista
 Router::add('|version|', function($r) {
