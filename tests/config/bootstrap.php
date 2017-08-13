@@ -12,3 +12,4 @@ Environment::set([
     'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
 ], Environment::TEST);
 
+Environment::setEnvironment(Environment::TEST);

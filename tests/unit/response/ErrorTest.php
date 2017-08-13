@@ -6,18 +6,22 @@ use alkemann\h2l\{response\Error, Response, Request, Environment, exceptions\Inv
 
 class ErrorTest extends \PHPUnit_Framework_TestCase
 {
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        Environment::setEnvironment(Environment::TEST);
+    }
 
     public function testConstructAndHeaderInjection()
     {
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
-        $content_path = dirname(__DIR__);
         $code = 406;
-        $e = new Error([], compact('header_func', 'content_path', 'code'));
+        $e = new Error([], compact('header_func', 'code'));
         $this->assertTrue($e instanceof Response);
         $this->assertTrue($e instanceof Error);
         $e->render();
-        $expected = ['HTTP/1.0 406 Not Acceptable', 'Content-type: text/html'];
+        $expected = ['HTTP/1.0 406 Not Acceptable'];
         $this->assertEquals($expected, $header);
         $this->assertEquals("html", $e->type());
     }
@@ -39,30 +43,29 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("json", $e->type());
     }
 
-    public function test400WithMessage()
-    {
-        $header = [];
-        $header_func = function($h) use (&$header) {$header[] = $h; };
-        $content_path = dirname(__DIR__);
-        $code = 400;
-        $e = new Error([], compact('header_func', 'content_path', 'code'));
-        $e->render();
-        $expected = ['HTTP/1.0 400 Bad Request', 'Content-type: text/html'];
-        $this->assertEquals($expected, $header);
-    }
-
     public function test404()
     {
         Environment::put('debug', false);
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
-        $content_path = dirname(__DIR__);
         $code = 404;
-        $e = new Error([], compact('header_func', 'content_path', 'code'));
+        $e = new Error([], compact('header_func', 'code'));
         $e->render();
-        $expected = ['HTTP/1.0 404 Not Found', 'Content-type: text/html'];
+        $expected = ['HTTP/1.0 404 Not Found'];
         $this->assertEquals($expected, $header);
+    }
 
+    public function test404WithErrorPageWithMessage()
+    {
+        Environment::put('debug', false);
+        $header = [];
+        $header_func = function($h) use (&$header) {$header[] = $h; };
+        $code = 404;
+        $type = 'xml';
+        $e = new Error(['message' => 'Not Found'], compact('header_func', 'type', 'code'));
+        $e->render();
+        $expected = ['HTTP/1.0 404 Not Found', 'Content-type: application/xml'];
+        $this->assertEquals($expected, $header);
     }
 
     public function test404WithDebug()
@@ -78,6 +81,10 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
             public function render()
             {
                 throw new InvalidUrl("NO/PAGE");
+            }
+            public function isValid()
+            {
+                return true;
             }
         };
         $header_func = function($h) use (&$header) {$header[] = $h; };

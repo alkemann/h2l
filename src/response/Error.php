@@ -66,7 +66,6 @@ class Error extends Response
 
         $msg = self::$code_to_message[$this->code];
         $h("HTTP/1.0 {$this->code} {$msg}");
-
         try {
             $page_config = $this->config + [
                     'code' => $this->code,
@@ -75,6 +74,8 @@ class Error extends Response
                 ];
             $data = $this->data + ['code' => $this->code];
             $page = new $page_class($data, $page_config);
+            $page->isValid();
+
             return $page->render();
         } catch (InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());

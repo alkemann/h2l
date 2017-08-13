@@ -22,6 +22,7 @@ Environment::set([
 alkemann\h2l\Router::alias('/', 'home.html');
 
 $request = new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST);
+$request->setRouteFromRouter();
 $response = $request->response();
 if ($response) {
     echo $response->render();

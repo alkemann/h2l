@@ -12,7 +12,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
         Environment::setEnvironment(Environment::TEST);
+        static::$config = [
+            'header_func' => function() {}
+        ];
     }
 
     public function testRenderingSimple()
@@ -24,7 +28,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $request->expects($this->once())->method('type')->willReturn('html');
         $request->expects($this->once())->method('route')->willReturn(
-            new Route('place')
+            new Route('place', function() {})
         );
 
         $page = Page::fromRequest($request, static::$config);
@@ -32,6 +36,8 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $expected = '<html><body><div><h1>Win!</h1></div></body></html>';
         $result = $page->render();
         $this->assertEquals($expected, $result);
+
+        $this->assertEquals(200, $page->code());
 
         $page->layout = 'spicy';
         $expected = '<html><head><title>Spice</title></head><body><h1>Win!</h1></body></html>';
@@ -53,11 +59,11 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $request->expects($this->once())->method('type')->willReturn('html');
         $request->expects($this->once())->method('route')->willReturn(
-            new Route('unknown')
+            new Route('unknown', function() {}  )
         );
 
         $this->expectException(InvalidUrl::class);
         $page = Page::fromRequest($request, static::$config);
-        $result = $page->render();
+        $page->isValid();
     }
 }

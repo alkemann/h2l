@@ -21,6 +21,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     {
 
         $r = new class extends Response {
+            protected $code = 202;
             public function render():string { return "HEY"; }
         };
 
@@ -41,5 +42,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $expected = "application/json";
         $result = $ref_method->invoke($r);
         $this->assertEquals($expected, $result);
+
+        $this->assertEquals(202, $r->code());
     }
 }

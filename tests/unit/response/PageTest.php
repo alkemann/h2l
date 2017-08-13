@@ -3,11 +3,17 @@
 namespace alkemann\h2l\tests\unit\response;
 
 use alkemann\h2l\{
-    Environment, response\Page, Router, Route, Request, Response
+    Environment, exceptions\ConfigMissing, response\Page, Router, Route, Request, Response
 };
 
 class PageTest extends \PHPUnit_Framework_TestCase
 {
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        Environment::setEnvironment(Environment::TEST);
+    }
+
     public function testConstruct()
     {
         $request = new Request(
@@ -24,6 +30,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'url' => 'places/norway',
                 'filter' => 'all'
             ]);
+        $request->setRouteFromRouter();
         $page = Page::fromRequest($request);
         $this->assertTrue($page instanceof Response);
         $this->assertTrue($page instanceof Page);
@@ -48,6 +55,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
             ],
             ['url' => 'tasks']);
+        $request->setRouteFromRouter();
         $page = Page::fromRequest($request);
         $ref_contentType = new \ReflectionMethod($page, 'contentType');
         $ref_contentType->setAccessible(true);
@@ -64,6 +72,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET',
             ],
             ['url' => 'tasks.json']);
+        $request->setRouteFromRouter();
         $page = Page::fromRequest($request);
         $ref_contentType = new \ReflectionMethod($page, 'contentType');
         $ref_contentType->setAccessible(true);
@@ -81,6 +90,7 @@ class PageTest extends \PHPUnit_Framework_TestCase
                 'REQUEST_METHOD' => 'GET'
             ]
         );
+        $request->setRouteFromRouter();
         $page = Page::fromRequest($request, $conf);
         $ref_type = new \ReflectionProperty($page, 'type');
         $ref_type->setAccessible(true);
@@ -93,7 +103,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public function testSetData()
     {
-        $page = Page::fromRequest(new Request);
+        $request = new Request;
+        $request->setRouteFromRouter();
+        $page = Page::fromRequest($request);
         $page->setData('place', 'Norway');
         $page->setData(['city' => 'Oslo', 'height' => 12]);
 
@@ -106,9 +118,12 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public function testMissingContentPathConfigs()
     {
-        $this->expectException(\alkemann\h2l\exceptions\ConfigMissing::class);
+        $this->expectException(ConfigMissing::class);
         Environment::setEnvironment('testMissingContentPathConfigs');
-        $page = Page::fromRequest(new Request(['url' => 'place']));
+        $r = new Request(['url' => 'testMissingContentPathConfigs']);
+        $r->setRouteFromRouter();
+        $h = function() {};
+        $page = Page::fromRequest($r, ['header_func' => $h]);
         $page->render();
         Environment::setEnvironment(Environment::TEST);
     }
@@ -118,7 +133,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
         Environment::setEnvironment('testMissingContentPathConfigs');
         unset($conf['layout_path']);
         Environment::set($conf, 'testMissingContentPathConfigs');
-        $page = Page::fromRequest(new Request(['url' => 'place']));
+        $r = new Request(['url' => 'place']);
+        $r->setRouteFromRouter();
+        $h = function() {};
+        $page = Page::fromRequest($r, ['header_func' => $h]);
         $expected = "<h1>Win!</h1>";
         $result = $page->render();
         $this->assertEquals($expected, $result);

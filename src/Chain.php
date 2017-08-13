@@ -13,6 +13,9 @@ class Chain
 
     public function next(Request $request): ?Response
     {
+        if (empty($this->chain)) {
+            throw new exceptions\EmptyChainError;
+        }
         $next = array_shift($this->chain);
         return $next($request, $this);
     }

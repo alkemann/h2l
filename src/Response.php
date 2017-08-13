@@ -58,6 +58,7 @@ abstract class Response
     ];
 
     protected $type = 'html';
+    protected $code = 200;
 
     protected $validTypes = ['html', 'json', 'xml'];
     protected $contentTypes = [
@@ -71,7 +72,12 @@ abstract class Response
         return $this->type;
     }
 
-    protected function contentType(): string
+    public function code(): int
+    {
+        return $this->code;
+    }
+
+    public function contentType(): string
     {
         $format = $this->type;
         if (in_array($format, $this->validTypes)) {

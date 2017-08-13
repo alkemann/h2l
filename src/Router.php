@@ -70,7 +70,10 @@ class Router
 
         // TODO cache of valid static routes, maybe with a try, catch, finally?
         return new Route($url, function (Request $request) {
-            return response\Page::fromRequest($request);
+            $page = response\Page::fromRequest($request);
+            if ($page->isValid()) {
+                return $page;
+            }
         });
     }
 

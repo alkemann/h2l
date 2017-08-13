@@ -51,8 +51,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('home.html', "$result");
         $this->assertEquals([], $result->parameters());
         $this->assertTrue(is_callable($result));
-        $result = $result(new Request);
-        $this->assertTrue($result instanceof Page);
     }
 
     public function testDynamicRoutes()

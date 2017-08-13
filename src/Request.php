@@ -2,6 +2,9 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\exceptions\InvalidUrl;
+use alkemann\h2l\exceptions\NoRouteSetError;
+
 /**
  * Class Request
  *
@@ -39,8 +42,8 @@ class Request
     /**
      * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
      *
-     * Response type can be set from HTTP_ACCEPT header. the Route object will be set by a call
-     * to Router::match
+     * Response type can be set from HTTP_ACCEPT header
+     * Call setRoute or setRouteFromRouter to set a route
      *
      * @param array $request $_REQUEST
      * @param array $server $_SERVER
@@ -77,10 +80,16 @@ class Request
 
         $this->url = $this->request['url'] ?? '/';
         $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
+    }
 
-        // @TODO should these two really happen in construct?
-        $this->route = Router::match($this->url, $this->method);
+    public function setRouteFromRouter(string $router = Router::class): bool
+    {
+        $this->route = $router::match($this->url, $this->method);
+        if (is_null($this->route)) {
+            return false;
+        }
         $this->parameters = $this->route->parameters();
+        return true;
     }
 
     public function getHeader(string $name): ?string
@@ -104,9 +113,9 @@ class Request
     }
 
     /**
-     * @return interfaces\Route identified for request
+     * @return interfaces\Route|null Route identified for request if set
      */
-    public function route(): interfaces\Route
+    public function route(): ?interfaces\Route
     {
         return $this->route;
     }
@@ -175,12 +184,26 @@ class Request
     /**
      * Execute the Route's callback and return the Response object that the callback is required to return
      *
-     * @return Response
+     * Catches InvalidUrl exceptions and returns a response\Error with 404 instead
+     *
+     * @return Response|null
+     * @throws NoRouteSetError if a route has not been set prior to calling this, or by a middleware
      */
     public function response(): ?Response
     {
         $cbs = $this->middlewares;
-        array_push($cbs, $this->route);
+        $call_eventual_route_at_end_of_chain = function(Request $request, Chain $chain): ?Response {
+            $route = $request->route();
+            if (is_null($route)) {
+                throw new NoRouteSetError("Response called without Route set");
+            }
+            try {
+                return $route($request);
+            } catch (InvalidUrl $e) {
+                return new response\Error(['message' => $e->getMessage()], ['code' => 404]);
+            }
+        };
+        array_push($cbs, $call_eventual_route_at_end_of_chain);
         $response = (new Chain($cbs))->next($this);
         return ($response instanceof Response) ? $response : null;
     }
@@ -188,11 +211,13 @@ class Request
     /**
      * Add a closure to wrap the Route callback in to be called during Request::response
      *
-     * @param callable $cb
+     * @param callable|callable[] ...$cbs
      */
-    public function registerMiddle(callable $cb): void
+    public function registerMiddle(callable ...$cbs): void
     {
-        $this->middlewares[] = $cb;
+        foreach ($cbs as $cb) {
+            $this->middlewares[] = $cb;
+        }
     }
 
     /**

@@ -3,14 +3,21 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Chain, interfaces\Session as SessionInterface, Request, Response, response\Error, response\Json, Route
+    Chain, Environment, exceptions\NoRouteSetError, interfaces\Session as SessionInterface, Request, Response, response\Error, response\Json, Route, Router
 };
 
 class RequestTests extends \PHPUnit_Framework_TestCase
 {
 
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+        Environment::setEnvironment(Environment::TEST);
+    }
+
     public function testGetHtml()
     {
+        $this->assertEquals(Environment::TEST, Environment::current());
         $r = new Request(
             [ // $_REQUEST
                 'url' => 'place',
@@ -31,6 +38,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals('place', $r->url());
         $this->assertEquals('html', $r->type());
         $this->assertEquals('all', $r->param('filter'));
+        $r->setRouteFromRouter();
         $route = $r->route();
         $this->assertTrue($route instanceof Route);
         $result = $r->response();
@@ -87,6 +95,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals('api/tasks/12.json', $r->url());
         $this->assertEquals('json', $r->type());
         $this->assertEquals('all', $r->param('filter'));
+        $r->setRouteFromRouter();
         $route = $r->route();
         $this->assertTrue($route instanceof Route);
         $result = $r->response();
@@ -100,11 +109,13 @@ class RequestTests extends \PHPUnit_Framework_TestCase
 
     public function testParameters()
     {
-        $route = new Route('thing', function() {return new Error();}, ['place' => 'Oslo']);
+        $route = new Route('thing', function () {
+            return new Error();
+        }, ['place' => 'Oslo']);
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
-            ->setMockClassName('Request') // Mock class name
-            ->setMethods(['method']) // mocked methods
+            ->setMockClassName('Request')// Mock class name
+            ->setMethods(['method'])// mocked methods
             ->getMock();
 
         $request->setRoute($route);
@@ -136,11 +147,40 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals($s, $result);
     }
 
+    public function testNoRouteResponse()
+    {
+        $this->expectException(NoRouteSetError::class);
+        $request = new Request;
+        $request->response();
+    }
+
+    public function testResponse()
+    {
+        $request = new Request;
+        $cb = function (Request $r): ?Response { return new Json('hey'); };
+        $route = new Route('testResponse', $cb);
+        $request->setRoute($route);
+        $result = $request->response();
+        $this->assertTrue($result instanceof Json);
+    }
+
+    public function testSetRouteFromRouter()
+    {
+        $response = new Json('hey');
+        $cb = function (Request $r) use ($response): ?Response { return $response; };
+        Router::add('testSetRouteFromRouter', $cb, Request::GET);
+        $request = new Request(['url' => 'testSetRouteFromRouter']);
+        $request->setRouteFromRouter();
+
+        $result = $request->response();
+        $this->assertSame($response, $result);
+    }
+
     public function testMiddleWare()
     {
         $events = [];
 
-        $route = new Route('thing', function () use (&$events) {
+        $route = new Route('testMiddleWare', function () use (&$events) {
             $events[] = "Primary Route Called";
             return new Json(['place' => 'Oslo']);
         }, ['place' => 'Oslo']);
@@ -162,9 +202,21 @@ class RequestTests extends \PHPUnit_Framework_TestCase
         $request->registerMiddle($middle);
 
         $result = $request->response();
-        $this->assertTrue($result instanceof Error, "Response is : [" . get_class($result) . "]");
 
         $expected = ['Before middleware', 'Error Route Called', 'After middleware'];
         $this->assertEquals($expected, $events);
+
+        $this->assertTrue($result instanceof Error, "Response is : [" . get_class($result) . "]");
+    }
+
+    public function testSetFromRouterWithNoMatch()
+    {
+        $mock_router = new class {
+            public static function match() { return null; }
+        };
+
+        $r = new Request;
+        $result = $r->setRouteFromRouter(get_class($mock_router));
+        $this->assertFalse($result);
     }
 }

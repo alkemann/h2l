@@ -11,7 +11,6 @@ class Json extends \alkemann\h2l\Response
 {
     protected $type = 'json';
 
-    private $code;
     private $content;
     private $config;
 

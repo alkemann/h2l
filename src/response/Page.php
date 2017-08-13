@@ -29,7 +29,6 @@ class Page extends Response
     protected $request;
     protected $data = [];
     protected $template = 'error';
-    protected $code = 200;
 
     protected $config = [];
 
@@ -63,6 +62,19 @@ class Page extends Response
         $page = new static([], $config);
         $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url());
         return $page;
+    }
+
+    /**
+     * @return bool
+     * @throws InvalidUrl
+     */
+    public function isValid(): bool
+    {
+        $file = $this->getContentFile($this->template);
+        if (!file_exists($file)) {
+            throw new InvalidUrl("Missing view file: [ $file ]");
+        }
+        return true;
     }
 
     /**
@@ -163,9 +175,6 @@ class Page extends Response
     public function view(string $view): string
     {
         $file = $this->getContentFile($view);
-        if (!file_exists($file)) {
-            throw new InvalidUrl($file);
-        }
         ob_start();
         try {
             // or another way to hide the file variable?
@@ -188,9 +197,8 @@ class Page extends Response
      */
     public function render(): string
     {
-        $contentType = $this->contentType();
-
         $h = $this->config['header_func'] ?? 'header';
+        $contentType = $this->contentType();
         $h("Content-type: $contentType");
         $view = $this->view($this->template);
         $response = $this->head();

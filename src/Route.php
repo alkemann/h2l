@@ -30,10 +30,10 @@ class Route implements interfaces\Route
      * Route constructor.
      *
      * @param string $url
-     * @param Closure|null $cb
+     * @param Closure $cb
      * @param array $parameters
      */
-    public function __construct(string $url, ?Closure $cb = null, array $parameters = [])
+    public function __construct(string $url, ?Closure $cb, array $parameters = [])
     {
         $this->url = $url;
         $this->callback = $cb;

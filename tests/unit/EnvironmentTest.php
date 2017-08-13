@@ -12,17 +12,22 @@ use alkemann\h2l\Environment;
 
 class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {
-    static $defaults = null;
+    private static $test_env = null;
 
     public static function setUpBeforeClass()
     {
-        static::$defaults = Environment::grab(Environment::ALL);
+        static::$test_env = Environment::grab(Environment::ALL);
     }
 
     public function setUp()
     {
         Environment::setEnvironment(Environment::DEV);
-        Environment::set(static::$defaults, Environment::ALL);
+        Environment::set(static::$test_env, Environment::ALL);
+    }
+
+    public function tearDown()
+    {
+        Environment::set(static::$test_env);
     }
 
     public function testEnv()
@@ -88,7 +93,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     public function testAddAll()
     {
         Environment::add(['thang' => 'thong'], Environment::ALL);
-        $expected = static::$defaults;
+        $expected = static::$test_env;
         foreach ($expected as $env => $v) {
             $expected[$env]['thang'] = 'thong';
         }
@@ -99,7 +104,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
     public function testGrabAll()
     {
         Environment::put('other', 'fun');
-        $expected = static::$defaults;
+        $expected = static::$test_env;
         $expected[Environment::DEV]['other'] = 'fun';
         $result = Environment::grab(Environment::ALL);
         $this->assertEquals($expected, $result);
