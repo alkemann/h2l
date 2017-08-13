@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    interfaces\Session as SessionInterface, Request, Route, Response, response\Error, Session
+    Chain, interfaces\Session as SessionInterface, Request, Response, response\Error, response\Json, Route
 };
 
 class RequestTests extends \PHPUnit_Framework_TestCase
@@ -134,5 +134,37 @@ class RequestTests extends \PHPUnit_Framework_TestCase
 
         $result = $request->session();
         $this->assertEquals($s, $result);
+    }
+
+    public function testMiddleWare()
+    {
+        $events = [];
+
+        $route = new Route('thing', function () use (&$events) {
+            $events[] = "Primary Route Called";
+            return new Json(['place' => 'Oslo']);
+        }, ['place' => 'Oslo']);
+
+        $request = new Request;
+        $request->setRoute($route);
+
+        $middle = function (Request $request, Chain $chain) use (&$events): ?Response {
+            $events[] = 'Before middleware';
+            $error_route = new Route($request->url(), function (Request $r) use (&$events): ?Response {
+                $events[] = 'Error Route Called';
+                return new Error();
+            });
+            $request->setRoute($error_route);
+            $response = $chain->next($request);
+            $events[] = 'After middleware';
+            return $response;
+        };
+        $request->registerMiddle($middle);
+
+        $result = $request->response();
+        $this->assertTrue($result instanceof Error, "Response is : [" . get_class($result) . "]");
+
+        $expected = ['Before middleware', 'Error Route Called', 'After middleware'];
+        $this->assertEquals($expected, $events);
     }
 }

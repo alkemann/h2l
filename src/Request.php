@@ -15,6 +15,7 @@ class Request
     const PUT = 'PUT';
     const DELETE = 'DELETE';
 
+    private $middlewares = [];
     private $request;
     private $server;
     private $parameters;
@@ -47,8 +48,13 @@ class Request
      * @param array $post $_POST
      * @param null|interfaces\Session $session if null, a default Session with $_SESSION will be created
      */
-    public function __construct(array $request = [], array $server = [], array $get = [], array $post = [], interfaces\Session $session = null)
-    {
+    public function __construct(
+        array $request = [],
+        array $server = [],
+        array $get = [],
+        array $post = [],
+        interfaces\Session $session = null
+    ) {
         $this->request = $request;
         $this->server = $server;
         $this->post = $post;
@@ -71,6 +77,8 @@ class Request
 
         $this->url = $this->request['url'] ?? '/';
         $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
+
+        // @TODO should these two really happen in construct?
         $this->route = Router::match($this->url, $this->method);
         $this->parameters = $this->route->parameters();
     }
@@ -171,8 +179,20 @@ class Request
      */
     public function response(): ?Response
     {
-        $response = ($this->route)($this);
+        $cbs = $this->middlewares;
+        array_push($cbs, $this->route);
+        $response = (new Chain($cbs))->next($this);
         return ($response instanceof Response) ? $response : null;
+    }
+
+    /**
+     * Add a closure to wrap the Route callback in to be called during Request::response
+     *
+     * @param callable $cb
+     */
+    public function registerMiddle(callable $cb): void
+    {
+        $this->middlewares[] = $cb;
     }
 
     /**

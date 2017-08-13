@@ -24,6 +24,7 @@ Documentation:
  ☐ Cache
  ☐ Environments
  ☐ Session
+ ☐ Middleware
 
 Skeletons:
  ☐ Add a Heroku skeleton
