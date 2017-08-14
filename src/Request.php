@@ -231,6 +231,9 @@ class Request
     public function session(?string $key = null)
     {
         if (is_null($key)) {
+            if (session_status() != PHP_SESSION_ACTIVE) {
+                session_start();
+            }
             return $this->session;
         }
         return $this->session->get($key);
