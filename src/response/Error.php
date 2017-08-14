@@ -70,7 +70,8 @@ class Error extends Response
             $page_config = $this->config + [
                     'code' => $this->code,
                     'template' => $this->code == 404 ? '404' : 'error',
-                    'type' => $this->type
+                    'type' => $this->type,
+                    'request' => $this->request
                 ];
             $data = $this->data + ['code' => $this->code];
             $page = new $page_class($data, $page_config);

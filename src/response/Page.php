@@ -94,7 +94,7 @@ class Page extends Response
         }
     }
 
-    public function request(): Request
+    public function request(): ?Request
     {
         return $this->request;
     }

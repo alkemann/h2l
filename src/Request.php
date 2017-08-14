@@ -200,7 +200,7 @@ class Request
             try {
                 return $route($request);
             } catch (InvalidUrl $e) {
-                return new response\Error(['message' => $e->getMessage()], ['code' => 404]);
+                return new response\Error(['message' => $e->getMessage()], ['code' => 404, 'request' => $this]);
             }
         };
         array_push($cbs, $call_eventual_route_at_end_of_chain);
