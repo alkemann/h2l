@@ -2,10 +2,10 @@
 
 namespace alkemann\h2l\tests\unit\data;
 
-use alkemann\h2l\data\Mysql;
+use alkemann\h2l\data\PDO;
 use alkemann\h2l\tests\mocks\mysql\Statement as MockStatement;
 
-class MysqlTest extends \PHPUnit_Framework_TestCase
+class PDOTest extends \PHPUnit_Framework_TestCase
 {
     public function testQuery()
     {
@@ -16,14 +16,14 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $handler->expects($this->once())->method('query')->will($this->returnValue(new class() { public function fetchAll() { return "QUERIED"; }}));
 
-        $m = new Mysql;
+        $m = new PDO;
 
-        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\Mysql', 'db');
+        $reflection_prop = new \ReflectionProperty(PDO::class, 'db');
         $reflection_prop->setAccessible(true);
         $reflection_prop->setValue($m, $handler);
 
         $expected = 'QUERIED';
-        $result = $m->query('SELECT * FROM `tests`;');
+        $result = $m->query('SELECT * FROM tests;');
         $this->assertEquals($expected, $result);
     }
 
@@ -32,7 +32,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore', 'status' => 1], ['id' => 15, 'title' => 'Space', 'status' => 1]];
         $mi = new MockStatement($ec, $r);
-        $eq = 'SELECT * FROM `things` WHERE status = :c_status LIMIT :o_offset,:o_limit ;';
+        $eq = 'SELECT * FROM things WHERE status = :c_status LIMIT :o_offset,:o_limit ;';
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
 
         $result = $m->find('things', ['status' => 1], ['limit' => 10, 'offset' => 20]);
@@ -56,7 +56,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     {
         $ec = function() { return false; };
         $mi = new MockStatement($ec, []);
-        $eq = 'SELECT * FROM `things` WHERE nothing = :c_nothing ;';
+        $eq = 'SELECT * FROM things WHERE nothing = :c_nothing ;';
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
         $result = $m->find('things', ['nothing' => 'has this']);
         $this->assertTrue($result instanceof \Traversable);
@@ -78,9 +78,9 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
             ->with($expected_query)
             ->will($this->returnValue($ms));
 
-        $m = new Mysql;
+        $m = new PDO;
 
-        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\Mysql', 'db');
+        $reflection_prop = new \ReflectionProperty(PDO::class, 'db');
         $reflection_prop->setAccessible(true);
         $reflection_prop->setValue($m, $handler);
 
@@ -89,7 +89,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyUpdate()
     {
-        $m = new Mysql;
+        $m = new PDO;
         $this->assertEquals(0, $m->update('tab', [], ['status' => 'NEW']));
         $this->assertEquals(0, $m->update('tab', ['id' => 1], []));
     }
@@ -99,7 +99,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore']];
         $mi = new MockStatement($ec, $r);
-        $eq = 'SELECT * FROM `things` WHERE id = :c_id ;';
+        $eq = 'SELECT * FROM things WHERE id = :c_id ;';
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
         $expected = ['id' => 12, 'title' => 'Gore'];
         $result = $m->one('things', ['id' => 12]);
@@ -108,7 +108,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testOneNotFound()
     {
-        $m = $this->getMockBuilder('alkemann\h2l\data\Mysql')
+        $m = $this->getMockBuilder(PDO::class)
             ->setMethods(['find'])
             ->getMock();
         $m->expects($this->once())
@@ -122,7 +122,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(\Error::class);
 
-        $m = $this->getMockBuilder('alkemann\h2l\data\Mysql')
+        $m = $this->getMockBuilder(PDO::class)
             ->setMethods(['find'])
             ->getMock();
         $f = function() { return true; };
@@ -136,7 +136,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $eq = "UPDATE `things` SET status = :d_status WHERE id = :c_id ;";
+        $eq = "UPDATE things SET status = :d_status WHERE id = :c_id ;";
         $ec = function() { return true; };
         $mi = new MockStatement($ec, [1]);
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
@@ -147,12 +147,12 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testInsert()
     {
-        $eq = "INSERT INTO `things` (task, status) VALUES (:d_task, :d_status);";
+        $eq = "INSERT INTO things (task, status) VALUES (:d_task, :d_status);";
         $ec = function() { return true; };
         $mi = new MockStatement($ec, [1]);
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
 
-        $reflection_prop = new \ReflectionProperty('alkemann\h2l\data\Mysql', 'db');
+        $reflection_prop = new \ReflectionProperty(PDO::class, 'db');
         $reflection_prop->setAccessible(true);
         $handler = $reflection_prop->getValue($m);
         $handler->expects($this->once())
@@ -166,7 +166,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete()
     {
-        $eq = "DELETE FROM `things` WHERE id = :c_id ;";
+        $eq = "DELETE FROM things WHERE id = :c_id ;";
         $ec = function() { return true; };
         $mi = new MockStatement($ec, [1]);
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
@@ -177,7 +177,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public function testEmptyDelete()
     {
-        $m = new Mysql;
+        $m = new PDO;
         $this->assertEquals(0, $m->delete('tab', []));
     }
 }

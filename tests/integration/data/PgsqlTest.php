@@ -7,7 +7,7 @@ use alkemann\h2l\data\PDO;
 use PDO as _PDO;
 use PDOException;
 
-class MysqlTest extends \PHPUnit_Framework_TestCase
+class PgsqlTest extends \PHPUnit_Framework_TestCase
 {
     private static $config = [];
     /**
@@ -17,11 +17,11 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        if (extension_loaded('pdo_mysql') === false) {
-            self::markTestSkipped("PHP extension 'pdo_mysql' not installed");
+        if (extension_loaded('pdo_pgsql') === false) {
+            self::markTestSkipped("PHP extension 'pdo_pgsql' not installed");
             return;
         }
-        $f = dirname(dirname(__DIR__)) . '/config/pdo_mysql_connection.php';
+        $f = dirname(dirname(__DIR__)) . '/config/pdo_pgsql_connection.php';
         if (file_exists($f) == false) {
             self::markTestSkipped("Missing [ {$f} ] config file");
         }
@@ -34,7 +34,7 @@ class MysqlTest extends \PHPUnit_Framework_TestCase
         $user = $c['user'] ?? null;
         $pass = $c['pass'] ?? null;
         try {
-            $db = new _PDO("mysql:host={$host};dbname={$db}", $user, $pass);
+            $db = new _PDO("pgsql:host={$host};dbname={$db}", $user, $pass);
             $db->query('TRUNCATE TABLE tests;');
         } catch (\PDOException $e) {
             self::markTestSkipped("Connection configured, but connection failed!");
