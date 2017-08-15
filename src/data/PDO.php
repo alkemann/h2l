@@ -22,6 +22,10 @@ class PDO implements Source
 
     public function __construct(array $config = [])
     {
+        if (count($config) === 1 && array_key_exists('url', $config)) {
+            $config = parse_url($config['url']);
+        }
+
         $defaults = [
             'host' => 'localhost',
             'db' => 'test',
