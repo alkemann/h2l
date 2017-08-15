@@ -39,16 +39,17 @@ class PDO implements Source
 
         $scheme = $this->config['scheme'] ?? 'mysql';
         $host = $this->config['host'];
-        $db = $this->config['db'];
+        $db = $this->config['db'] ?? ((isset($this->config['path'])) ? ltrim($this->config['path'], '/') : null);
         $user = $this->config['user'];
         $pass = $this->config['pass'] ?? '';
         $port = ($this->config['port'] ?? false) ? ";port={$this->config['port']}" : '';
+        $sslmode = !empty($this->config['sslmode']) ? ';sslmode=required' : '';
         $opts = [
             _PDO::ATTR_EMULATE_PREPARES => false,
             _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION
         ];
         try {
-            $this->db = new _PDO("{$scheme}:host={$host}{$port};dbname={$db}", $user, $pass, $opts);
+            $this->db = new _PDO("{$scheme}:host={$host}{$port}{$sslmode};dbname={$db}", $user, $pass, $opts);
 
             // @TODO use this?
             // $this->db->setAttribute( _PDO::ATTR_EMULATE_PREPARES, false);
