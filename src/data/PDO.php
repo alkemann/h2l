@@ -5,9 +5,9 @@ namespace alkemann\h2l\data;
 use alkemann\h2l\exceptions\ConnectionError;
 use alkemann\h2l\interfaces\Source;
 use alkemann\h2l\Log;
-use PDO;
+use PDO as _PDO;
 
-class Mysql implements Source
+class PDO implements Source
 {
 
     /**
@@ -16,7 +16,7 @@ class Mysql implements Source
     protected $config = [];
 
     /**
-     * @var PDO
+     * @var _PDO
      */
     protected $db = null;
 
@@ -37,18 +37,20 @@ class Mysql implements Source
             return $this->db;
         }
 
+        $type = $this->config['type'] ?? 'mysql';
         $host = $this->config['host'];
         $db = $this->config['db'];
         $user = $this->config['user'];
         $pass = $this->config['pass'];
         $opts = [
-            PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            _PDO::ATTR_EMULATE_PREPARES => false,
+            _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION
         ];
         try {
-            $this->db = new PDO("mysql:host={$host};dbname={$db}", $user, $pass, $opts);
+            $this->db = new _PDO("{$type}:host={$host};dbname={$db}", $user, $pass, $opts);
+
             // @TODO use this?
-            // $this->db->setAttribute( PDO::ATTR_EMULATE_PREPARES, false);
+            // $this->db->setAttribute( _PDO::ATTR_EMULATE_PREPARES, false);
         } catch (\PDOException $e) {
             throw new ConnectionError("Unable to connect to $host : $db with user $user");
         }
@@ -59,7 +61,7 @@ class Mysql implements Source
     {
         Log::debug("PDO:QUERY [$query]");
         $result = $this->handler()->query($query);
-        return $result->fetchAll(PDO::FETCH_ASSOC);
+        return $result->fetchAll(_PDO::FETCH_ASSOC);
     }
 
     public function one(string $table, array $conditions, array $options = []): ?array
@@ -81,7 +83,7 @@ class Mysql implements Source
     {
         $where = $this->where($conditions);
         $limit = $this->limit($options);
-        $query = "SELECT * FROM `{$table}` {$where}{$limit};";
+        $query = "SELECT * FROM {$table} {$where}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
@@ -96,7 +98,7 @@ class Mysql implements Source
         }
         // @codeCoverageIgnoreStart
         if ($stmt instanceof \PDOStatement) {
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $stmt->setFetchMode(_PDO::FETCH_ASSOC);
         }
         // @codeCoverageIgnoreEnd
         return $stmt;
@@ -141,8 +143,8 @@ class Mysql implements Source
     private function bindPaginationToStatement(array $options, $stmt): void
     {
         if (array_key_exists('limit', $options)) {
-            $stmt->bindValue(":o_offset", (int)($options['offset'] ?? 0), PDO::PARAM_INT);
-            $stmt->bindValue(":o_limit", (int)$options['limit'], PDO::PARAM_INT);
+            $stmt->bindValue(":o_offset", (int)($options['offset'] ?? 0), _PDO::PARAM_INT);
+            $stmt->bindValue(":o_limit", (int)$options['limit'], _PDO::PARAM_INT);
         }
     }
 
@@ -154,7 +156,7 @@ class Mysql implements Source
 
         $datasql = $this->data($data);
         $where = $this->where($conditions);
-        $query = "UPDATE `{$table}` SET {$datasql} {$where};";
+        $query = "UPDATE {$table} SET {$datasql} {$where};";
 
         $params = $this->boundDebugString($conditions, $options, $data);
         Log::debug("PDO:QUERY [$query][$params]");
@@ -182,7 +184,7 @@ class Mysql implements Source
     {
         $keys = implode(', ', array_keys($data));
         $data_phs = ':d_' . implode(', :d_', array_keys($data));
-        $query = "INSERT INTO `{$table}` ({$keys}) VALUES ({$data_phs});";
+        $query = "INSERT INTO {$table} ({$keys}) VALUES ({$data_phs});";
         $params = $this->boundDebugString([], [], $data);
         Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
@@ -201,7 +203,7 @@ class Mysql implements Source
             return 0;
         }
         $limit = $this->limit($options);
-        $query = "DELETE FROM `{$table}` {$where}{$limit};";
+        $query = "DELETE FROM {$table} {$where}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
