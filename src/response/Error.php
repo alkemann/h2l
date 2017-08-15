@@ -5,6 +5,7 @@ namespace alkemann\h2l\response;
 use alkemann\h2l\Environment;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\Log;
+use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 
 /**
@@ -17,6 +18,9 @@ class Error extends Response
     protected $type = 'html';
     protected $code = 500;
     protected $data = [];
+    /**
+     * @var Request
+     */
     protected $request = null;
     protected $config = [];
 
@@ -74,6 +78,9 @@ class Error extends Response
                     'request' => $this->request
                 ];
             $data = $this->data + ['code' => $this->code];
+            /**
+             * @var $page Page
+             */
             $page = new $page_class($data, $page_config);
             $page->isValid();
 
