@@ -24,6 +24,7 @@ class PDO implements Source
     {
         if (count($config) === 1 && array_key_exists('url', $config)) {
             $config = parse_url($config['url']);
+            $config['db'] = ltrim($config['path'], '/');
         }
 
         $defaults = [
@@ -43,17 +44,22 @@ class PDO implements Source
 
         $scheme = $this->config['scheme'] ?? 'mysql';
         $host = $this->config['host'];
-        $db = $this->config['db'] ?? ((isset($this->config['path'])) ? ltrim($this->config['path'], '/') : null);
+        $db = $this->config['db'];
         $user = $this->config['user'];
         $pass = $this->config['pass'] ?? '';
         $port = ($this->config['port'] ?? false) ? ";port={$this->config['port']}" : '';
-        $sslmode = !empty($this->config['sslmode']) ? ';sslmode=required' : '';
+        if (empty($this->config['query'])) {
+            $modifiers = '';
+        } else {
+            $modifiers = ';' . str_replace('&', ';', $this->config['query']);
+        }
         $opts = [
             _PDO::ATTR_EMULATE_PREPARES => false,
             _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION
         ];
+        $dsn = "{$scheme}:host={$host}{$port}{$modifiers};dbname={$db}";
         try {
-            $this->db = new _PDO("{$scheme}:host={$host}{$port}{$sslmode};dbname={$db}", $user, $pass, $opts);
+            $this->db = new _PDO($dsn, $user, $pass, $opts);
 
             // @TODO use this?
             // $this->db->setAttribute( _PDO::ATTR_EMULATE_PREPARES, false);
