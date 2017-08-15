@@ -13,7 +13,7 @@ before_script:
   - psql -d travis_ci_test -U postgres -a -f tests/config/travis_init_pgsql.sql
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'h2l_tests'];" > tests/config/pdo_mysql_connection.php
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'test'];" > tests/config/mongo_connection.php
-  - echo "<?php return ['type'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'','db'=>'travis_ci_test'];" > tests/config/pdo_pgsql_connection.php
+  - echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'','db'=>'travis_ci_test'];" > tests/config/pdo_pgsql_connection.php
   - composer install
 script:
   - bin/runtests

@@ -37,17 +37,18 @@ class PDO implements Source
             return $this->db;
         }
 
-        $type = $this->config['type'] ?? 'mysql';
+        $scheme = $this->config['scheme'] ?? 'mysql';
         $host = $this->config['host'];
         $db = $this->config['db'];
         $user = $this->config['user'];
-        $pass = $this->config['pass'];
+        $pass = $this->config['pass'] ?? '';
+        $port = ($this->config['port'] ?? false) ? ";port={$this->config['port']}" : '';
         $opts = [
             _PDO::ATTR_EMULATE_PREPARES => false,
             _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION
         ];
         try {
-            $this->db = new _PDO("{$type}:host={$host};dbname={$db}", $user, $pass, $opts);
+            $this->db = new _PDO("{$scheme}:host={$host}{$port};dbname={$db}", $user, $pass, $opts);
 
             // @TODO use this?
             // $this->db->setAttribute( _PDO::ATTR_EMULATE_PREPARES, false);
