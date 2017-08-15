@@ -4,12 +4,15 @@ php:
 services:
   - mysql
   - mongodb
+  - postgresql
 before_script:
   - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - mongo mydb_test --eval 'db.addUser("travis", "test");'
   - mysql -u root --password="" < tests/config/travis_start.sql
+  - psql -c 'create database travis_ci_test;' -U postgres
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'h2l_tests'];" > tests/config/pdo_mysql_connection.php
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'test'];" > tests/config/mongo_connection.php
+  - echo "<?php return ['type'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'','db'=>'travis_ci_test'];" > tests/config/pdo_pgsql_connection.php
   - composer install
 script:
   - bin/runtests
