@@ -1,1 +1,7 @@
-CREATE TABLE tests ( id INT NOT NULL AUTO_INCREMENT , name VARCHAR(256) NOT NULL DEFAULT 'A name' , age INT NOT NULL DEFAULT '69' , PRIMARY KEY (id)) ENGINE = InnoDB;
+CREATE SEQUENCE tests_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807 START 18 CACHE 1;
+
+CREATE TABLE "public"."tests" (
+  "id" integer DEFAULT nextval('tests_id_seq') NOT NULL,
+  "name" character varying(256) NOT NULL,
+  "age" integer NOT NULL
+) WITH (oids = false);
