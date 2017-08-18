@@ -166,7 +166,6 @@ class Remote
             'Accept-Encoding'
         ];
         foreach ($headers_to_set_to_blank_if_not_set as $name) {
-
             if ($request->header($name) === null) {
                 $conf[CURLOPT_HTTPHEADER][] = "{$name}:";
             }
@@ -196,7 +195,6 @@ class Remote
                         $result['Http-Code'] = $matches[2];
                         $result['Http-Message'] = $matches[3] ? trim($matches[3]) : '';
                     }
-
                 }
             } else {
                 list($key, $value) = explode(": ", $part);
@@ -205,5 +203,4 @@ class Remote
         }
         return $result;
     }
-
 }
