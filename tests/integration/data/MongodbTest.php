@@ -48,7 +48,7 @@ class MongodbTest extends \PHPUnit_Framework_TestCase
     {
         $m = new Mongo(self::$config);
         $h = static::$collection_handler->invoke($m, 'tests');
-        $this->assertTrue($h instanceof \MongoDB\Collection);
+        $this->assertInstanceOf(\MongoDB\Collection::class, $h);
     }
 
     public function testUsage()

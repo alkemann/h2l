@@ -13,7 +13,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $r = new class extends Response {
             public function render():string { return "HEY"; }
         };
-        $this->assertTrue($r instanceof Response);
+        $this->assertInstanceOf(Response::class, $r);
         $this->assertEquals("HEY", $r->render());
     }
 

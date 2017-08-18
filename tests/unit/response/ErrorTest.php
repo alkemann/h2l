@@ -18,8 +18,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $code = 406;
         $e = new Error([], compact('header_func', 'code'));
-        $this->assertTrue($e instanceof Response);
-        $this->assertTrue($e instanceof Error);
+        $this->assertInstanceOf(Response::class, $e);
+        $this->assertInstanceOf(Error::class, $e);
         $e->render();
         $expected = ['HTTP/1.0 406 Not Acceptable'];
         $this->assertEquals($expected, $header);
@@ -39,7 +39,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $request->expects($this->once())->method('type')->willReturn('json');
 
         $e = new Error([], compact('header_func', 'content_path', 'code', 'request'));
-        $this->assertTrue($e instanceof Error);
+        $this->assertInstanceOf(Error::class, $e);
         $this->assertEquals("json", $e->type());
     }
 

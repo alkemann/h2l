@@ -10,13 +10,13 @@ class CacheTest extends \PHPUnit_Framework_TestCase
     public function testSettingHandler()
     {
         $c = new Cache(new Memory());
-        $this->assertTrue($c instanceof Cache);
+        $this->assertInstanceOf(Cache::class, $c);
     }
 
     public function testHasGetSetDelete()
     {
         $c = new Cache(new Memory());
-        $this->assertTrue($c instanceof Cache);
+        $this->assertInstanceOf(Cache::class, $c);
         $v = 1337;
         $o = (object) ['name' => 'King Kong', 'age' => 12];
         $this->assertFalse($c->has('v'));
@@ -37,7 +37,7 @@ class CacheTest extends \PHPUnit_Framework_TestCase
     public function testMultiples()
     {
         $c = new Cache(new Memory());
-        $this->assertTrue($c instanceof Cache);
+        $this->assertInstanceOf(Cache::class, $c);
         $s = "This is string";
         $f = 0.123;
         $b = true;

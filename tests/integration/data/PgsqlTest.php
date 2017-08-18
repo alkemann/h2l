@@ -47,14 +47,14 @@ class PgsqlTest extends \PHPUnit_Framework_TestCase
 
         $m = new PDO(['host' => 'nope']);
         $h = static::$handler_method->invoke($m);
-        $this->assertTrue($h instanceof _PDO);
+        $this->assertInstanceOf(_PDO::class, $h);
     }
 
     public function testConnectSuccess()
     {
         $m = new PDO(self::$config);
         $h = static::$handler_method->invoke($m);
-        $this->assertTrue($h instanceof _PDO);
+        $this->assertInstanceOf(_PDO::class, $h);
     }
 
     public function testUsage()

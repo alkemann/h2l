@@ -33,7 +33,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
                 'filter' => 'all'
             ]
         );
-        $this->assertTrue($r instanceof Request);
+        $this->assertInstanceOf(Request::class, $r);
         $this->assertEquals(Request::GET, $r->method());
         $this->assertEquals('place', $r->url());
         $this->assertEquals('html', $r->type());
@@ -63,7 +63,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
                 'filter' => 'all'
             ]
         );
-        $this->assertTrue($r instanceof Request);
+        $this->assertInstanceOf(Request::class, $r);
         $expected = ['Accept' => 'text/html,*/*;q=0.8', 'Api-Key' => 'asdf123'];
         $result = $r->getHeaders();
         $this->assertEquals($expected, $result);
@@ -90,7 +90,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
                 'title' => 'New Title',
             ]
         );
-        $this->assertTrue($r instanceof Request);
+        $this->assertInstanceOf(Request::class, $r);
         $this->assertEquals(Request::POST, $r->method());
         $this->assertEquals('api/tasks/12.json', $r->url());
         $this->assertEquals('json', $r->type());
@@ -137,7 +137,7 @@ class RequestTests extends \PHPUnit_Framework_TestCase
                 null
             );
 
-        $this->assertTrue($s instanceof SessionInterface);
+        $this->assertInstanceOf(SessionInterface::class, $s);
         $request = new Request([], [], [], [], $s);
         $this->assertEquals('one', $request->session('ask one'));
         $this->assertEquals('two', $request->session('ask two'));

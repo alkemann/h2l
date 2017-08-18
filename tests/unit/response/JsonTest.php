@@ -10,8 +10,8 @@ class JsonTest extends \PHPUnit_Framework_TestCase
     public function testConstructor()
     {
         $r = new Json(['id' => 12, 'title' => 'Hello there']);
-        $this->assertTrue($r instanceof Response);
-        $this->assertTrue($r instanceof Json);
+        $this->assertInstanceOf(Response::class, $r);
+        $this->assertInstanceOf(Json::class, $r);
     }
 
     public function testRender()

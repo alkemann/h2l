@@ -110,9 +110,6 @@ class PDOTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result instanceof \Traversable);
         // Check that we are NOT getting the Mock statement in response:
         $this->assertFalse($result instanceof MockStatement);
-        foreach ($result as $key => $value) {
-            var_dump([$key => $value]);
-        }
         $this->assertEquals([], iterator_to_array($result));
     }
 

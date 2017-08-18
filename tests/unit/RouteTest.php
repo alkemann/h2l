@@ -15,7 +15,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $e = new Error(['message' => 'No place'], ['code' => 404]);
         $cb = function(Request $r) use ($e) { return $e; };
         $r = new Route('/some/place.json', $cb, ['id' => 12]);
-        $this->assertTrue($r instanceof Route);
+        $this->assertInstanceOf(Route::class, $r);
         $this->assertSame('/some/place.json', $r->url());
         $this->assertSame('/some/place.json', "$r");
         $this->assertSame(['id' => 12], $r->parameters());
