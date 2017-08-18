@@ -11,7 +11,7 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
     public function testGetRequest()
     {
         $request = (new Message)
-            ->withUrl('https://requestb.in/17jkg571');
+            ->withUrl('http://mockbin.org/bin/cf21c2d2-bb7a-46d5-aa3c-b0d52faa25ad?foo=bar&foo=baz');
         $response = (new Remote)->http($request);
         $this->assertInstanceOf(Message::class, $response);
         $this->assertEquals(200, $response->code());
@@ -20,7 +20,7 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
 
     public function testPostRequest()
     {
-        $response = (new Remote)->postForm('https://requestb.in/17jkg571', ['name' => 'Alek']);
+        $response = (new Remote)->postForm('http://mockbin.org/bin/cf21c2d2-bb7a-46d5-aa3c-b0d52faa25ad?foo=bar&foo=baz', ['name' => 'Alek']);
         $this->assertInstanceOf(Message::class, $response);
         $this->assertEquals(200, $response->code());
         $this->assertEquals(Request::POST, $response->method());
@@ -28,7 +28,7 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
 
     public function testCurlFailure()
     {
-        $request = (new Message)->withUrl('https://www.tttttttttttttttt.nothing');
+        $request = (new Message)->withUrl('http://www.tttttttttttttttt.nothing');
         try {
             (new Remote)->http($request);
         } catch (CurlFailure $e) {
