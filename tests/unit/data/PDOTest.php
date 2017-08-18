@@ -7,9 +7,57 @@ use alkemann\h2l\tests\mocks\mysql\Statement as MockStatement;
 
 class PDOTest extends \PHPUnit_Framework_TestCase
 {
+    public function testConfigFromUrl()
+    {
+        $url = 'mysql://user:pass@localhost/dbname?sslmode=true&win=1';
+        $config = ['url' => $url];
+        $pdo = new PDO($config);
+
+        $ref_prop = new \ReflectionProperty(PDO::class, 'config');
+        $ref_prop->setAccessible(true);
+
+        $expected = [
+            'scheme' => 'mysql',
+            'host' => 'localhost',
+            'user' => 'user',
+            'pass' => 'pass',
+            'path' => '/dbname',
+            'db' => 'dbname',
+            'query' => 'sslmode=true&win=1'
+        ];
+        $result = $ref_prop->getValue($pdo);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testHandlerWithQueryParamOptions()
+    {
+        $pdo_mock = new class()
+        {
+            public $config;
+            public function __construct() { $this->config = func_get_args(); }
+        };
+        $mock_class =  get_class($pdo_mock);
+        $url = 'mysql://user:pass@localhost/dbname?sslmode=true&win=1';
+        $config = ['url' => $url];
+        $pdo = new PDO($config, $mock_class);
+
+        $ref_method = new \ReflectionMethod(PDO::class, 'handler');
+        $ref_method->setAccessible(true);
+        $result = $ref_method->invoke($pdo);
+        $this->assertInstanceOf($mock_class, $result);
+
+        $expected = [
+            "mysql:host=localhost;sslmode=true;win=1;dbname=dbname",
+            'user',
+            'pass',
+            [ \PDO::ATTR_EMULATE_PREPARES => false, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION ]
+        ];
+        $this->assertEquals($expected, $result->config);
+    }
+
     public function testQuery()
     {
-        $handler = $this->getMockBuilder('PDO')
+        $handler = $this->getMockBuilder(\PDO::class)
             ->disableOriginalConstructor()
             ->setMockClassName('PdoHandler') // Mock class name
             ->setMethods(['query']) // mocked methods

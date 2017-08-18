@@ -20,8 +20,12 @@ class PDO implements Source
      */
     protected $db = null;
 
-    public function __construct(array $config = [])
+    private $pdo_class = _PDO::class;
+
+    public function __construct(array $config = [], string $pdo_class = _PDO::class)
     {
+        $this->pdo_class = $pdo_class;
+
         if (count($config) === 1 && array_key_exists('url', $config)) {
             $config = parse_url($config['url']);
             $config['db'] = ltrim($config['path'], '/');
@@ -58,8 +62,9 @@ class PDO implements Source
             _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION
         ];
         $dsn = "{$scheme}:host={$host}{$port}{$modifiers};dbname={$db}";
+        $class = $this->pdo_class;
         try {
-            $this->db = new _PDO($dsn, $user, $pass, $opts);
+            $this->db = new $class($dsn, $user, $pass, $opts);
 
             // @TODO use this?
             // $this->db->setAttribute( _PDO::ATTR_EMULATE_PREPARES, false);
