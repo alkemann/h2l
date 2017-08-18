@@ -71,9 +71,15 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);
 
         $html = "<html><body>Win!</body></html>";
-        $message = (new Message)->withBody($html);
+        $message = (new Message)->withBody($html)->withHeaders(['Content-Type' => 'text/plain']);
         $this->assertEquals($html, $message->content());
 
+        $html = "<html><body id=\"the-body\">Win!</body></html>";
+        $message = (new Message)->withBody($html)->withHeaders(['Content-Type' => 'text/html']);
+        $this->assertEquals($html, $message->body());
+        $result = $message->content();
+        $this->assertInstanceOf(\DOMDocument::class, $result);
+        $this->assertEquals('Win!', $result->getElementById('the-body')->nodeValue);
     }
 
     public function testAs()

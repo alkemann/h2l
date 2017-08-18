@@ -104,6 +104,10 @@ final class Message
                 return json_decode($this->body, true);
             case static::CONTENT_XML:
                 return new \SimpleXMLElement($this->body);
+            case static::CONTENT_HTML:
+                $doc = new \DOMDocument();
+                $doc->loadHTML($this->body);
+                return $doc;
             case null:
             default:
                 return $this->body;
@@ -280,5 +284,13 @@ final class Message
         $new = clone $this;
         $new->meta = $meta;
         return $new;
+    }
+
+    /**
+     * @return string the raw body of the message
+     */
+    public function __toString(): string
+    {
+        return $this->body ?? '';
     }
 }
