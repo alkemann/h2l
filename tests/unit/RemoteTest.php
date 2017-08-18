@@ -14,13 +14,11 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
         $ref_method->setAccessible(true);
 
         $expected = [
-            'redirects' => [
-                [
-                    'Http-Version' => '1.1',
-                    'Http-Code' => '302',
-                    'Http-Message' => 'FOUND',
-                    'Served-By' => 'example.com'
-                ]
+            'redirected' => [
+                'Http-Version' => '1.1',
+                'Http-Code' => '302',
+                'Http-Message' => 'FOUND',
+                'Served-By' => 'example.com'
             ],
             'Http-Version' => '1.1',
             'Http-Code' => '200',

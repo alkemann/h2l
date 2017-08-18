@@ -181,24 +181,26 @@ class Remote
         $parts = explode("\n", $header);
         $result = [];
         foreach ($parts as $part) {
-            if (strpos($part, ': ') === false) {
-                if (substr($part, 0, 4) === 'HTTP') {
-                    if ($result) {
-                        $prev = $result;
-                        $result = [];
-                        $result['redirects'][] = $prev;
-                    }
+            $part = trim($part);
+            if (empty($part)) {
+                continue;
+            }
 
-                    $regex = '#^HTTP/(\d\.\d) (\d{3})(.*)#';
-                    if (preg_match($regex, $part, $matches)) {
-                        $result['Http-Version'] = $matches[1];
-                        $result['Http-Code'] = $matches[2];
-                        $result['Http-Message'] = $matches[3] ? trim($matches[3]) : '';
-                    }
-                }
-            } else {
+            if (strpos($part, ': ') !== false) {
                 list($key, $value) = explode(": ", $part);
                 $result[$key] = trim($value);
+                continue;
+            }
+
+            $regex = '#^HTTP/(\d\.\d) (\d{3})(.*)#';
+            if (preg_match($regex, $part, $matches)) {
+                if ($result) {
+                    $result = ['redirected' => $result];
+                }
+
+                $result['Http-Version'] = $matches[1];
+                $result['Http-Code'] = $matches[2];
+                $result['Http-Message'] = $matches[3] ? trim($matches[3]) : '';
             }
         }
         return $result;
