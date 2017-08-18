@@ -151,7 +151,7 @@ class Remote
             $options[CURLOPT_HTTPHEADER] = [];
         }
         $body = $request->body();
-        if ($body) {
+        if ($body !== null) {
             $options[CURLOPT_POSTFIELDS] = $body;
         }
 

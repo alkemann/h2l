@@ -38,7 +38,7 @@ final class Message
      */
     private $method = Request::GET;
     /**
-     * @var ?string
+     * @var string
      */
     private $body;
     /**
@@ -61,8 +61,6 @@ final class Message
      * @var string
      */
     private $content_charset = 'utf-8';
-
-    // public function __construct() {}
 
     public function type(): ?string
     {
@@ -94,7 +92,7 @@ final class Message
     }
 
     /**
-     * @return null|string|array|SimpleXMLElement body converted from raw format
+     * @return null|string|array|\SimpleXMLElement body converted from raw format
      */
     public function content()
     {
@@ -238,7 +236,7 @@ final class Message
         $new = clone $this;
         $new->headers = $headers;
         $content_header = $new->header('Content-Type');
-        if ($content_header) {
+        if (is_string($content_header)) {
             if (strpos($content_header, ';') === false) {
                 $new->content_type = trim(strtolower($content_header));
             } else {
