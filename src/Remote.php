@@ -16,12 +16,23 @@ use alkemann\h2l\exceptions\CurlFailure;
 class Remote
 {
     private $config = [];
+    private $curl_options = [];
+    private $curl_handler;
+    // @var float
+    private $start;
 
-    public function __construct(array $config = [])
+    public function __construct(array $curl_options = [], array $config = [])
     {
-        $this->config = $config + [
-                // defaults
-            ];
+        $this->config = $config;
+        $this->curl_options = [
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_USERAGENT => 'alkemann-h2l-Remote-0.29',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HEADER => true,
+            ] + $curl_options;
     }
 
     public function get(string $url, array $headers = []): Message
@@ -75,75 +86,39 @@ class Remote
 
     public function http(Message $request): Message
     {
-        $start = microtime(true);
-
-        $curl_handler = $this->createCurlHandlerFromRequest($request);
-
-        $meta = [];
-        $headers = [];
-
-        try {
-            $content = curl_exec($curl_handler);
-            if ($content === false) {
-                throw new CurlFailure(curl_error($curl_handler), curl_errno($curl_handler));
-            }
-        } catch (\Exception $e) {
-            Log::error("CURL exception : " . get_class($e) . " : " . $e->getMessage());
-
-            $curl_failure = new CurlFailure($e->getMessage(), $e->getCode(), $e);
-            $latency = microtime(true) - $start;
-            $info = curl_getinfo($curl_handler);
-            $curl_failure->setContext(compact('request', 'latency', 'info'));
-
-            curl_close($curl_handler);
-            unset($curl_handler);
-
-            throw $curl_failure;
-        }
-
-        $meta['latency'] = microtime(true) - $start;
-        $meta['info'] = curl_getinfo($curl_handler);
-        $code = $meta['info']['http_code'];
-
-        $header_size = curl_getinfo($curl_handler, CURLINFO_HEADER_SIZE);
+        $this->createCurlHandlerFromRequest($request);
+        $content = $this->execute_curl($request);
+        $meta = curl_getinfo($this->curl_handler);
+        $header_size = curl_getinfo($this->curl_handler, CURLINFO_HEADER_SIZE);
         $header = substr($content, 0, $header_size);
-        if ($header) {
-            $headers = $this->extractHeaders($header);
-        }
+        $headers = $this->extractHeaders($header);
         $content = substr($content, $header_size);
-
-        // Curl handler no longer needed, let's close it
-
-        curl_close($curl_handler);
-        unset($curl_handler);
-
+        curl_close($this->curl_handler);
+        unset($this->curl_handler);
+        $meta['latency'] = microtime(true) - $this->start;
         return (new Message)
             ->withType(Message::RESPONSE)
             ->withUrl($request->url())
             ->withMethod($request->method())
             ->withBody($content)
-            ->withCode($code)
+            ->withCode($meta['http_code'])
             ->withHeaders($headers)
-            ->withMeta($meta);
+            ->withMeta($meta)
+        ;
     }
 
     /**
-     * return resource a hurl handler
+     * @param Message $request
      */
     private function createCurlHandlerFromRequest(Message $request)
     {
-        $curl_handler = curl_init();
+        $this->start = microtime(true);
 
-        $options = $this->config['curl'] ?? [];
+        $this->curl_handler = curl_init();
+
+        $options = $this->curl_options;
         $options += [
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_CONNECTTIMEOUT => 5,
-            CURLOPT_TIMEOUT => 5,
             CURLOPT_URL => $request->url(),
-            CURLOPT_USERAGENT => 'alkemann\h2l\Remote',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => true,
             CURLOPT_CUSTOMREQUEST => $request->method(),
         ];
 
@@ -171,9 +146,35 @@ class Remote
             }
         }
 
-        curl_setopt_array($curl_handler, $options);
+        curl_setopt_array($this->curl_handler, $options);
+    }
 
-        return $curl_handler;
+    /**
+     * @param Message $request
+     * @return string
+     * @throws CurlFailure if curl_exec returns false or throws an Exception
+     */
+    private function execute_curl(Message $request): string
+    {
+        try {
+            $content = curl_exec($this->curl_handler);
+            if ($content === false) {
+                throw new CurlFailure(curl_error($this->curl_handler), curl_errno($this->curl_handler));
+            }
+            return $content;
+        } catch (\Exception $e) {
+            Log::error("CURL exception : " . get_class($e) . " : " . $e->getMessage());
+
+            $curl_failure = new CurlFailure($e->getMessage(), $e->getCode(), $e);
+            $latency = microtime(true) - $this->start;
+            $info = curl_getinfo($this->curl_handler);
+            $curl_failure->setContext(compact('request', 'latency', 'info'));
+
+            curl_close($this->curl_handler);
+            unset($this->curl_handler);
+
+            throw $curl_failure;
+        }
     }
 
     private function extractHeaders(string $header): array
