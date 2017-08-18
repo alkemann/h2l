@@ -62,6 +62,9 @@ final class Message
      */
     private $content_charset = 'utf-8';
 
+    /**
+     * @return null|string
+     */
     public function type(): ?string
     {
         return $this->type;
@@ -107,11 +110,17 @@ final class Message
         }
     }
 
+    /**
+     * @return string
+     */
     public function contentType(): string
     {
         return $this->content_type;
     }
 
+    /**
+     * @return string
+     */
     public function charset(): string
     {
         return $this->content_charset;
