@@ -21,6 +21,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://example.com', $message->url());
         $this->assertEquals(Request::POST, $message->method());
         $this->assertEquals('{"name": "John"}', $message->body());
+        $this->assertEquals('{"name": "John"}', ((string) $message));
         $this->assertEquals(Message::CONTENT_JSON, $message->contentType());
         $this->assertEquals('utf-8', $message->charset());
     }
