@@ -25,6 +25,8 @@ Documentation:
  ☐ Environments
  ☐ Session
  ☐ Middleware
+ ☐ Remote
+ ☐ Message
 
 Skeletons:
  ☐ Add a Heroku skeleton
