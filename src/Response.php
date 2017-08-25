@@ -60,7 +60,8 @@ abstract class Response
     protected static $contentTypes = [
         'text/html' => 'html',
         'application/json' => 'json',
-        'application/xml' => 'xml'
+        'application/xml' => 'xml',
+        'text/xml' => 'xml',
     ];
 
     protected $content_type = 'text/html';

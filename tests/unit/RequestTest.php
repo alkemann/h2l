@@ -46,7 +46,8 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'CONTENT_FORM' => 'application/x-www-form-urlencoded',
             'CONTENT_HTML' => 'text/html',
             'CONTENT_TEXT' => 'text/plain',
-            'CONTENT_XML' => 'text/xml',
+            'CONTENT_XML' => 'application/xml',
+            'CONTENT_TEXT_XML' => 'text/xml',
         ];
         $result = $ref_class->getConstants();
         $this->assertEquals($expected_constants, $result);

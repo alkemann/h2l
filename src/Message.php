@@ -15,7 +15,8 @@ class Message
     const CONTENT_FORM = 'application/x-www-form-urlencoded';
     const CONTENT_HTML = 'text/html';
     const CONTENT_TEXT = 'text/plain';
-    const CONTENT_XML = 'text/xml';
+    const CONTENT_XML = 'application/xml';
+    const CONTENT_TEXT_XML = 'text/xml';
 
     /**
      * @var int

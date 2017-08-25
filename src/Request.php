@@ -90,6 +90,7 @@ class Request extends Message
         $known_content_types = [
             Message::CONTENT_JSON,
             Message::CONTENT_XML,
+            Message::CONTENT_TEXT_XML,
             Message::CONTENT_FORM
         ];
         foreach ($known_content_types as $t) {
@@ -105,6 +106,7 @@ class Request extends Message
         $known_accept_types = [
             Message::CONTENT_JSON,
             Message::CONTENT_XML,
+            Message::CONTENT_TEXT_XML,
         ];
         foreach ($known_accept_types as $t) {
             if (strpos($accept_type, $t) !== false) {
