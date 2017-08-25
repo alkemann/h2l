@@ -30,6 +30,8 @@ class Page extends Response
     protected $request;
     protected $data = [];
     protected $template = 'error';
+    protected $content_type = Message::CONTENT_HTML;
+    protected $code = 200;
 
     protected $config = [];
 

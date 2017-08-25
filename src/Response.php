@@ -7,7 +7,7 @@ namespace alkemann\h2l;
  *
  * @package alkemann\h2l
  */
-abstract class Response
+abstract class Response extends Message
 {
     public static $code_to_message = [
         // Informational 1xx
@@ -64,9 +64,6 @@ abstract class Response
         'text/xml' => 'xml',
     ];
 
-    protected $content_type = 'text/html';
-    protected $code = 200;
-
     public function fileEndingFromType(string $type): string
     {
         foreach (static::$contentTypes as $type_key => $ending) {
@@ -75,16 +72,6 @@ abstract class Response
             }
         }
         return 'html';
-    }
-
-    public function contentType(): string
-    {
-        return $this->content_type;
-    }
-
-    public function code(): int
-    {
-        return $this->code;
     }
 
     abstract public function render(): string;
