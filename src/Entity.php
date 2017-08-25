@@ -196,6 +196,7 @@ trait Entity
     public function reset(): void
     {
         $this->data = [];
+        $this->relationships = [];
     }
 
     /**

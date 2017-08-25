@@ -3,7 +3,10 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\Entity;
-use alkemann\h2l\tests\mocks\relationship\Car;
+use alkemann\h2l\exceptions\ConfigMissing;
+use alkemann\h2l\tests\mocks\relationship\{
+    Car, Father, Son
+};
 
 class MockEntity implements \JsonSerializable { use Entity; public static function fields():?array {return null; } };
 
@@ -141,7 +144,28 @@ class EntityTest extends \PHPUnit_Framework_TestCase
         ];
         $result = $e->describeRelationship('cars');
         $this->assertEquals($expected, $result);
+    }
 
+    public function testReset()
+    {
+        $father = new Father(['id' => 1, 'name' => 'John']);
 
+        $father->populateRelation('sons', [new Son(['name' => 'Peter'])]);
+
+        $this->assertEquals('John', $father->name);
+        $sons = $father->sons(false);
+        $this->assertTrue(is_array($sons) && count($sons) === 1);
+        $this->assertEquals('Peter', $sons[0]->name);
+
+        $father->reset();
+
+        $this->assertNull($father->name);
+        $thrown = false;
+        try {
+            $sons = $father->sons(false);
+        } catch (ConfigMissing $e) {
+            $thrown = true;
+        }
+        $this->assertTrue($thrown, "Father didnt try to look in DB for his sons");
     }
 }
