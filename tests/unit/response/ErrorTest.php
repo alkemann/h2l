@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\unit\response;
 
-use alkemann\h2l\{response\Error, Response, Request, Environment, exceptions\InvalidUrl};
+use alkemann\h2l\{
+    Message, response\Error, Response, Request, Environment, exceptions\InvalidUrl
+};
 
 class ErrorTest extends \PHPUnit_Framework_TestCase
 {
@@ -105,5 +107,14 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
     {
         $e = new Error([], ['header_func' => 99]);
         $e->render();
+    }
+
+    public function testErrorFromRequest()
+    {
+        $request = (new Request)
+            ->withServerParams(['HTTP_ACCEPT' => 'application/json;q=0.9']);
+        $error = new Error([], compact('request'));
+        $this->assertSame($request, $error->request());
+        $this->assertEquals(Message::CONTENT_JSON, $error->contentType());
     }
 }

@@ -51,7 +51,7 @@ class DispatchTests extends \PHPUnit_Framework_TestCase
         $request = self::getRequestFromDispatch($dispatch);
         $this->assertEquals(Request::GET, $request->method());
         $this->assertEquals('place', $request->url());
-        $this->assertEquals('text/html', $request->contentType());
+        $this->assertEquals('', $request->contentType());
         $this->assertEquals('all', $request->param('filter'));
         $this->assertNull($dispatch->route());
         $this->assertNull($request->route());

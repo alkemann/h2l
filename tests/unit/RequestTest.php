@@ -25,7 +25,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'meta' => [],
             'headers' => [],
             'options' => [],
-            'content_type' => 'text/html',
+            'content_type' => '',
             'accept_type' => 'text/html',
             'content_charset' => 'utf-8',
         ];
@@ -131,12 +131,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Request::POST, $r2->method());
     }
 
+    public function testDefailtServerParamsXML()
+    {
+        $request = (new Request)
+            ->withServerParams([
+                'HTTP_ACCEPT' => 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8'
+            ]);
+        $this->assertEquals(Message::CONTENT_HTML, $request->acceptType());
+    }
     public function testAlternativeServerParamsXML()
     {
         $request = (new Request)
             ->withServerParams([
                 'HTTP_CONTENT_TYPE' => 'application/xml; charset=utf-8',
-                'HTTP_ACCEPT' => 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8'
+                'HTTP_ACCEPT' => 'application/xml;q=0.9, */*;q=0.8'
             ]);
         $this->assertEquals(Message::CONTENT_XML, $request->acceptType());
         $this->assertEquals(Message::CONTENT_XML, $request->contentType());
