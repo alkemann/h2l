@@ -78,27 +78,40 @@ class Request extends Message
     {
         $new = clone $this;
         $new->server = $server;
-        $content_type = $server['HTTP_CONTENT_TYPE'] ?? false;
-        if ($content_type && $content_type !== '*/*') {
-            if (strpos($content_type, 'application/json') !== false) {
-                $new->content_type = Message::CONTENT_JSON;
-            } elseif (strpos($content_type, 'application/xml') !== false) {
-                $new->content_type = Message::CONTENT_XML;
-            } elseif (strpos($content_type, 'application/x-www-form-urlencoded') !== false) {
-                $new->content_type = Message::CONTENT_FORM;
-            }
-        }
-        $accept_header = $server['HTTP_ACCEPT'] ?? false;
-        if ($accept_header && $accept_header !== '*/*') {
-            if (strpos($accept_header, 'application/json') !== false) {
-                $new->accept_type = Message::CONTENT_JSON;
-            } elseif (strpos($accept_header, 'application/xml') !== false) {
-                $new->accept_type = Message::CONTENT_XML;
-            }
-        }
+        $new->setContentTypeFromServerParams($server['HTTP_CONTENT_TYPE'] ?? '');
+        $new->setAcceptTypeFromServerParams($server['HTTP_ACCEPT'] ?? '');
         $new->method = $server['REQUEST_METHOD'] ?? Request::GET;
         $new->headers = Util::getRequestHeadersFromServerArray($server);
         return $new;
+    }
+
+    private function setContentTypeFromServerParams(string $content_type): void
+    {
+        $known_content_types = [
+            Message::CONTENT_JSON,
+            Message::CONTENT_XML,
+            Message::CONTENT_FORM
+        ];
+        foreach ($known_content_types as $t) {
+            if (strpos($content_type, $t) !== false) {
+                $this->content_type = $t;
+                return;
+            }
+        }
+    }
+
+    private function setAcceptTypeFromServerParams(string $accept_type): void
+    {
+        $known_accept_types = [
+            Message::CONTENT_JSON,
+            Message::CONTENT_XML,
+        ];
+        foreach ($known_accept_types as $t) {
+            if (strpos($accept_type, $t) !== false) {
+                $this->accept_type = $t;
+                return;
+            }
+        }
     }
 
     public function acceptType(): string
