@@ -43,6 +43,11 @@ class Error extends Response
             ];
     }
 
+    public function request(): ?Request
+    {
+        return $this->request;
+    }
+
     /**
      * @throws \Error
      */

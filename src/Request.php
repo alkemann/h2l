@@ -26,7 +26,7 @@ class Request extends Message
     protected $get = [];
     protected $post = [];
     protected $route = null;
-
+    protected $content_type = '';
     protected $accept_type = Message::CONTENT_HTML;
 
     /**
@@ -105,6 +105,7 @@ class Request extends Message
     {
         $known_accept_types = [
             Message::CONTENT_JSON,
+            Message::CONTENT_HTML,
             Message::CONTENT_XML,
             Message::CONTENT_TEXT_XML,
         ];
