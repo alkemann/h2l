@@ -22,6 +22,8 @@ use alkemann\h2l\{ Dispatch, Request, Response, Log, Chain };
 
 $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
+
+// Middlewae to add a log response for request and what response handler is chosen
 $log_request_middleware = function(Request $request, Chain $chain): ?Response {
     Log::debug("== REQUEST: {$request->method()} '{$request->url()}' ==");
     $response = $chain->next($request);
@@ -30,8 +32,10 @@ $log_request_middleware = function(Request $request, Chain $chain): ?Response {
     return $response;
 };
 $dispatch->registerMiddle($log_request_middleware);
+
 $response = $dispatch->response();
 if ($response) {
     echo $response->render();
+    // Log response code and content type after render echo
     Log::debug("== RESPONSE: {$response->code()} {$response->contentType()} ==");
 }

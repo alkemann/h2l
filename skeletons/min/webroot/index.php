@@ -6,7 +6,7 @@ $VENDOR_PATH = $ROOT . 'vendor' . DIRECTORY_SEPARATOR;
 
 require_once($VENDOR_PATH . 'autoload.php');
 
-use alkemann\h2l\Environment;
+use alkemann\h2l\{ Environment, Dispatch };
 
 Environment::set([
     Environment::DEV => [
@@ -21,7 +21,7 @@ Environment::set([
 
 alkemann\h2l\Router::alias('/', 'home.html');
 
-$dispatch = new alkemann\h2l\Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
 $response = $dispatch->response();
 if ($response) {
