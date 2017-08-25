@@ -4,6 +4,7 @@ Features:
  ☐ Cache
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
+ ☐ XML response render
 
 Cache:
  ☐ Cached routes
@@ -25,6 +26,9 @@ Documentation:
  ☐ Environments
  ☐ Session
  ☐ Middleware
+ ☐ Remote
+ ☐ Message
+ ☐ Dispatch
 
 Skeletons:
  ☐ Add a Heroku skeleton

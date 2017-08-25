@@ -9,66 +9,52 @@ namespace alkemann\h2l;
  *
  * @package alkemann\h2l
  */
-final class Message
+class Message
 {
     const CONTENT_JSON = 'application/json';
     const CONTENT_FORM = 'application/x-www-form-urlencoded';
     const CONTENT_HTML = 'text/html';
     const CONTENT_TEXT = 'text/plain';
-    const CONTENT_XML = 'text/xml';
-
-    const REQUEST = "REQUEST";
-    const RESPONSE = "RESPONSE";
-    /**
-     * @var string  "REQUEST"|"RESPONSE"
-     */
-    private $type;
+    const CONTENT_XML = 'application/xml';
+    const CONTENT_TEXT_XML = 'text/xml';
 
     /**
      * @var int
      */
-    private $code;
+    protected $code;
     /**
      * @var string
      */
-    private $url = '';
+    protected $url = '';
     /**
      * Enum with Request::GET, Request::POST etc
      * @var string
      */
-    private $method = Request::GET;
+    protected $method = Request::GET;
     /**
      * @var string
      */
-    private $body;
+    protected $body;
     /**
      * @var array
      */
-    private $meta = [];
+    protected $meta = [];
     /**
      * @var array
      */
-    private $headers = [];
+    protected $headers = [];
     /**
      * @var array
      */
-    private $options = [];
+    protected $options = [];
     /**
      * @var string
      */
-    private $content_type = 'text/html';
+    protected $content_type = Message::CONTENT_HTML;
     /**
      * @var string
      */
-    private $content_charset = 'utf-8';
-
-    /**
-     * @return null|string
-     */
-    public function type(): ?string
-    {
-        return $this->type;
-    }
+    protected $content_charset = 'utf-8';
 
     /**
      * @return string
@@ -183,17 +169,6 @@ final class Message
     public function code(): ?int
     {
         return $this->code;
-    }
-
-    /**
-     * @param string $type
-     * @return Message
-     */
-    public function withType(string $type): Message
-    {
-        $new = clone $this;
-        $new->type = $type;
-        return $new;
     }
 
     /**

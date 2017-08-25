@@ -23,14 +23,13 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
-            ->setMethods(['type', 'route', 'method'])
+            ->setMethods(['acceptType', 'contentType', 'route', 'method', 'url'])
             ->getMock();
 
-        $request->expects($this->once())->method('type')->willReturn('html');
+        $request->expects($this->once())->method('acceptType')->willReturn('text/html');
         $request->expects($this->once())->method('route')->willReturn(
             new Route('place', function() {})
         );
-
         $page = Page::fromRequest($request, static::$config);
 
         $expected = '<html><body><div><h1>Win!</h1></div></body></html>';
@@ -54,10 +53,10 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
-            ->setMethods(['type', 'route', 'method'])
+            ->setMethods(['acceptType', 'contentType', 'route', 'method'])
             ->getMock();
 
-        $request->expects($this->once())->method('type')->willReturn('html');
+        $request->expects($this->once())->method('acceptType')->willReturn('text/html');
         $request->expects($this->once())->method('route')->willReturn(
             new Route('unknown', function() {}  )
         );

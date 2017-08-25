@@ -18,21 +18,24 @@ require_once($CONFIG_PATH . 'connections.php');
 require_once($CONFIG_PATH . 'routes.php');
 // ***********
 
-use alkemann\h2l\{ Request, Response, Log, Chain };
+use alkemann\h2l\{ Dispatch, Request, Response, Log, Chain };
 
-$request = new Request($_REQUEST, $_SERVER, $_GET, $_POST);
-$request->setRouteFromRouter();
+$dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch->setRouteFromRouter();
+
+// Middlewae to add a log response for request and what response handler is chosen
 $log_request_middleware = function(Request $request, Chain $chain): ?Response {
-    $url = $request->route()->url();
-    Log::debug("== REQUEST: {$request->method()} '{$url}' ==");
+    Log::debug("== REQUEST: {$request->method()} '{$request->url()}' ==");
     $response = $chain->next($request);
     if ($response) Log::debug("== Response Handler: " . get_class($response));
     else Log::debug("== Null Response");
     return $response;
 };
-$request->registerMiddle($log_request_middleware);
-$response = $request->response();
+$dispatch->registerMiddle($log_request_middleware);
+
+$response = $dispatch->response();
 if ($response) {
     echo $response->render();
+    // Log response code and content type after render echo
     Log::debug("== RESPONSE: {$response->code()} {$response->contentType()} ==");
 }

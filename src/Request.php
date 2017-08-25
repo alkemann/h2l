@@ -2,15 +2,13 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\exceptions\InvalidUrl;
-use alkemann\h2l\exceptions\NoRouteSetError;
-
 /**
  * Class Request
  *
+ * @TODO : $locale = Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
  * @package alkemann\h2l
  */
-class Request
+class Request extends Message
 {
     const GET = 'GET';
     const HEAD = 'HEAD';
@@ -22,143 +20,17 @@ class Request
     const TRACE = 'TRACE';
     const PATCH = 'PATCH';
 
-    private $middlewares = [];
-    private $request;
-    private $server;
-    private $parameters;
-    private $headers;
-    private $get;
-    private $post;
-    private $url;
-    private $method;
-    private $type = 'html';
+    protected $parameters = [];
+    protected $request = [];
+    protected $server = [];
+    protected $get = [];
+    protected $post = [];
+    protected $route = null;
+    protected $content_type = '';
+    protected $accept_type = Message::CONTENT_HTML;
 
     /**
-     * @var interfaces\Session
-     */
-    private $session;
-
-    /**
-     * @var interfaces\Route
-     */
-    protected $route;
-
-    /**
-     * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
-     *
-     * Response type can be set from HTTP_ACCEPT header
-     * Call setRoute or setRouteFromRouter to set a route
-     *
-     * @param array $request $_REQUEST
-     * @param array $server $_SERVER
-     * @param array $get $_GET
-     * @param array $post $_POST
-     * @param null|interfaces\Session $session if null, a default Session with $_SESSION will be created
-     */
-    public function __construct(
-        array $request = [],
-        array $server = [],
-        array $get = [],
-        array $post = [],
-        interfaces\Session $session = null
-    ) {
-        $this->request = $request;
-        $this->server = $server;
-        $this->post = $post;
-        $this->get = $get;
-        unset($this->get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
-        $this->parameters = [];
-        $this->headers = Util::getRequestHeadersFromServerArray($server);
-
-        // override html type with json
-        $http_accept = $this->server['HTTP_ACCEPT'] ?? '*/*';
-        if ($http_accept !== '*/*' && strpos($http_accept, 'application/json') !== false) {
-            $this->type = 'json';
-        }
-
-        if (is_null($session)) {
-            $this->session = new Session;
-        } else {
-            $this->session = $session;
-        }
-
-        $this->url = $this->request['url'] ?? '/';
-        $this->method = $this->server['REQUEST_METHOD'] ?? Request::GET;
-    }
-
-    public function setRouteFromRouter(string $router = Router::class): bool
-    {
-        $this->route = $router::match($this->url, $this->method);
-        if (is_null($this->route)) {
-            return false;
-        }
-        $this->parameters = $this->route->parameters();
-        return true;
-    }
-
-    public function getHeader(string $name): ?string
-    {
-        return $this->headers[$name] ?? null;
-    }
-
-    public function getHeaders(): array
-    {
-        return $this->headers;
-    }
-
-    /**
-     * @TODO inspect request headers for content type, auto parse the body
-     * @codeCoverageIgnore
-     * @return string the raw 'php://input' post
-     */
-    public function getPostBody(): string
-    {
-        return file_get_contents('php://input');
-    }
-
-    /**
-     * @return interfaces\Route|null Route identified for request if set
-     */
-    public function route(): ?interfaces\Route
-    {
-        return $this->route;
-    }
-
-    /**
-     * @param interfaces\Route $route
-     */
-    public function setRoute(interfaces\Route $route): void
-    {
-        $this->route = $route;
-        $this->parameters = $route->parameters();
-    }
-
-    /**
-     * @return string the requested url
-     */
-    public function url(): string
-    {
-        return $this->url;
-    }
-
-    /**
-     * @return string Request::GET, Request::POST, Request::PATCH, Request::PATCH etc
-     */
-    public function method(): string
-    {
-        return $this->method;
-    }
-
-    /**
-     * @return string 'html', 'json', 'xml' etc
-     */
-    public function type(): string
-    {
-        return $this->type;
-    }
-
-    /**
-     * Get request parameters from url as url parats, get queries or post, in that order
+     * Get request parameters from url as url params, get queries or post, in that order
      *
      * @param string $name the name of the parameter
      * @return mixed|null the value or null if not set
@@ -178,7 +50,126 @@ class Request
     }
 
     /**
-     * @return array $_GET
+     * @param array $request
+     * @return Request
+     */
+    public function withRequestParams(array $request): Request
+    {
+        $new = clone $this;
+        $new->url = $request['url'] ?? '/';
+        unset($request['url']);
+        $new->request = $request;
+        return $new;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequestParams(): array
+    {
+        return $this->request;
+    }
+
+    /**
+     * @param array $server
+     * @return Request
+     */
+    public function withServerParams(array $server): Request
+    {
+        $new = clone $this;
+        $new->server = $server;
+        $new->setContentTypeFromServerParams($server['HTTP_CONTENT_TYPE'] ?? '');
+        $new->setAcceptTypeFromServerParams($server['HTTP_ACCEPT'] ?? '');
+        $new->method = $server['REQUEST_METHOD'] ?? Request::GET;
+        $new->headers = Util::getRequestHeadersFromServerArray($server);
+        return $new;
+    }
+
+    private function setContentTypeFromServerParams(string $content_type): void
+    {
+        $known_content_types = [
+            Message::CONTENT_JSON,
+            Message::CONTENT_XML,
+            Message::CONTENT_TEXT_XML,
+            Message::CONTENT_FORM
+        ];
+        foreach ($known_content_types as $t) {
+            if (strpos($content_type, $t) !== false) {
+                $this->content_type = $t;
+                return;
+            }
+        }
+    }
+
+    private function setAcceptTypeFromServerParams(string $accept_type): void
+    {
+        $known_accept_types = [
+            Message::CONTENT_JSON,
+            Message::CONTENT_HTML,
+            Message::CONTENT_XML,
+            Message::CONTENT_TEXT_XML,
+        ];
+        foreach ($known_accept_types as $t) {
+            if (strpos($accept_type, $t) !== false) {
+                $this->accept_type = $t;
+                return;
+            }
+        }
+    }
+
+    public function acceptType(): string
+    {
+        return $this->accept_type;
+    }
+
+    /**
+     * @return array
+     */
+    public function getServerParam(): array
+    {
+        return $this->server;
+    }
+
+    /**
+     * @param array $post
+     * @return Request
+     */
+    public function withPostData(array $post): Request
+    {
+        $new = clone $this;
+        $new->post = $post;
+        return $new;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPostData(): array
+    {
+        return $this->post;
+    }
+
+    /**
+     * @param array $get
+     * @return Request
+     */
+    public function withGetData(array $get): Request
+    {
+        $new = clone $this;
+        $new->get = $get;
+        return $new;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGetData(): array
+    {
+        return $this->get;
+    }
+
+    /**
+     * @return array
      */
     public function query(): array
     {
@@ -186,73 +177,41 @@ class Request
     }
 
     /**
-     * Execute the Route's callback and return the Response object that the callback is required to return
-     *
-     * Catches InvalidUrl exceptions and returns a response\Error with 404 instead
-     *
-     * @return Response|null
-     * @throws NoRouteSetError if a route has not been set prior to calling this, or by a middleware
+     * @param array $parameters
+     * @return Request
      */
-    public function response(): ?Response
+    public function withUrlParams(array $parameters): Request
     {
-        $cbs = $this->middlewares;
-        $call_eventual_route_at_end_of_chain = function (Request $request, Chain $chain): ?Response {
-            $route = $request->route();
-            if (is_null($route)) {
-                throw new NoRouteSetError("Response called without Route set");
-            }
-            try {
-                return $route($request);
-            } catch (InvalidUrl $e) {
-                return new response\Error(['message' => $e->getMessage()], ['code' => 404, 'request' => $this]);
-            }
-        };
-        array_push($cbs, $call_eventual_route_at_end_of_chain);
-        $response = (new Chain($cbs))->next($this);
-        return ($response instanceof Response) ? $response : null;
+        $new = clone $this;
+        $new->parameters = $parameters;
+        return $new;
     }
 
     /**
-     * Add a closure to wrap the Route callback in to be called during Request::response
-     *
-     * @param callable|callable[] ...$cbs
+     * @return array
      */
-    public function registerMiddle(callable ...$cbs): void
+    public function getUrlParams(): array
     {
-        foreach ($cbs as $cb) {
-            $this->middlewares[] = $cb;
-        }
+        return $this->parameters;
     }
 
     /**
-     * Returns the session var at $key or the Session object
-     *
-     * First call to this method will initiate the session
-     *
-     * @param string $key Dot notation for deeper values, i.e. `user.email`
-     * @return mixed|interfaces\Session
+     * @param interfaces\Route $route
+     * @return Request
      */
-    public function session(?string $key = null)
+    public function withRoute(interfaces\Route $route): Request
     {
-        if (is_null($key)) {
-            if (session_status() != PHP_SESSION_ACTIVE) {
-                session_start();
-            }
-            return $this->session;
-        }
-        return $this->session->get($key);
+        $new = clone $this;
+        $new->route = $route;
+        $new->parameters = $route->parameters();
+        return $new;
     }
 
     /**
-     * Redirect NOW the request to $url
-     *
-     * @codeCoverageIgnore
-     * @param $url
+     * @return interfaces\Route|null
      */
-    public function redirect($url)
+    public function route(): ?interfaces\Route
     {
-        // @TODO add support for reverse route match
-        header("Location: " . $url);
-        exit;
+        return $this->route;
     }
 }

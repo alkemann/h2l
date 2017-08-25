@@ -9,7 +9,7 @@ namespace alkemann\h2l\response;
  */
 class Json extends \alkemann\h2l\Response
 {
-    protected $type = 'json';
+    protected $content_type = 'json';
 
     private $content;
     private $config;

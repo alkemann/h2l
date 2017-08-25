@@ -69,7 +69,7 @@ A minimal `webroot\index.php` could look something like this
 $root_path = realpath(dirname(dirname(__FILE__)));
 require_once($root_path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php');
 
-use alkemann\h2l\{Environment, Request};
+use alkemann\h2l\{Environment, Dispatch};
 
 Environment::set([
     'debug' => false,
@@ -79,7 +79,7 @@ Environment::set([
 ], Environment::PROD);
 Environment::setEnvironment(Environment::PROD);
 
-$response = (new alkemann\h2l\Request($_REQUEST, $_SERVER, $_GET, $_POST))->response();
+$response = (new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST))->response();
 if ($response) echo $response->render();
 ```
 

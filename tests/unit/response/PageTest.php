@@ -16,95 +16,94 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
     public function testConstruct()
     {
-        $request = new Request(
-            [ // $_REQUEST
-                'url' => 'places/norway',
-                'filter' => 'all'
-            ],
-            [ // $_SERVER
+        /**
+         * @var $request Request
+         */
+        $request = (new Request)
+            ->withRequestParams(['url' => 'places/norway', 'filter' => 'all'])
+            ->withServerParams([
                 'HTTP_ACCEPT' => 'text/html,*/*;q=0.8',
                 'REQUEST_URI' => '/places/norway?filter=all',
                 'REQUEST_METHOD' => 'GET',
-            ],
-            [ // GET
-                'url' => 'places/norway',
-                'filter' => 'all'
-            ]);
-        $request->setRouteFromRouter();
+            ])
+            ->withGetData(['filter' => 'all'])
+            ->withUrl('places/norway')
+        ;
+        $request = $request->withRoute(Router::match($request->url(), $request->method()));
         $page = Page::fromRequest($request);
         $this->assertTrue($page instanceof Response);
         $this->assertTrue($page instanceof Page);
         $this->assertSame($request, $page->request());
 
-        $ref_contentType = new \ReflectionMethod($page, 'contentType');
-        $ref_contentType->setAccessible(true);
         $ref_templateFromUrl = new \ReflectionMethod($page, 'templateFromUrl');
         $ref_templateFromUrl->setAccessible(true);
 
-        $this->assertEquals('text/html', $ref_contentType->invoke($page, 'places/norway'));
+        $this->assertEquals('text/html', $page->contentType());
         $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_templateFromUrl->invoke($page, 'places/norway'));
     }
 
     public function testJsonFormat()
     {
-        $request = new Request(
-            ['url' => 'tasks'],
-            [ // $_SERVER
+        /**
+         * @var $request Request
+          */
+        $request = (new Request)
+            ->withRequestParams(['url' => 'tasks'])
+            ->withServerParams([
                 'HTTP_ACCEPT' => 'application/json;q=0.8',
                 'REQUEST_URI' => '/tasks',
                 'REQUEST_METHOD' => 'GET',
-            ],
-            ['url' => 'tasks']);
-        $request->setRouteFromRouter();
+            ])
+            ->withUrl('tasks')
+        ;
+        $request = $request->withRoute(Router::match($request->url(), $request->method()));
         $page = Page::fromRequest($request);
-        $ref_contentType = new \ReflectionMethod($page, 'contentType');
-        $ref_contentType->setAccessible(true);
-        $this->assertEquals('application/json', $ref_contentType->invoke($page));
+        $this->assertEquals('application/json', $page->contentType());
     }
 
     public function testJsonUrlpart()
     {
-        $request = new Request(
-            ['url' => 'tasks.json'],
-            [ // $_SERVER
+        /**
+         * @var $request Request
+          */
+        $request = (new Request)
+            ->withRequestParams(['url' => 'tasks.json'])
+            ->withServerParams([
                 'HTTP_ACCEPT' => '*/*;q=0.8',
                 'REQUEST_URI' => '/tasks.json',
                 'REQUEST_METHOD' => 'GET',
-            ],
-            ['url' => 'tasks.json']);
-        $request->setRouteFromRouter();
+            ])
+            ->withUrl('tasks.json')
+        ;
+        $request = $request->withRoute(Router::match($request->url(), $request->method()));
         $page = Page::fromRequest($request);
-        $ref_contentType = new \ReflectionMethod($page, 'contentType');
-        $ref_contentType->setAccessible(true);
-        $this->assertEquals('application/json', $ref_contentType->invoke($page));
+        $this->assertEquals('application/json', $page->contentType());
     }
 
     public function testBadFormatUsesHtml()
     {
         $conf = [];
-        $request = new Request(
-            ['url' => 'somethig.csv'],
-            [
+        /**
+         * @var $request Request
+         */
+        $request = (new Request)
+            ->withRequestParams(['url' => 'somethig.csv'])
+            ->withServerParams([
                 'HTTP_ACCEPT' => '*/*;q=0.8',
-                'REQUEST_URI' => '/tasks.json',
+                'REQUEST_URI' => '/somethig.csv',
                 'REQUEST_METHOD' => 'GET'
-            ]
-        );
-        $request->setRouteFromRouter();
+            ])
+            ->withUrl('somethig.csv')
+        ;
+        $request = $request->withRoute(Router::match($request->url(), $request->method()));
         $page = Page::fromRequest($request, $conf);
-        $ref_type = new \ReflectionProperty($page, 'type');
-        $ref_type->setAccessible(true);
-        $ref_type->setValue($page, 'csv');
-
-        $ref_contentType = new \ReflectionMethod($page, 'contentType');
-        $ref_contentType->setAccessible(true);
-        $this->assertEquals('text/html', $ref_contentType->invoke($page));
+        $this->assertEquals('text/html', $page->contentType());
     }
 
     public function testSetData()
     {
         $request = new Request;
-        $request->setRouteFromRouter();
+        $request = $request->withRoute(Router::match($request->url(), $request->method()));
         $page = Page::fromRequest($request);
         $page->setData('place', 'Norway');
         $page->setData(['city' => 'Oslo', 'height' => 12]);
@@ -120,21 +119,22 @@ class PageTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(ConfigMissing::class);
         Environment::setEnvironment('testMissingContentPathConfigs');
-        $r = new Request(['url' => 'testMissingContentPathConfigs']);
-        $r->setRouteFromRouter();
+        $r = (new Request)->withUrl('testMissingContentPathConfigs');
+        $r = $r->withRoute(Router::match($r->url()));
         $h = function() {};
         $page = Page::fromRequest($r, ['header_func' => $h]);
         $page->render();
         Environment::setEnvironment(Environment::TEST);
     }
+
     public function testMissingLayoutConfigs()
     {
         $conf = Environment::grab(Environment::TEST);
         Environment::setEnvironment('testMissingContentPathConfigs');
         unset($conf['layout_path']);
         Environment::set($conf, 'testMissingContentPathConfigs');
-        $r = new Request(['url' => 'place']);
-        $r->setRouteFromRouter();
+        $r = (new Request)->withUrl('place');
+        $r = $r->withRoute(Router::match($r->url()));
         $h = function() {};
         $page = Page::fromRequest($r, ['header_func' => $h]);
         $expected = "<h1>Win!</h1>";

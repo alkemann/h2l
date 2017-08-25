@@ -10,15 +10,20 @@ namespace alkemann\h2l;
  */
 class Session implements interfaces\Session
 {
+    public function startIfNotStarted(): void
+    {
+        if ($this->active() === false) {
+            session_start();
+        }
+    }
+
     /**
      * @param string $key
      * @return mixed|null
      */
     public function get(string $key)
     {
-        if (session_status() != \PHP_SESSION_ACTIVE) {
-            session_start();
-        }
+        $this->startIfNotStarted();
         if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
         }

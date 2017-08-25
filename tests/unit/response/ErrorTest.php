@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\unit\response;
 
-use alkemann\h2l\{response\Error, Response, Request, Environment, exceptions\InvalidUrl};
+use alkemann\h2l\{
+    Message, response\Error, Response, Request, Environment, exceptions\InvalidUrl
+};
 
 class ErrorTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +25,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $e->render();
         $expected = ['HTTP/1.0 406 Not Acceptable'];
         $this->assertEquals($expected, $header);
-        $this->assertEquals("html", $e->type());
+        $this->assertEquals("text/html", $e->contentType());
     }
 
     public function testConstructWithRequest()
@@ -33,14 +35,14 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $request = $this->getMockBuilder(Request::class)
             // ->setMockClassName('Request')
             ->disableOriginalConstructor()
-            ->setMethods(['type', 'route', 'method']) // mocked methods
+            ->setMethods(['acceptType', 'contentType', 'route', 'method']) // mocked methods
             ->getMock();
 
-        $request->expects($this->once())->method('type')->willReturn('json');
+        $request->expects($this->once())->method('acceptType')->willReturn('application/json');
 
         $e = new Error([], compact('header_func', 'content_path', 'code', 'request'));
         $this->assertInstanceOf(Error::class, $e);
-        $this->assertEquals("json", $e->type());
+        $this->assertEquals("application/json", $e->contentType());
     }
 
     public function test404()
@@ -61,8 +63,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
         $code = 404;
-        $type = 'xml';
-        $e = new Error(['message' => 'Not Found'], compact('header_func', 'type', 'code'));
+        $content_type = 'application/xml';
+        $e = new Error(['message' => 'Not Found'], compact('header_func', 'content_type', 'code'));
         $e->render();
         $expected = ['HTTP/1.0 404 Not Found', 'Content-type: application/xml'];
         $this->assertEquals($expected, $header);
@@ -105,5 +107,14 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
     {
         $e = new Error([], ['header_func' => 99]);
         $e->render();
+    }
+
+    public function testErrorFromRequest()
+    {
+        $request = (new Request)
+            ->withServerParams(['HTTP_ACCEPT' => 'application/json;q=0.9']);
+        $error = new Error([], compact('request'));
+        $this->assertSame($request, $error->request());
+        $this->assertEquals(Message::CONTENT_JSON, $error->contentType());
     }
 }

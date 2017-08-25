@@ -30,9 +30,9 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
 HTTP/1.1 302 FOUND
 Served-By: example.com
 
-HTTP/1.1 200 OK 
-Content-Type: application/json; charset=utf-8 
-Accept: */* 
+HTTP/1.1 200 OK
+Content-Type: application/json; charset=utf-8
+Accept: */*
 
 HEADER;
 
@@ -47,14 +47,13 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::GET)
                 ->withUrl('http://example.com/xml/note.xml')
-                ->withHeaders(['Accept' => 'text/xml'])
+                ->withHeaders(['Accept' => 'application/xml'])
             )
             ->willReturn(new Message);
 
-        $result = $remote->get('http://example.com/xml/note.xml', ['Accept' => 'text/xml']);
+        $result = $remote->get('http://example.com/xml/note.xml', ['Accept' => 'application/xml']);
         $this->assertInstanceOf(Message::class, $result);
     }
 
@@ -67,7 +66,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::POST)
                 ->withUrl('http://example.com')
                 ->withBody($json)
@@ -92,7 +90,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::POST)
                 ->withUrl('http://example.com')
                 ->withBody($string)
@@ -114,7 +111,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::DELETE)
                 ->withUrl('http://example.com/user/11')
             )

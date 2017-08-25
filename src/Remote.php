@@ -38,7 +38,6 @@ class Remote
     public function get(string $url, array $headers = []): Message
     {
         $request = (new Message)
-            ->withType(Message::REQUEST)
             ->withUrl($url)
             ->withMethod(Request::GET)
             ->withHeaders($headers);
@@ -52,7 +51,6 @@ class Remote
         $data_string = json_encode($data);
         $headers['Content-Length'] = strlen($data_string);
         $request = (new Message)
-            ->withType(Message::REQUEST)
             ->withUrl($url)
             ->withMethod($method)
             ->withBody($data_string)
@@ -66,7 +64,6 @@ class Remote
         $data_string = http_build_query($data);
         $headers['Content-Length'] = strlen($data_string);
         $request = (new Message)
-            ->withType(Message::REQUEST)
             ->withUrl($url)
             ->withMethod($method)
             ->withBody($data_string)
@@ -77,7 +74,6 @@ class Remote
     public function delete(string $url, array $headers = []): Message
     {
         $request = (new Message)
-            ->withType(Message::REQUEST)
             ->withUrl($url)
             ->withMethod(Request::DELETE)
             ->withHeaders($headers);
@@ -97,7 +93,6 @@ class Remote
         unset($this->curl_handler);
         $meta['latency'] = microtime(true) - $this->start;
         return (new Message)
-            ->withType(Message::RESPONSE)
             ->withUrl($request->url())
             ->withMethod($request->method())
             ->withBody($content)

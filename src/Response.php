@@ -7,7 +7,7 @@ namespace alkemann\h2l;
  *
  * @package alkemann\h2l
  */
-abstract class Response
+abstract class Response extends Message
 {
     public static $code_to_message = [
         // Informational 1xx
@@ -57,33 +57,21 @@ abstract class Response
         505 => 'HTTP Version Not Supported',
     ];
 
-    protected $type = 'html';
-    protected $code = 200;
-
-    protected $validTypes = ['html', 'json', 'xml'];
-    protected $contentTypes = [
-        'html' => 'text/html',
-        'json' => 'application/json',
-        'xml' => 'application/xml'
+    protected static $contentTypes = [
+        'text/html' => 'html',
+        'application/json' => 'json',
+        'application/xml' => 'xml',
+        'text/xml' => 'xml',
     ];
 
-    public function type(): string
+    public function fileEndingFromType(string $type): string
     {
-        return $this->type;
-    }
-
-    public function code(): int
-    {
-        return $this->code;
-    }
-
-    public function contentType(): string
-    {
-        $format = $this->type;
-        if (in_array($format, $this->validTypes)) {
-            return $this->contentTypes[$format];
+        foreach (static::$contentTypes as $type_key => $ending) {
+            if ($type === $type_key) {
+                return $ending;
+            }
         }
-        return "text/html";
+        return 'html';
     }
 
     abstract public function render(): string;
