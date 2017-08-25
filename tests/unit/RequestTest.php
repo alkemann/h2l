@@ -3,220 +3,141 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Chain, Environment, exceptions\NoRouteSetError, interfaces\Session as SessionInterface, Request, Response, response\Error, response\Json, Route, Router
+    Chain, Dispatch, Message, Request, Environment, Response, Route, Router, exceptions\NoRouteSetError, interfaces\Session as SessionInterface, response\Error, response\Json
 };
 
-class RequestTests extends \PHPUnit_Framework_TestCase
+class RequestTest extends \PHPUnit_Framework_TestCase
 {
-
-    public static function setUpBeforeClass()
+    public function testConstructBlank()
     {
-        parent::setUpBeforeClass();
-        Environment::setEnvironment(Environment::TEST);
+        $ref_class = new \ReflectionClass(Request::class);
+        $expected_defaults = [
+            'parameters' => [],
+            'request' => [],
+            'server' => [],
+            'get' => [],
+            'post' => [],
+            'route' => null,
+            'code' => null,
+            'url' => '',
+            'method' => Request::GET,
+            'body' => null,
+            'meta' => [],
+            'headers' => [],
+            'options' => [],
+            'content_type' => 'text/html',
+            'accept_type' => 'text/html',
+            'content_charset' => 'utf-8',
+        ];
+        $result = $ref_class->getDefaultProperties();
+        $this->assertEquals($expected_defaults, $result);
+
+        $expected_constants = [
+            'GET' => 'GET',
+            'HEAD' => 'HEAD',
+            'POST' => 'POST',
+            'PUT' => 'PUT',
+            'DELETE' => 'DELETE',
+            'CONNECT' => 'CONNECT',
+            'OPTIONS' => 'OPTIONS',
+            'TRACE' => 'TRACE',
+            'PATCH' => 'PATCH',
+            'CONTENT_JSON' => 'application/json',
+            'CONTENT_FORM' => 'application/x-www-form-urlencoded',
+            'CONTENT_HTML' => 'text/html',
+            'CONTENT_TEXT' => 'text/plain',
+            'CONTENT_XML' => 'text/xml',
+        ];
+        $result = $ref_class->getConstants();
+        $this->assertEquals($expected_constants, $result);
+
+        $request = new Request();
+        $properties = $ref_class->getProperties();
+        $result = array_reduce($properties, function(array $o, \ReflectionProperty $v) use ($request) {
+            $v->setAccessible(true);
+            $o[$v->getName()] = $v->getValue($request);
+            return $o;
+        }, []);
+        $this->assertEquals($expected_defaults, $result);
     }
 
-    public function testGetHtml()
+    public function testConstructPattern()
     {
-        $this->assertEquals(Environment::TEST, Environment::current());
-        $r = new Request(
-            [ // $_REQUEST
-                'url' => 'place',
-                'filter' => 'all'
-            ],
-            [ // $_SERVER
-                'HTTP_ACCEPT' => 'text/html,*/*;q=0.8',
-                'REQUEST_URI' => '/place?filter=all',
-                'REQUEST_METHOD' => 'GET',
-            ],
-            [ // GET
-                'url' => 'place',
-                'filter' => 'all'
-            ]
-        );
-        $this->assertInstanceOf(Request::class, $r);
-        $this->assertEquals(Request::GET, $r->method());
-        $this->assertEquals('place', $r->url());
-        $this->assertEquals('html', $r->type());
-        $this->assertEquals('all', $r->param('filter'));
-        $r->setRouteFromRouter();
-        $route = $r->route();
-        $this->assertTrue($route instanceof Route);
-        $result = $r->response();
-        $this->assertTrue($result instanceof Response);
-    }
-
-    public function testHeaders()
-    {
-        $r = new Request(
-            [ // $_REQUEST
-                'url' => 'place',
-                'filter' => 'all'
-            ],
-            [ // $_SERVER
-                'HTTP_ACCEPT' => 'text/html,*/*;q=0.8',
-                'HTTP_API_KEY' => 'asdf123',
-                'REQUEST_URI' => '/place?filter=all',
-                'REQUEST_METHOD' => 'GET',
-            ],
-            [ // GET
-                'url' => 'place',
-                'filter' => 'all'
-            ]
-        );
-        $this->assertInstanceOf(Request::class, $r);
-        $expected = ['Accept' => 'text/html,*/*;q=0.8', 'Api-Key' => 'asdf123'];
-        $result = $r->getHeaders();
-        $this->assertEquals($expected, $result);
-        $this->assertEquals('asdf123', $r->getHeader('Api-Key'));
-    }
-
-    public function testPostJson()
-    {
-        $r = new Request(
-            [ // $_REQUEST
-                'url' => 'api/tasks/12.json',
-                'filter' => 'all'
-            ],
-            [ // $_SERVER
-                'HTTP_ACCEPT' => 'application/json;q=0.8',
-                'REQUEST_URI' => '/api/tasks/12.json?filter=all',
-                'REQUEST_METHOD' => 'POST',
-            ],
-            [ // GET
-                'url' => 'api/tasks/12.json',
-                'filter' => 'all'
-            ],
-            [ // POST
-                'title' => 'New Title',
-            ]
-        );
-        $this->assertInstanceOf(Request::class, $r);
-        $this->assertEquals(Request::POST, $r->method());
-        $this->assertEquals('api/tasks/12.json', $r->url());
-        $this->assertEquals('json', $r->type());
-        $this->assertEquals('all', $r->param('filter'));
-        $r->setRouteFromRouter();
-        $route = $r->route();
-        $this->assertTrue($route instanceof Route);
-        $result = $r->response();
-        $this->assertTrue($result instanceof Response);
-        $this->assertEquals("New Title", $r->param('title'));
-
-        $expected = ['filter' => 'all'];
-        $result = $r->query();
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testParameters()
-    {
-        $route = new Route('thing', function () {
-            return new Error();
-        }, ['place' => 'Oslo']);
-        $request = $this->getMockBuilder(Request::class)
+        /**
+         * @var $route Route
+         */
+        $route = $this->getMockBuilder(Route::class)
             ->disableOriginalConstructor()
-            ->setMockClassName('Request')// Mock class name
-            ->setMethods(['method'])// mocked methods
+            ->setMethods(['parameters', 'url'])
             ->getMock();
+        $route->expects($this->once())->method('parameters')->willReturn(['city' => 'oslo']);
 
-        $request->setRoute($route);
-        $this->assertEquals("Oslo", $request->param('place'));
-        $this->assertNull($request->param('paris'));
+        $server_params = [
+            'HTTP_ACCEPT' => 'application/json;q=0.9',
+            'HTTP_CONTENT_TYPE' => 'application/x-www-form-urlencoded',
+            'HOME' => '/var/www',
+            'REQUEST_METHOD' => 'POST'
+        ];
+
+        $request = (new Request)
+            ->withGetData(['token' => 'hash123'])
+            ->withServerParams($server_params)
+            ->withRequestParams(['url' => '/place/oslo', 'token' => 'hash123', 'weather' => 'nice'])
+            ->withPostData(['weather' => 'nice'])
+            ->withRoute($route);
+        ;
+
+        $expected = [
+            'parameters' => ['city' => 'oslo'],
+            'request' => ['token' => 'hash123', 'weather' => 'nice'],
+            'server' => $server_params,
+            'get' => ['token' => 'hash123'],
+            'post' => ['weather' => 'nice'],
+            'route' => $route,
+            'code' => null,
+            'url' => '/place/oslo',
+            'method' => Request::POST,
+            'body' => null,
+            'meta' => [],
+            'headers' => ['Accept' => 'application/json;q=0.9', 'Content-Type' => 'application/x-www-form-urlencoded'],
+            'options' => [],
+            'content_type' => 'application/x-www-form-urlencoded',
+            'accept_type' => 'application/json',
+            'content_charset' => 'utf-8',
+        ];
+        $properties = (new \ReflectionClass(Request::class))->getProperties();
+        $result = array_reduce($properties, function(array $o, \ReflectionProperty $v) use ($request) {
+            $v->setAccessible(true);
+            $o[$v->getName()] = $v->getValue($request);
+            return $o;
+        }, []);
+        $this->assertEquals($expected, $result);
+
+        $r2 = $request->withUrlParams(['city' => 'Bergen', 'weather' => 'rain']);
+        $this->assertNotSame($request, $r2);
+
+        $this->assertEquals(['city' => 'Bergen', 'weather' => 'rain'], $r2->getUrlParams());
+        $this->assertEquals(['token' => 'hash123'], $r2->getGetData());
+        $this->assertEquals(['weather' => 'nice'], $r2->getPostData());
+        $this->assertEquals(['token' => 'hash123', 'weather' => 'nice'], $r2->getRequestParams());
+        $this->assertEquals($server_params, $r2->getServerParam());
+        $this->assertEquals('/place/oslo', $r2->url());
+        $this->assertEquals(['Accept' => 'application/json;q=0.9', 'Content-Type' => 'application/x-www-form-urlencoded'], $r2->headers());
+        $this->assertEquals('application/json;q=0.9', $r2->header('Accept'));
+        $this->assertEquals('utf-8', $r2->charset());
+        $this->assertEquals(Message::CONTENT_FORM, $r2->contentType());
+        $this->assertEquals(Message::CONTENT_JSON, $r2->acceptType());
+        $this->assertEquals(Request::POST, $r2->method());
     }
 
-    public function testSession()
+    public function testAlternativeServerParamsXML()
     {
-        $s = $this->getMockBuilder(SessionInterface::class)
-            ->setMethods(['set', 'get'])
-            ->getMock();
-        $s->expects($this->exactly(3))
-            ->method('get')
-            ->withConsecutive(['ask one'], ['ask two'], ['ask three'])
-            ->willReturnOnConsecutiveCalls(
-                'one',
-                'two',
-                null
-            );
-
-        $this->assertInstanceOf(SessionInterface::class, $s);
-        $request = new Request([], [], [], [], $s);
-        $this->assertEquals('one', $request->session('ask one'));
-        $this->assertEquals('two', $request->session('ask two'));
-        $this->assertEquals(null, $request->session('ask three'));
-
-        $result = $request->session();
-        $this->assertEquals($s, $result);
-    }
-
-    public function testNoRouteResponse()
-    {
-        $this->expectException(NoRouteSetError::class);
-        $request = new Request;
-        $request->response();
-    }
-
-    public function testResponse()
-    {
-        $request = new Request;
-        $cb = function (Request $r): ?Response { return new Json('hey'); };
-        $route = new Route('testResponse', $cb);
-        $request->setRoute($route);
-        $result = $request->response();
-        $this->assertTrue($result instanceof Json);
-    }
-
-    public function testSetRouteFromRouter()
-    {
-        $response = new Json('hey');
-        $cb = function (Request $r) use ($response): ?Response { return $response; };
-        Router::add('testSetRouteFromRouter', $cb, Request::GET);
-        $request = new Request(['url' => 'testSetRouteFromRouter']);
-        $request->setRouteFromRouter();
-
-        $result = $request->response();
-        $this->assertSame($response, $result);
-    }
-
-    public function testMiddleWare()
-    {
-        $events = [];
-
-        $route = new Route('testMiddleWare', function () use (&$events) {
-            $events[] = "Primary Route Called";
-            return new Json(['place' => 'Oslo']);
-        }, ['place' => 'Oslo']);
-
-        $request = new Request;
-        $request->setRoute($route);
-
-        $middle = function (Request $request, Chain $chain) use (&$events): ?Response {
-            $events[] = 'Before middleware';
-            $error_route = new Route($request->url(), function (Request $r) use (&$events): ?Response {
-                $events[] = 'Error Route Called';
-                return new Error();
-            });
-            $request->setRoute($error_route);
-            $response = $chain->next($request);
-            $events[] = 'After middleware';
-            return $response;
-        };
-        $request->registerMiddle($middle);
-
-        $result = $request->response();
-
-        $expected = ['Before middleware', 'Error Route Called', 'After middleware'];
-        $this->assertEquals($expected, $events);
-
-        $this->assertTrue($result instanceof Error, "Response is : [" . get_class($result) . "]");
-    }
-
-    public function testSetFromRouterWithNoMatch()
-    {
-        $mock_router = new class {
-            public static function match() { return null; }
-        };
-
-        $r = new Request;
-        $result = $r->setRouteFromRouter(get_class($mock_router));
-        $this->assertFalse($result);
+        $request = (new Request)
+            ->withServerParams([
+                'HTTP_CONTENT_TYPE' => 'application/xml; charset=utf-8',
+                'HTTP_ACCEPT' => 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8'
+            ]);
+        $this->assertEquals(Message::CONTENT_XML, $request->acceptType());
+        $this->assertEquals(Message::CONTENT_XML, $request->contentType());
     }
 }

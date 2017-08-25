@@ -28,17 +28,17 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $ref_class = new \ReflectionClass($r);
         $ref_method = $ref_class->getMethod('contentType');
         $ref_method->setAccessible(true);
-        $ref_property = $ref_class->getProperty('type');
+        $ref_property = $ref_class->getProperty('content_type');
         $ref_property->setAccessible(true);
 
-        $this->assertEquals('html', $r->type());
+        $this->assertEquals('text/html', $r->contentType());
         $expected = "text/html";
         $result = $ref_method->invoke($r);
         $this->assertEquals($expected, $result);
 
-        $ref_property->setValue($r, 'json');
+        $ref_property->setValue($r, 'application/json');
 
-        $this->assertEquals('json', $r->type());
+        $this->assertEquals('application/json', $r->contentType());
         $expected = "application/json";
         $result = $ref_method->invoke($r);
         $this->assertEquals($expected, $result);

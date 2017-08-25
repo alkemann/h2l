@@ -11,13 +11,11 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function testRequest()
     {
         $message = (new Message)
-            ->withType(Message::REQUEST)
             ->withUrl('http://example.com')
             ->withMethod(Request::POST)
             ->withBody('{"name": "John"}')
             ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"']);
 
-        $this->assertEquals(Message::REQUEST, $message->type());
         $this->assertEquals('http://example.com', $message->url());
         $this->assertEquals(Request::POST, $message->method());
         $this->assertEquals('{"name": "John"}', $message->body());
@@ -29,14 +27,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     public function testResponse()
     {
         $message = (new Message)
-            ->withType(Message::RESPONSE)
             ->withCode(200)
             ->withBody('{"name": "John"}')
             ->withMeta(['latency' => 0.2])
             ->withOptions(['thing' => 2])
             ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"']);
 
-        $this->assertEquals(Message::RESPONSE, $message->type());
         $this->assertEquals('', $message->url());
         $this->assertEquals(Request::GET, $message->method());
         $this->assertEquals('{"name": "John"}', $message->body());

@@ -57,33 +57,33 @@ abstract class Response
         505 => 'HTTP Version Not Supported',
     ];
 
-    protected $type = 'html';
-    protected $code = 200;
-
-    protected $validTypes = ['html', 'json', 'xml'];
-    protected $contentTypes = [
-        'html' => 'text/html',
-        'json' => 'application/json',
-        'xml' => 'application/xml'
+    protected static $contentTypes = [
+        'text/html' => 'html',
+        'application/json' => 'json',
+        'application/xml' => 'xml'
     ];
 
-    public function type(): string
+    protected $content_type = 'text/html';
+    protected $code = 200;
+
+    public function fileEndingFromType(string $type): string
     {
-        return $this->type;
+        foreach (static::$contentTypes as $type_key => $ending) {
+            if ($type === $type_key) {
+                return $ending;
+            }
+        }
+        return 'html';
+    }
+
+    public function contentType(): string
+    {
+        return $this->content_type;
     }
 
     public function code(): int
     {
         return $this->code;
-    }
-
-    public function contentType(): string
-    {
-        $format = $this->type;
-        if (in_array($format, $this->validTypes)) {
-            return $this->contentTypes[$format];
-        }
-        return "text/html";
     }
 
     abstract public function render(): string;

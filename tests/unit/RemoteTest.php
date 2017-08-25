@@ -47,7 +47,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::GET)
                 ->withUrl('http://example.com/xml/note.xml')
                 ->withHeaders(['Accept' => 'text/xml'])
@@ -67,7 +66,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::POST)
                 ->withUrl('http://example.com')
                 ->withBody($json)
@@ -92,7 +90,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::POST)
                 ->withUrl('http://example.com')
                 ->withBody($string)
@@ -114,7 +111,6 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withType(Message::REQUEST)
                 ->withMethod(Request::DELETE)
                 ->withUrl('http://example.com/user/11')
             )

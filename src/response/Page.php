@@ -5,6 +5,7 @@ namespace alkemann\h2l\response;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\Log;
+use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\Environment;
@@ -35,9 +36,10 @@ class Page extends Response
     public function __construct($data = [], array $config = [])
     {
         $this->data = $data;
-        foreach (['request', 'type', 'code'] as $key) {
+        foreach (['request', 'content_type', 'code'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
+                unset($config[$key]);
             }
         }
         if (isset($config['template'])) {
@@ -57,10 +59,12 @@ class Page extends Response
     {
         $config += [
             'request' => $request,
-            'type' => $request->type(),
+            'content_type' => $request->acceptType(),
         ];
         $page = new static([], $config);
-        $page->template = $config['template'] ?? $page->templateFromUrl($request->route()->url());
+        $route = $request->route();
+        $url = $route ? $route->url() : $request->url();
+        $page->template = $config['template'] ?? $page->templateFromUrl($url);
         return $page;
     }
 
@@ -132,7 +136,8 @@ class Page extends Response
         if (is_null($path)) {
             Log::debug("As there is no configured `layout_path` in Environment, layouts are skipped");
         }
-        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $this->type . '.php';
+        $ending = static::$contentTypes[$this->content_type];
+        return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $ending . '.php';
     }
 
     private function getContentFile(string $view): string
@@ -212,7 +217,8 @@ class Page extends Response
      */
     public function setTemplate(string $template): void
     {
-        $this->template = "{$template}.{$this->type}";
+        $ending = $this->fileEndingFromType($this->content_type);
+        $this->template = "{$template}.{$ending}";
     }
 
     /**
@@ -227,14 +233,14 @@ class Page extends Response
         $view = current($last);
         $period = strrpos($view, '.');
         if ($period) {
-            $type = substr($view, $period + 1);
-            if (in_array($type, $this->validTypes)) {
-                $this->type = $type;
+            $ending = substr($view, $period + 1);
+            if ($type = array_search($ending, static::$contentTypes)) {
+                $this->content_type = $type;
                 $view = substr($view, 0, $period);
             }
         }
-
-        $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $this->type;
+        $ending = $this->fileEndingFromType($this->content_type);
+        $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $ending;
         return trim($ret, DIRECTORY_SEPARATOR);
     }
 }

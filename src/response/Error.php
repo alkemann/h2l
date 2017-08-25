@@ -15,7 +15,7 @@ use alkemann\h2l\Response;
  */
 class Error extends Response
 {
-    protected $type = 'html';
+    protected $content_type = 'text/html';
     protected $code = 500;
     protected $data = [];
     /**
@@ -27,7 +27,7 @@ class Error extends Response
     public function __construct(array $data = [], array $config = [])
     {
         $this->data = $data;
-        foreach (['type', 'code', 'request'] as $key) {
+        foreach (['content_type', 'code', 'request'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
                 unset($config[$key]);
@@ -35,26 +35,12 @@ class Error extends Response
         }
 
         if ($this->request) {
-            $this->type = $this->request->type();
-        } else {
-            $this->grabTypeFromGlobals();
+            $this->content_type = $this->request->acceptType();
         }
 
         $this->config = $config + [
                 'page_class' => Page::class
             ];
-    }
-
-    /**
-     * @TODO dependency injection?
-     * @codeCoverageIgnore
-     */
-    private function grabTypeFromGlobals()
-    {
-        $httaccept = $_SERVER['HTTP_ACCEPT'] ?? '*/*';
-        if ($httaccept !== '*/*' && strpos($httaccept, 'application/json') !== false) {
-            $this->type = 'json';
-        }
     }
 
     /**
@@ -74,7 +60,7 @@ class Error extends Response
             $page_config = $this->config + [
                     'code' => $this->code,
                     'template' => $this->code == 404 ? '404' : 'error',
-                    'type' => $this->type,
+                    'content_type' => $this->content_type,
                     'request' => $this->request
                 ];
             $data = $this->data + ['code' => $this->code];
