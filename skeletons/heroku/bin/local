@@ -12,4 +12,32 @@ WEBPORT=${1:-8080}
 export CLEARDB_DATABASE_URL="mysql://${USER}:${PASS}@${HOST}/${DB}?reconnect=true"
 export ENV='LOCAL'
 open http://localhost:$WEBPORT
-php -S localhost:$WEBPORT -t webroot webroot/server.php
+php -S localhost:$WEBPORT -t webroot webroot/server.php &
+SERVER_PID=$!
+
+npm run build &
+NPM_WATCHER=$!
+
+echo " "
+echo " - Backend server runnin on http://localhost:${WEBPORT} with PID: ${SERVER_PID}"
+echo " - NPM Watcher running on PID: ${NPM_WATCHER}"
+echo " "
+
+function gracefullyExit {
+  echo " "
+  echo " - Stopping Backend Server"
+  kill $SERVER_PID
+
+  echo " - Stopping NPM Watcher"
+  kill $NPM_WATCHER
+
+  echo " - DONE"
+  echo " "
+  exit 0
+}
+
+trap gracefullyExit SIGINT
+
+while true; do
+    sleep 1;
+done

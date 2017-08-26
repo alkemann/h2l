@@ -14,10 +14,11 @@
 - `vendor/bin/skeleton heroku` (copies all the files of `skeletons/heroku` into root of your project)
 - `npm install` (installs node.js dependencies)
 - `git init .` Add files (`git add .`). Ensure both composer.json and composer.lock files is included
-- Make an initial commit
+- `git commit -m "Initial file start"` (Make an initial commit)
 - `git branch release` (makes a release branch that will be used to push to Heroku)
-- Create Heroku app with `heroku apps:create NAME --region eu`
-- Scale your app with `heroku ps:scale web=1`
+- `heroku apps:create NAME --region eu` (Create Heroku app with )
+- `git push heroku master` (Starts heroku off, use `bin/deploy` after this)
+- `heroku ps:scale web=1` (Scale your app with 1 web worker)
 - Ready to go! See `develop` or `deploy` parts for next steps
 
 ## Develop
@@ -33,5 +34,5 @@ host a localhost server using PHP native)
 
 - Deployments are done through `git push`, so ensure that changes are commited
 - Clean out your git state by commiting all or `git stash`
-- Push to Heroku with `bin/deploy`
-- Go to https://<NAME>.herokuapp.com/say/hello_world
+- Push to Heroku with `bin/deploy -b` (You may skipp the `-b` if you are building as you go with `npm run build`)
+- `heroku open` to open the remote app in browser
