@@ -32,7 +32,6 @@ Documentation:
 
 Skeletons:
  ☐ Add a Heroku skeleton
- ☐ Remove skeletons from .gitattributes ignore and add a task for removing
  ☐ Alternately, add an option at end of task to remove when having installed one
 
 Tests:

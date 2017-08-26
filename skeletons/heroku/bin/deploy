@@ -1,0 +1,55 @@
+#!/bin/bash
+set -e
+
+if git diff-index --quiet HEAD --; then
+    echo " - Git state clean, proceeding"
+else
+    echo " - "
+    echo "    YOUR GIT IS DIRTY!"
+    echo " - "
+    exit 1
+fi
+
+DIR="$(git rev-parse --show-toplevel )"
+echo " - Working dir : ${DIR} "
+cd $DIR
+
+echo " - Resetting release branch"
+git checkout release -q
+git merge master -q -m "Merge Master into Release"
+git reset master
+git add --all
+
+echo " - Building release"
+if [ "$1" == "-b" ] || [ "$1" == "--build" ] ; then
+    echo " - Rebuilding Javascript files"
+    npm run build:prod
+    echo " "
+else
+    echo " - Skipped building"
+fi
+
+echo " - Adding Javascript files "
+git add -f webroot/js/bundle*
+
+echo " - Removing server.php that is used for local host serving"
+git rm --quiet --ignore-unmatch -- webroot/server.php
+
+echo " - Adding record to release log"
+echo "$(date) : $(git rev-parse --verify HEAD )" >> RELEASES.txt
+git add RELEASES.txt
+git commit -m "Bumping release" -q
+
+echo " - RELEASE: "
+echo " "
+tail -n1 RELEASES.txt
+echo " "
+
+echo " - Deploying to Heroku"
+git push heroku release:master -q -f
+
+echo " - Reset to master"
+git checkout master -q
+git co release -- webroot/js
+git reset HEAD -- webroot/js
+echo " - DONE - "
