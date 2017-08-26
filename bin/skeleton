@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]
+then
+  echo "Usage: ${0} NAME"
+  exit 1
+fi
+
+DIR=$(pwd)
+SKELE=$(pwd)/vendor/alkemann/h2l/skeletons
+
+if [ ! -d "${SKELE}/${1}" ]; then
+  echo "Usage: ${0} NAME"
+  echo " "
+  echo "Must name one of the possible skeletons!"
+  echo " "
+  cd $SKELE
+  ls -1A
+  echo " "
+  exit 1
+fi
+
+cp -r ${SKELE}/${1}/* .

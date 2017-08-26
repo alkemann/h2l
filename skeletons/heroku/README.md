@@ -1,10 +1,17 @@
 # Heroku and React builder template
 
+## Requirements
+
+- PHP 7.1
+- Node.js
+- Heroku
+
 ## Getting started
 
 - Composer require `alkemann/h2l`
 - Ensure your `composer.json` includes `"autoload": {"psr-4": {"backend\\": "backend/"}}`
 - Copy all the files of `skeletons/heroku` into root of your project
+- `composer install` & `npm install`
 - Initiate git and add both composer.json and composer.lock files
 - Create Heroku app with `heroku apps:create`
 - Scale your app with `heroku ps:scale web=1`

@@ -25,7 +25,7 @@
         "phpunit/phpunit": "^5.2",
         "mongodb/mongodb": "^1.1"
     },
-    "bin": ["bin/h2l", "bin/testh2l"],
+    "bin": ["bin/skeleton", "bin/testh2l"],
     "autoload": {
         "psr-4": {
             "alkemann\\h2l\\": "src/",

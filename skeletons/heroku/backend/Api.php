@@ -1,10 +1,12 @@
 <?php
 
-namespace api;
+namespace backend;
 
 use alkemann\h2l\{Request, Response, Router, Log};
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\response\{Json, Error};
+
+use backend\entities\Examplar;
 
 /**
  * Class Api
@@ -14,15 +16,15 @@ use alkemann\h2l\response\{Json, Error};
 class Api
 {
     static $type_to_model_map = [
-        // 'entity-name'        => EntityName::class,
+        'example' => Examplar::class,
     ];
 
     static $routes = [
         // Url                          function    request method
         ['echo',                        'echo',     [Request::GET, Request::POST] ],
-        ['%/example/(?<type>\w+)%',     'example',  Request::POST ],
+        ['%say/(?<word>[\w\%\d]+)%',          'example',   Request::GET ],
 
-        // ['%(?<type>\w+)/list%',        'list',     Request::POST],
+        ['%(?<type>\w+)/list%',         'list',      Request::GET],
         // ['%(?<type>\w+)/(?<id>\d+)%',  'delete',   Request::DELETE],
         // ['%(?<type>\w+)/(?<id>\d+)%',  'get',      Request::GET],
     ];
@@ -31,11 +33,11 @@ class Api
 
     public function echo(Request $request): Response
     {
-        $url = $request->route()->url;
+        $url = $request->route()->url();
         $method = $request->method();
         $get = $request->query();
-        $headers = $request->getHeaders();
-        $body = $request->getPostBody();
+        $headers = $request->headers();
+        $body = $request->body();
         $json_body = json_decode($body);
         $body = $json_body ? $json_body : $body;
         return new Json(compact('url', 'method', 'get', 'headers', 'body'));
@@ -49,7 +51,16 @@ class Api
      */
     public function example(Request $request): Response
     {
-        return new Json(['type' => $request->param('type')]);
+        $data = ['word' => urldecode($request->param('word'))];
+        $example = new Examplar($data);
+        return new Json($example);
+    }
+
+    public function list(Request $request): Response
+    {
+        $entity_class = $this->typeToModel($request->param('type'));
+        $data = $entity_class::find($request->getGetData());
+        return new Json($data);
     }
 
     ///////////////////////////////////////////////////
