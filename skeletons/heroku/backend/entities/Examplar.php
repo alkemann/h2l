@@ -10,7 +10,7 @@ class Examplar implements \JsonSerializable
 
     public function fields(): array
     {
-        return ['id', 'word'];
+        return ['id', 'word', "meaning"];
     }
 
     public function jsonSerialize(): array

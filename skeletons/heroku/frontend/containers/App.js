@@ -5,13 +5,16 @@ import { loadExample } from "../actions";
 
 
 class App extends React.Component {
-    // componentWillMount() {
-    // }
+    componentWillMount() {
+        this.props.loadExample();
+    }
 
     render() {
         return (
             <div className="container">
-                <p>Some app this is</p>
+                <h1>Home</h1>
+                <h4>Word of the day: <span>{this.props.example.word}</span>!</h4>
+                <p>{this.props.example.meaning}</p>
             </div>
         );
     }

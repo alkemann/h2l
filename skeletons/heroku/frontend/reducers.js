@@ -1,8 +1,8 @@
 const api = (state = {
-    example: null
+    example: {word: "Nothing", meaning: "-"}
 }, action) => {
     switch (action.type) {
-        case "EXAMPLE_TYPE":
+        case "EXAMPLE_TYPE_FULFILLED":
             state = {
                 ...state,
                 example: action.payload.response

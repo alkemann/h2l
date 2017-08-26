@@ -22,7 +22,7 @@ class Api
     static $routes = [
         // Url                          function    request method
         ['echo',                        'echo',     [Request::GET, Request::POST] ],
-        ['%say/(?<word>[\w\%\d]+)%',          'example',   Request::GET ],
+        ['example',                     'example',   Request::GET ],
 
         ['%(?<type>\w+)/list%',         'list',      Request::GET],
         // ['%(?<type>\w+)/(?<id>\d+)%',  'delete',   Request::DELETE],
@@ -44,14 +44,17 @@ class Api
     }
 
     /**
-     * @url '%/example/(?<type>\w+)%'
+     * @url 'example'
      * @method Request::GET
      * @param Request $request
      * @return Response
      */
     public function example(Request $request): Response
     {
-        $data = ['word' => urldecode($request->param('word'))];
+        $data = [
+            'word' => 'Syzygy',
+            'meaning' => "the nearly straight-line configuration of three celestial bodies (such as the sun, moon, and earth during a solar or lunar eclipse) in a gravitational system."
+        ];
         $example = new Examplar($data);
         return new Json($example);
     }
