@@ -17,7 +17,7 @@ cd $DIR
 echo " - Resetting release branch"
 git checkout release -q
 git merge master -q -m "Merge Master into Release"
-git reset master
+git reset -q master
 git add --all
 
 echo " - Building release"
