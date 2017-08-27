@@ -1,0 +1,42 @@
+#!/bin/bash
+set -e
+
+echo " "
+echo " == Choose Heroku name and region:"
+echo " "
+DEFAULT=${PWD##*/}
+read -p "  Heroku app name [${DEFAULT}]: " NAME
+NAME=${NAME:-${DEFAULT}}
+read -p "  Heroku region (eu|us) [eu]: " REGION
+REGION=${REGION:-'eu'}
+echo " "
+
+echo " == Adding autoload of backend to composer.json"
+php -r '$c=json_decode(file_get_contents("composer.json"), 1); $c["autoload"]=["psr-4"=>["backend\\"=>"backend/"]]; file_put_contents("composer.json", json_encode($c, JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT));'
+
+echo " == Another Composer install to install the autoload"
+composer install
+
+echo " == Installing Node dependencies"
+npm install
+
+echo " == Initialize Git with starting files and createing the release branch"
+git init -q .
+git add -A
+git commit -m "Initial files" -q
+git branch release
+
+echo " == Creates the Heroku app ${NAME} in ${REGION}"
+heroku apps:create $NAME --region $REGION
+
+echo " == First deploy by pushing to Heroku"
+bin/deploy -b
+
+echo " == Scaling up to one Heroku dyno"
+heroku ps:scale web=1
+
+echo " == DONE! Take a look!"
+heroku open
+
+echo " == Next steps is makng changes, run 'bin/local [PORT NUMBER:8080]' to develop local"
+echo " == Then to redeploy your changes, commit them to master and 'bin/deploy -b'"
