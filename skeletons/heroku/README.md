@@ -8,7 +8,8 @@
 
 ## Getting started
 
-- `alkemann/h2l:*` composer require this library
+- `mkdir my-new-project && cd my-new-project` (Start with a fresh new folder)
+- `composer require alkemann/h2l:*` composer require this library
 - `vendor/bin/skeleton heroku` (copies all the files of `skeletons/heroku` into root of your project)
 - `bin/install` Sets up Heroku and Node dependencies
 - Ready to go! See `develop` or `deploy` parts for next steps
