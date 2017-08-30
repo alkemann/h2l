@@ -8,17 +8,9 @@
 
 ## Getting started
 
-- Composer require `alkemann/h2l:*`
-- Ensure your `composer.json` includes `"autoload": {"psr-4": {"backend\\": "backend/"}}`
-- `composer install` (installs php dependency)
+- `alkemann/h2l:*` composer require this library
 - `vendor/bin/skeleton heroku` (copies all the files of `skeletons/heroku` into root of your project)
-- `npm install` (installs node.js dependencies)
-- `git init .` Add files (`git add .`). Ensure both composer.json and composer.lock files is included
-- `git commit -m "Initial file start"` (Make an initial commit)
-- `git branch release` (makes a release branch that will be used to push to Heroku)
-- `heroku apps:create NAME --region eu` (Create Heroku app with )
-- `git push heroku master` (Starts heroku off, use `bin/deploy` after this)
-- `heroku ps:scale web=1` (Scale your app with 1 web worker)
+- `bin/install` Sets up Heroku and Node dependencies
 - Ready to go! See `develop` or `deploy` parts for next steps
 
 ## Develop
