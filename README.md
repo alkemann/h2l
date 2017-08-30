@@ -30,7 +30,8 @@ Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.githu
    Thirdly there is an "example" version that contains some more illustative example pages
    and dynamic routes. install by simply copying the skeleton folder contents of choice down
    to the root of your app (presumably the same folder that contains the "vendor" composer):
-   `vendor/bin/h2l skeleton base`
+   `vendor/bin/skeleton base` (there more other skeleton alternatives, like `min` (bare bones)
+   or `heroku` (set up for plug and play heroku app with H2L as backend and an react-redux frontend)).
 
 
 ## Usage from skeleton
