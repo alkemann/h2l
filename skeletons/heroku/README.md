@@ -12,7 +12,7 @@
 - `composer require alkemann/h2l:*` composer require this library
 - `vendor/bin/skeleton heroku` (copies all the files of `skeletons/heroku` into root of your project)
 - `bin/install` Sets up Heroku and Node dependencies
-- Ready to go! See [develop](#Develop) or [deploy](#Deploy) parts for next steps
+- Ready to go! See [Develop](#develop) or [Deploy](#deploy) parts for next steps
 
 ## Develop
 
