@@ -21,3 +21,9 @@ if [ ! -d "${SKELE}/${1}" ]; then
 fi
 
 cp -r ${SKELE}/${1}/* .
+
+if [ -f bin/install ]; then
+    echo ""
+    echo "You should now run 'bin/install' to complete the install process."
+    echo ""
+fi
