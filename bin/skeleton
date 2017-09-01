@@ -20,7 +20,7 @@ if [ ! -d "${SKELE}/${1}" ]; then
   exit 1
 fi
 
-cp -rT ${SKELE}/${1}/* .
+cp -r ${SKELE}/${1}/. .
 
 if [ -f bin/install ]; then
     echo ""
