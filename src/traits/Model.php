@@ -19,12 +19,11 @@ use alkemann\h2l\interfaces\Source;
  * @property array $fields
  * @property array $table
  * @property array $data
+ * @method void __construct(array $data)
  * @package alkemann\h2l
  */
 trait Model
 {
-    abstract public function __construct(array $data = []);
-
     /**
      * @throws ConfigMissing
      */
