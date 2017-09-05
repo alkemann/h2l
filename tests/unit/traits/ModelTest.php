@@ -14,7 +14,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $p = new class {
             use Model;
-
+            public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
             public function data(array $data = null): array {}
@@ -28,7 +28,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
         $p = new class {
             use Model;
-
+            public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
             public function data(array $data = null): array {}
@@ -50,7 +50,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $p = new class {
             use Model;
             static $connection = 'ModelTest testMissingTableConfig';
-
+            public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
             public function data(array $data = null): array {}
