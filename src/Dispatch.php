@@ -63,6 +63,9 @@ class Dispatch
 
     public function setRouteFromRouter(string $router = Router::class): bool
     {
+        /**
+         * @var Router $router
+         */
         $route = $router::match($this->request->url(), $this->request->method());
         if (is_null($route)) {
             return false;

@@ -23,7 +23,7 @@ use alkemann\h2l\{ Dispatch, Request, Response, Log, Chain };
 $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
 
-// Middlewae to add a log response for request and what response handler is chosen
+// Middleware to add a log response for request and what response handler is chosen
 $log_request_middleware = function(Request $request, Chain $chain): ?Response {
     Log::debug("== REQUEST: {$request->method()} '{$request->url()}' ==");
     $response = $chain->next($request);

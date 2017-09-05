@@ -2,6 +2,11 @@
 
 namespace alkemann\h2l\interfaces;
 
+/**
+ * Interface Source
+ *
+ * @package alkemann\h2l\interfaces
+ */
 interface Source
 {
     public function __construct(array $config = []);

@@ -2,6 +2,11 @@
 
 namespace alkemann\h2l\exceptions;
 
+/**
+ * Class CurlFailure
+ *
+ * @package alkemann\h2l\exceptions
+ */
 class CurlFailure extends \Exception
 {
     protected $context = [];
@@ -22,6 +27,7 @@ class CurlFailure extends \Exception
         $this->context = $context;
     }
 
+    // @TODO Use constants?
     public static $code_to_constant_name = [
         1 => "CURLE_UNSUPPORTED_PROTOCOL",
         2 => "CURLE_FAILED_INIT",
