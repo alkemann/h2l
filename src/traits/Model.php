@@ -17,7 +17,7 @@ use alkemann\h2l\interfaces\Source;
  * @property string $pk
  * @property string $connection
  * @property array $fields
- * @property array $table
+ * @property string $table
  * @property array $data
  * @package alkemann\h2l
  */
