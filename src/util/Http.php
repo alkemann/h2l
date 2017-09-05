@@ -9,6 +9,16 @@ namespace alkemann\h2l\util;
  */
 class Http
 {
+    const TRACE = 'TRACE';
+    const HEAD = 'HEAD';
+    const POST = 'POST';
+    const CONNECT = 'CONNECT';
+    const OPTIONS = 'OPTIONS';
+    const PUT = 'PUT';
+    const PATCH = 'PATCH';
+    const DELETE = 'DELETE';
+    const GET = 'GET';
+
     private static $code_to_message = [
         // Informational 1xx
         100 => 'Continue',

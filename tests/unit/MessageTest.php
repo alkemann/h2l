@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Message, Request, traits\Entity, traits\Model
+    Message, traits\Entity, traits\Model, util\Http
 };
 
 class MessageTest extends \PHPUnit_Framework_TestCase
@@ -12,12 +12,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
     {
         $message = (new Message)
             ->withUrl('http://example.com')
-            ->withMethod(Request::POST)
+            ->withMethod(Http::POST)
             ->withBody('{"name": "John"}')
             ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"']);
 
         $this->assertEquals('http://example.com', $message->url());
-        $this->assertEquals(Request::POST, $message->method());
+        $this->assertEquals(Http::POST, $message->method());
         $this->assertEquals('{"name": "John"}', $message->body());
         $this->assertEquals('{"name": "John"}', ((string) $message));
         $this->assertEquals(Message::CONTENT_JSON, $message->contentType());
@@ -34,7 +34,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"']);
 
         $this->assertEquals('', $message->url());
-        $this->assertEquals(Request::GET, $message->method());
+        $this->assertEquals(Http::GET, $message->method());
         $this->assertEquals('{"name": "John"}', $message->body());
         $this->assertEquals(200, $message->code());
         $this->assertEquals(['Content-Type' => 'application/json; Charset="utf-8"'], $message->headers());

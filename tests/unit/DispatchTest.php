@@ -3,8 +3,10 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Dispatch, Environment, exceptions\NoRouteSetError, interfaces\Session as SessionInterface, Request, Response, response\Error, response\Json, Route, Router, util\Chain
+    Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, response\Error, response\Json, Route, Router, util\Chain, util\Http
 };
+use alkemann\h2l\interfaces\Session as SessionInterface;
+
 
 class DispatchTests extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +48,7 @@ class DispatchTests extends \PHPUnit_Framework_TestCase
             ]
         );
         $request = self::getRequestFromDispatch($dispatch);
-        $this->assertEquals(Request::GET, $request->method());
+        $this->assertEquals(Http::GET, $request->method());
         $this->assertEquals('place', $request->url());
         $this->assertEquals('', $request->contentType());
         $this->assertEquals('all', $request->param('filter'));
@@ -110,7 +112,7 @@ class DispatchTests extends \PHPUnit_Framework_TestCase
             ]
         );
         $r = self::getRequestFromDispatch($dispatch);
-        $this->assertEquals(Request::POST, $r->method());
+        $this->assertEquals(Http::POST, $r->method());
         $this->assertEquals('api/tasks/12.json', $r->url());
         $this->assertEquals('application/json', $r->contentType());
         $this->assertEquals('all', $r->param('filter'));
@@ -120,7 +122,7 @@ class DispatchTests extends \PHPUnit_Framework_TestCase
         $route = $r2->route();
         $this->assertInstanceOf(Route::class, $route);
         $result = $dispatch->response();
-        $this->assertInstanceOf( Response::class, $result);
+        $this->assertInstanceOf(Response::class, $result);
         $this->assertEquals("New Title", $r->param('title'));
 
         $expected = ['filter' => 'all'];
@@ -194,7 +196,7 @@ class DispatchTests extends \PHPUnit_Framework_TestCase
         $cb = function (Request $r) use ($response): ?Response {
             return $response;
         };
-        Router::add('testSetRouteFromRouter', $cb, Request::GET);
+        Router::add('testSetRouteFromRouter', $cb, Http::GET);
         $request = new Dispatch(['url' => 'testSetRouteFromRouter']);
         $request->setRouteFromRouter();
 

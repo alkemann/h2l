@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{Request, Router, Route, response\Page, response\Json};
+use alkemann\h2l\{
+    Request, response\Json, Route, Router, util\Http
+};
 
 
 class RouterTest extends \PHPUnit_Framework_TestCase
@@ -56,7 +58,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testDynamicRoutes()
     {
         $cb = function() { $a=1; };
-        Router::add('|^api/tasks$|', $cb, Request::GET);
+        Router::add('|^api/tasks$|', $cb, Http::GET);
         $reflection = new \ReflectionMethod(Router::class, 'matchDynamicRoute');
         $reflection->setAccessible(true);
 
@@ -102,8 +104,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testDirectMatchedRoute()
     {
         $cb = function(Request $r) { return ""; };
-        Router::add('/api/people', $cb, Request::GET);
-        $route = Router::match('/api/people', Request::GET);
+        Router::add('/api/people', $cb, Http::GET);
+        $route = Router::match('/api/people', Http::GET);
         $this->assertTrue($route instanceof Route);
         $this->assertEquals('/api/people', "$route");
     }
@@ -111,8 +113,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testMatch()
     {
         $cb = function(Request $r) { return ""; };
-         Router::add('|/dynamic/(?<id>\d+)|', $cb, Request::GET);
-        $route = Router::match('/dynamic/123', Request::GET);
+         Router::add('|/dynamic/(?<id>\d+)|', $cb, Http::GET);
+        $route = Router::match('/dynamic/123', Http::GET);
         $this->assertTrue($route instanceof Route);
         $this->assertEquals(['id' => 123], $route->parameters());
         $this->assertEquals('/dynamic/123', "$route");

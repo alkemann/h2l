@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\util\Http;
+
 /**
  * Class Message
  *
@@ -30,7 +32,7 @@ class Message
      * Enum with Request::GET, Request::POST etc
      * @var string
      */
-    protected $method = Request::GET;
+    protected $method = Http::GET;
     /**
      * @var string
      */

@@ -2,7 +2,6 @@
 
 namespace alkemann\h2l;
 
-use alkemann\h2l\util\ArrayManipulations;
 use alkemann\h2l\util\Http;
 
 /**
@@ -13,15 +12,6 @@ use alkemann\h2l\util\Http;
  */
 class Request extends Message
 {
-    const GET = 'GET';
-    const HEAD = 'HEAD';
-    const POST = 'POST';
-    const PUT = 'PUT';
-    const DELETE = 'DELETE';
-    const CONNECT = 'CONNECT';
-    const OPTIONS = 'OPTIONS';
-    const TRACE = 'TRACE';
-    const PATCH = 'PATCH';
 
     protected $parameters = [];
     protected $request = [];
@@ -83,7 +73,7 @@ class Request extends Message
         $new->server = $server;
         $new->setContentTypeFromServerParams($server['HTTP_CONTENT_TYPE'] ?? '');
         $new->setAcceptTypeFromServerParams($server['HTTP_ACCEPT'] ?? '');
-        $new->method = $server['REQUEST_METHOD'] ?? Request::GET;
+        $new->method = $server['REQUEST_METHOD'] ?? Http::GET;
         $new->headers = Http::getRequestHeadersFromServerArray($server);
         return $new;
     }

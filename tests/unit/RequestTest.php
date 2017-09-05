@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Message, Request, Route
+    Message, Request, Route, util\Http
 };
 
 class RequestTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'route' => null,
             'code' => null,
             'url' => '',
-            'method' => Request::GET,
+            'method' => Http::GET,
             'body' => null,
             'meta' => [],
             'headers' => [],
@@ -33,15 +33,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected_defaults, $result);
 
         $expected_constants = [
-            'GET' => 'GET',
-            'HEAD' => 'HEAD',
-            'POST' => 'POST',
-            'PUT' => 'PUT',
-            'DELETE' => 'DELETE',
-            'CONNECT' => 'CONNECT',
-            'OPTIONS' => 'OPTIONS',
-            'TRACE' => 'TRACE',
-            'PATCH' => 'PATCH',
             'CONTENT_JSON' => 'application/json',
             'CONTENT_FORM' => 'application/x-www-form-urlencoded',
             'CONTENT_HTML' => 'text/html',
@@ -97,7 +88,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'route' => $route,
             'code' => null,
             'url' => '/place/oslo',
-            'method' => Request::POST,
+            'method' => Http::POST,
             'body' => null,
             'meta' => [],
             'headers' => ['Accept' => 'application/json;q=0.9', 'Content-Type' => 'application/x-www-form-urlencoded'],
@@ -128,7 +119,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('utf-8', $r2->charset());
         $this->assertEquals(Message::CONTENT_FORM, $r2->contentType());
         $this->assertEquals(Message::CONTENT_JSON, $r2->acceptType());
-        $this->assertEquals(Request::POST, $r2->method());
+        $this->assertEquals(Http::POST, $r2->method());
     }
 
     public function testDefailtServerParamsXML()

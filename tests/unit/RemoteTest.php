@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Message, Remote, Request
+    Message, Remote, util\Http
 };
 
 class RemoteTest extends \PHPUnit_Framework_TestCase
@@ -47,7 +47,7 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withMethod(Request::GET)
+                ->withMethod(Http::GET)
                 ->withUrl('http://example.com/xml/note.xml')
                 ->withHeaders(['Accept' => 'application/xml'])
             )
@@ -66,7 +66,7 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withMethod(Request::POST)
+                ->withMethod(Http::POST)
                 ->withUrl('http://example.com')
                 ->withBody($json)
                 ->withHeaders([
@@ -90,7 +90,7 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withMethod(Request::POST)
+                ->withMethod(Http::POST)
                 ->withUrl('http://example.com')
                 ->withBody($string)
                 ->withHeaders([
@@ -111,7 +111,7 @@ HEADER;
             ->getMock();
         $remote->expects($this->once())->method('http')
             ->with((new Message)
-                ->withMethod(Request::DELETE)
+                ->withMethod(Http::DELETE)
                 ->withUrl('http://example.com/user/11')
             )
             ->willReturn(new Message);

@@ -2,9 +2,11 @@
 
 namespace backend\entities;
 
+use alkemann\h2l\traits\Entity;
+
 class Examplar implements \JsonSerializable
 {
-    use alkemann\h2l\traits\Entity;
+    use Entity;
 
     public function fields(): array
     {

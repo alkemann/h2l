@@ -2,6 +2,7 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\util\Http;
 use Closure;
 
 /**
@@ -33,7 +34,7 @@ class Router
      * @param mixed $methods a single Request::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
      * @internal param Closure $closure Code to run on this match
      */
-    public static function add(string $url, callable $callable, $methods = [Request::GET]): void
+    public static function add(string $url, callable $callable, $methods = [Http::GET]): void
     {
         if ($callable instanceof Closure) {
             $closure = $callable;
@@ -52,7 +53,7 @@ class Router
      * @param string $method Request::<GET/POST/PATCH/PUT/DELETE>
      * @return interfaces\Route
      */
-    public static function match(string $url, string $method = Request::GET): interfaces\Route
+    public static function match(string $url, string $method = Http::GET): interfaces\Route
     {
         $url = self::$aliases[$url] ?? $url;
 
@@ -77,7 +78,7 @@ class Router
         });
     }
 
-    private static function matchDynamicRoute(string $url, string $method = Request::GET): ?interfaces\Route
+    private static function matchDynamicRoute(string $url, string $method = Http::GET): ?interfaces\Route
     {
         foreach (self::$routes[$method] as $route => $cb) {
             if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) {
