@@ -23,8 +23,6 @@ use alkemann\h2l\interfaces\Source;
  */
 trait Model
 {
-    abstract public function __construct(array $data = []);
-
     /**
      * @throws ConfigMissing
      */
