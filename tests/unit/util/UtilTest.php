@@ -3,6 +3,7 @@
 namespace alkemann\h2l\tests\unit\util;
 
 use alkemann\h2l\util\ArrayManipulations;
+use alkemann\h2l\util\Http;
 
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
@@ -107,7 +108,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
             'Content-Type' => 'JPEG'
         ];
 
-        $result = ArrayManipulations::getRequestHeadersFromServerArray($in);
+        $result = Http::getRequestHeadersFromServerArray($in);
         $this->assertEquals($expected, $result);
     }
 }

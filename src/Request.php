@@ -3,6 +3,7 @@
 namespace alkemann\h2l;
 
 use alkemann\h2l\util\ArrayManipulations;
+use alkemann\h2l\util\Http;
 
 /**
  * Class Request
@@ -83,7 +84,7 @@ class Request extends Message
         $new->setContentTypeFromServerParams($server['HTTP_CONTENT_TYPE'] ?? '');
         $new->setAcceptTypeFromServerParams($server['HTTP_ACCEPT'] ?? '');
         $new->method = $server['REQUEST_METHOD'] ?? Request::GET;
-        $new->headers = ArrayManipulations::getRequestHeadersFromServerArray($server);
+        $new->headers = Http::getRequestHeadersFromServerArray($server);
         return $new;
     }
 
