@@ -1,10 +1,6 @@
-# H2L - microframework
+# Structure
 
-Welcome to H2L a micro framework for PHP 7.1+
-
-## Structure
-
-### Core (alkemann/h2l)
+## Core (alkemann/h2l)
 - Connections
 - Dispatch
 - Environment

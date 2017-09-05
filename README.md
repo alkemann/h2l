@@ -43,7 +43,7 @@ Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.githu
 
 Some example routes:
 ```php
-use alkemann\h2l\{Request, Router, response\Json};
+use alkemann\h2l\{Request, Router, Response, response\Json};
 
 // Get task by id, i.e. GET http://example.com/api/tasks/12
 Router::add(
@@ -53,12 +53,11 @@ Router::add(
     $id = $request->param('id'); // from the regex matched url part
     $data_model = app\Task::get($id);
     return new Json($data_model); // since Task model implements \JsonSerializable
-  },
-  Request::GET
+  }
 );
 
-// Any url with `version` in it, i.e. http://example.com/somethi/versionista
-Router::add('|version|', function($r) {
+// http://example.com/version
+Router::add('version', function($r) {
 	return new Json(['version' => '1.3']);
 });
 ```
@@ -72,15 +71,16 @@ require_once($root_path . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR .
 
 use alkemann\h2l\{Environment, Dispatch};
 
+Environment::setEnvironment(Environment::PROD);
 Environment::set([
     'debug' => false,
-    'logs_path' => $root_path . 'logs' . DIRECTORY_SEPARATOR,
     'layout_path'  => $root_path . 'layouts' . DIRECTORY_SEPARATOR,
     'content_path' => $root_path .  'pages' . DIRECTORY_SEPARATOR,
-], Environment::PROD);
-Environment::setEnvironment(Environment::PROD);
+]);
 
-$response = (new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST))->response();
+$dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch->setRouteFromRouter();
+$response = $dispatch->response();
 if ($response) echo $response->render();
 ```
 

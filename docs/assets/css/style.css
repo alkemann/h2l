@@ -1,0 +1,13 @@
+---
+---
+
+@import "{{ site.them }}";
+
+nav .a {
+    color: #2877B8;
+    font-weight: bold;
+}
+nav span {
+    display: inline-block;
+    padding-right: 2rem;
+}
