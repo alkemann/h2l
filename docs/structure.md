@@ -41,3 +41,4 @@ Welcome to H2L a micro framework for PHP 7.1+
 - util
     - ArrayManipulations
     - Chain
+    - Http
