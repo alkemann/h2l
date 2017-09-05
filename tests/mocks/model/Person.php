@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\mocks\model;
 
-use alkemann\h2l\Model;
+use alkemann\h2l\traits\Model;
 
 class Person {
     use Model;

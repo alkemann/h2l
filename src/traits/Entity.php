@@ -1,6 +1,6 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\traits;
 
 /**
  * Class Entity

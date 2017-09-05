@@ -1,9 +1,9 @@
 <?php
 
-namespace alkemann\h2l\tests\unit;
+namespace alkemann\h2l\tests\unit\traits;
 
 use alkemann\h2l\{
-    Connections, exceptions\ConfigMissing, interfaces\Source, Model
+    Connections, exceptions\ConfigMissing, interfaces\Source, traits\Model
 };
 use alkemann\h2l\tests\mocks\model\Person;
 

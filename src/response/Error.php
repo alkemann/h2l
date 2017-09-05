@@ -5,6 +5,7 @@ namespace alkemann\h2l\response;
 use alkemann\h2l\Environment;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\Log;
+use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 
@@ -59,7 +60,7 @@ class Error extends Response
         }
         $page_class = $this->config['page_class'];
 
-        $msg = self::$code_to_message[$this->code];
+        $msg = Message::httpCodeToMessage($this->code);
         $h("HTTP/1.0 {$this->code} {$msg}");
         try {
             $page_config = $this->config + [

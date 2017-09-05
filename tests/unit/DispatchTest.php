@@ -3,10 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Chain, Dispatch, Request, Environment, Response, Route, Router,
-    exceptions\NoRouteSetError,
-    interfaces\Session as SessionInterface,
-    response\Error, response\Json
+    Dispatch, Environment, exceptions\NoRouteSetError, interfaces\Session as SessionInterface, Request, Response, response\Error, response\Json, Route, Router, util\Chain
 };
 
 class DispatchTests extends \PHPUnit_Framework_TestCase

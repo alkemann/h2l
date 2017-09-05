@@ -1,6 +1,6 @@
 <?php
 
-namespace alkemann\h2l\tests\acceptance;
+namespace alkemann\h2l\tests\acceptance\traits;
 
 use alkemann\h2l\Connections;
 use alkemann\h2l\interfaces\Source;

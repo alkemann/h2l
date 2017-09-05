@@ -18,7 +18,9 @@ require_once($CONFIG_PATH . 'connections.php');
 require_once($CONFIG_PATH . 'routes.php');
 // ***********
 
-use alkemann\h2l\{ Dispatch, Request, Response, Log, Chain };
+use alkemann\h2l\{
+    Dispatch, Log, Request, Response, util\Chain
+};
 
 $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();

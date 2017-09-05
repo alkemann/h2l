@@ -1,7 +1,16 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\util;
 
+use alkemann\h2l\exceptions;
+use alkemann\h2l\Request;
+use alkemann\h2l\Response;
+
+/**
+ * Class Chain
+ *
+ * @package alkemann\h2l\util
+ */
 class Chain
 {
     private $chain;

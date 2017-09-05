@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l\response;
 
+use alkemann\h2l\Message;
+
 /**
  * Class Json
  *
@@ -37,7 +39,7 @@ class Json extends \alkemann\h2l\Response
         $h = $this->config['header_func'] ?? 'header';
         $h("Content-type: application/json");
         if ($this->code != 200) {
-            $msg = static::$code_to_message[$this->code];
+            $msg = Message::httpCodeToMessage($this->code);
             $h("HTTP/1.0 {$this->code} {$msg}");
         }
     }

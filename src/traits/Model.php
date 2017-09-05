@@ -1,7 +1,9 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\traits;
 
+use alkemann\h2l\Connections;
+use alkemann\h2l\exceptions;
 use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\interfaces\Source;
 

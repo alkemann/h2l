@@ -1,8 +1,8 @@
 <?php
 
-namespace alkemann\h2l\tests\unit;
+namespace alkemann\h2l\tests\unit\util;
 
-use alkemann\h2l\Util;
+use alkemann\h2l\util\ArrayManipulations;
 
 class UtilTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,19 +22,19 @@ class UtilTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->assertEquals($data, Util::getArrayValueByKeys([], $data));
+        $this->assertEquals($data, ArrayManipulations::getArrayValueByKeys([], $data));
 
-        $this->assertEquals(87, Util::getArrayValueByKeys(['one','one_one'], $data));
-        $this->assertEquals(56, Util::getArrayValueByKeys(['one','one_two','one_two_one'], $data));
-        $this->assertEquals(98, Util::getArrayValueByKeys(['two'], $data));
-        $this->assertEquals(73, Util::getArrayValueByKeys(['three','three_one'], $data));
+        $this->assertEquals(87, ArrayManipulations::getArrayValueByKeys(['one','one_one'], $data));
+        $this->assertEquals(56, ArrayManipulations::getArrayValueByKeys(['one','one_two','one_two_one'], $data));
+        $this->assertEquals(98, ArrayManipulations::getArrayValueByKeys(['two'], $data));
+        $this->assertEquals(73, ArrayManipulations::getArrayValueByKeys(['three','three_one'], $data));
     }
 
     public function testExceptionWhenNotSet()
     {
         $this->expectException(\OutOfBoundsException::class);
         $data = [];
-        Util::getArrayValueByKeys(['one', 'two'], $data);
+        ArrayManipulations::getArrayValueByKeys(['one', 'two'], $data);
     }
 
     public function testgetFromArrayByKey()
@@ -52,13 +52,13 @@ class UtilTest extends \PHPUnit_Framework_TestCase
             ]
         ];
 
-        $this->assertEquals(87, Util::getFromArrayByKey('one.one_one', $data));
-        $this->assertEquals(56, Util::getFromArrayByKey('one.one_two.one_two_one', $data));
-        $this->assertEquals(['one_two_one' => 56], Util::getFromArrayByKey('one.one_two', $data));
-        $this->assertEquals(98, Util::getFromArrayByKey('two', $data));
-        $this->assertEquals(73, Util::getFromArrayByKey('three.three_one', $data));
-        $this->assertEquals(56, Util::getFromArrayByKey('one#one_two#one_two_one', $data, '#'));
-        $this->assertEquals(56, Util::getFromArrayByKey('one | one_two | one_two_one', $data, ' | '));
+        $this->assertEquals(87, ArrayManipulations::getFromArrayByKey('one.one_one', $data));
+        $this->assertEquals(56, ArrayManipulations::getFromArrayByKey('one.one_two.one_two_one', $data));
+        $this->assertEquals(['one_two_one' => 56], ArrayManipulations::getFromArrayByKey('one.one_two', $data));
+        $this->assertEquals(98, ArrayManipulations::getFromArrayByKey('two', $data));
+        $this->assertEquals(73, ArrayManipulations::getFromArrayByKey('three.three_one', $data));
+        $this->assertEquals(56, ArrayManipulations::getFromArrayByKey('one#one_two#one_two_one', $data, '#'));
+        $this->assertEquals(56, ArrayManipulations::getFromArrayByKey('one | one_two | one_two_one', $data, ' | '));
     }
 
     public function testNullWhenNotSet()
@@ -71,7 +71,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
                 ]
             ]
         ];
-        $this->assertNull(Util::getFromArrayByKey('one.one_two.one_two_two', $data));
+        $this->assertNull(ArrayManipulations::getFromArrayByKey('one.one_two.one_two_two', $data));
     }
 
     public function testHeaderExtractAndConvert()
@@ -107,7 +107,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
             'Content-Type' => 'JPEG'
         ];
 
-        $result = Util::getRequestHeadersFromServerArray($in);
+        $result = ArrayManipulations::getRequestHeadersFromServerArray($in);
         $this->assertEquals($expected, $result);
     }
 }

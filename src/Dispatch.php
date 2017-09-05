@@ -4,6 +4,7 @@ namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\NoRouteSetError;
+use alkemann\h2l\util\Chain;
 
 /**
  * Class Request

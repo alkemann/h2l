@@ -1,6 +1,6 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\util;
 
 use OutOfBoundsException;
 
@@ -9,7 +9,7 @@ use OutOfBoundsException;
  *
  * @package alkemann\h2l
  */
-class Util
+class ArrayManipulations
 {
 
     /**

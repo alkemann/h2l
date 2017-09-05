@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\util\ArrayManipulations;
+
 /**
  * Class Session implementation that access $_SESSION directly
  *
@@ -28,7 +30,7 @@ class Session implements interfaces\Session
             return $_SESSION[$key];
         }
         if (strpos($key, '.') !== false) {
-            return Util::getFromArrayByKey($key, $_SESSION);
+            return ArrayManipulations::getFromArrayByKey($key, $_SESSION);
         }
         return null;
     }

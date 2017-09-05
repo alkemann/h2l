@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Entity, Message, Model, Request
+    Message, Request, traits\Entity, traits\Model
 };
 
 class MessageTest extends \PHPUnit_Framework_TestCase
