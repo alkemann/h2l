@@ -3,9 +3,8 @@
 namespace alkemann\h2l\tests\unit\util;
 
 use alkemann\h2l\util\ArrayManipulations;
-use alkemann\h2l\util\Http;
 
-class UtilTest extends \PHPUnit_Framework_TestCase
+class ArrayManipulationsTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testGetArrayValueByKeys()
@@ -38,7 +37,7 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         ArrayManipulations::getArrayValueByKeys(['one', 'two'], $data);
     }
 
-    public function testgetFromArrayByKey()
+    public function testGetFromArrayByKey()
     {
         $data = [
             'one' => [
@@ -75,46 +74,20 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $this->assertNull(ArrayManipulations::getFromArrayByKey('one.one_two.one_two_two', $data));
     }
 
-    public function testHeaderExtractAndConvert()
+    public function testOutOfBoundsException()
     {
-        $in = [
-            'USER' => 'www-data',
-            'HTTP_CONNECTION' => 'keep-alive',
-            'HTTP_ACCEPT_ENCODING' => 'gzip, deflate',
-            'HTTP_HOST' => 'localhost:8081',
-            'HTTP_USER_AGENT' => 'PostmanRuntime/6.2.5',
-            'HTTP_ACCEPT' => 'application/json',
-            'HTTP_CACHE_CONTROL' => 'no-cache',
-            'SCRIPT_FILENAME' => '/var/www/html/webroot/index.php',
-            'REDIRECT_STATUS' => '200',
-            "CONTENT_LENGTH" => '2048',
-            "CONTENT_TYPE" => 'JPEG',
-            'SERVER_NAME' =>'',
-            'SERVER_PORT' => '80',
-            'SERVER_ADDR' => '172.17.0.7',
-            'REMOTE_PORT' => '58518',
-            'REMOTE_ADDR' => '172.17.0.1',
-            'SERVER_SOFTWARE' => 'nginx/1.13.1',
-        ];
-
-        $expected = [
-            'Connection' => 'keep-alive',
-            'Accept-Encoding' => 'gzip, deflate',
-            'Host' => 'localhost:8081',
-            'User-Agent' => 'PostmanRuntime/6.2.5',
-            'Accept' => 'application/json',
-            'Cache-Control' => 'no-cache',
-            'Content-Length' => '2048',
-            'Content-Type' => 'JPEG'
-        ];
-
-        $result = Http::getRequestHeadersFromServerArray($in);
-        $this->assertEquals($expected, $result);
-    }
-
-    public function testHttpCodeToMessage()
-    {
-        $this->assertEquals('Unknown', Http::httpCodeToMessage(45345));
-        $this->assertEquals('Accepted', Http::httpCodeToMessage(202));
+        $data = [];
+        $thrown = false;
+        $key = 'one.two.three';
+        $keys = explode('.', $key);
+        try {
+            ArrayManipulations::getArrayValueByKeys($keys, $data);
+        } catch (\OutOfBoundsException $e) {
+            $thrown = true;
+            $expected = "Key [one.two.three] not set in Array\n(\n)\n";
+            $result = $e->getMessage();
+            $this->assertEquals($expected, $result);
+        }
+        $this->assertTrue($thrown, "Out of bounds exceptions was not thrown");
     }
 }

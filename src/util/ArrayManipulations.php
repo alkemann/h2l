@@ -59,7 +59,7 @@ class ArrayManipulations
             return $data;
         }
         if (array_key_exists($key, $data) === false) {
-            throw new OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
+            throw new OutOfBoundsException("Key [{$key}." . join('.', $keys) . "] not set in " . print_r($data, 1));
         }
         if (empty($keys)) {
             return $data[$key];
