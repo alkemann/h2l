@@ -111,4 +111,10 @@ class UtilTest extends \PHPUnit_Framework_TestCase
         $result = Http::getRequestHeadersFromServerArray($in);
         $this->assertEquals($expected, $result);
     }
+
+    public function testHttpCodeToMessage()
+    {
+        $this->assertEquals('Unknown', Http::httpCodeToMessage(45345));
+        $this->assertEquals('Accepted', Http::httpCodeToMessage(202));
+    }
 }

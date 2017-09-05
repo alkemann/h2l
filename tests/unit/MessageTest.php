@@ -20,7 +20,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Http::POST, $message->method());
         $this->assertEquals('{"name": "John"}', $message->body());
         $this->assertEquals('{"name": "John"}', ((string) $message));
-        $this->assertEquals(Message::CONTENT_JSON, $message->contentType());
+        $this->assertEquals(Http::CONTENT_JSON, $message->contentType());
         $this->assertEquals('utf-8', $message->charset());
     }
 
@@ -48,7 +48,7 @@ class MessageTest extends \PHPUnit_Framework_TestCase
             ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"']);
         $this->assertEquals('application/json; Charset="utf-8"', $message->header('Content-Type'));
         $this->assertEquals('application/json; Charset="utf-8"', $message->header('content-type'));
-        $this->assertEquals(Message::CONTENT_JSON, $message->contentType());
+        $this->assertEquals(Http::CONTENT_JSON, $message->contentType());
         $this->assertEquals('utf-8', $message->charset());
     }
 
@@ -57,12 +57,12 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $data = ['name' => 'John', 'dead' => false];
         $message = (new Message)
             ->withBody(json_encode($data))
-            ->withHeaders(['Content-Type' => Message::CONTENT_JSON]);
+            ->withHeaders(['Content-Type' => Http::CONTENT_JSON]);
         $this->assertEquals($data, $message->content());
 
         $message = (new Message)
             ->withBody("<person><name>John</name><dead>false</dead></person>")
-            ->withHeaders(['Content-Type' => Message::CONTENT_XML]);
+            ->withHeaders(['Content-Type' => Http::CONTENT_XML]);
 
         $xml = $message->content();
         $this->assertInstanceOf(\SimpleXMLElement::class, $xml);

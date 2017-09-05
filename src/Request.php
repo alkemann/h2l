@@ -12,7 +12,6 @@ use alkemann\h2l\util\Http;
  */
 class Request extends Message
 {
-
     protected $parameters = [];
     protected $request = [];
     protected $server = [];
@@ -20,7 +19,7 @@ class Request extends Message
     protected $post = [];
     protected $route = null;
     protected $content_type = '';
-    protected $accept_type = Message::CONTENT_HTML;
+    protected $accept_type = Http::CONTENT_HTML;
 
     /**
      * Get request parameters from url as url params, get queries or post, in that order
@@ -81,10 +80,10 @@ class Request extends Message
     private function setContentTypeFromServerParams(string $content_type): void
     {
         $known_content_types = [
-            Message::CONTENT_JSON,
-            Message::CONTENT_XML,
-            Message::CONTENT_TEXT_XML,
-            Message::CONTENT_FORM
+            Http::CONTENT_JSON,
+            Http::CONTENT_XML,
+            Http::CONTENT_TEXT_XML,
+            Http::CONTENT_FORM
         ];
         foreach ($known_content_types as $t) {
             if (strpos($content_type, $t) !== false) {
@@ -97,10 +96,10 @@ class Request extends Message
     private function setAcceptTypeFromServerParams(string $accept_type): void
     {
         $known_accept_types = [
-            Message::CONTENT_JSON,
-            Message::CONTENT_HTML,
-            Message::CONTENT_XML,
-            Message::CONTENT_TEXT_XML,
+            Http::CONTENT_JSON,
+            Http::CONTENT_HTML,
+            Http::CONTENT_XML,
+            Http::CONTENT_TEXT_XML,
         ];
         foreach ($known_accept_types as $t) {
             if (strpos($accept_type, $t) !== false) {
