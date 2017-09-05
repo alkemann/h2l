@@ -2,9 +2,9 @@
 
 namespace backend;
 
-use alkemann\h2l\{Request, Response, Router, Log};
+use alkemann\h2l\{ Request, Response, Router, util\Http };
 use alkemann\h2l\exceptions\InvalidUrl;
-use alkemann\h2l\response\{Json, Error};
+use alkemann\h2l\response\{ Json, Error };
 
 use backend\entities\Examplar;
 
@@ -21,10 +21,10 @@ class Api
 
     static $routes = [
         // Url                          function    request method
-        ['echo',                        'echo',     [Request::GET, Request::POST] ],
-        ['example',                     'example',   Request::GET ],
+        ['echo',                        'echo',     [Http::GET, Http::POST] ],
+        ['example',                     'example',   Http::GET],
 
-        ['%(?<type>\w+)/list%',         'list',      Request::GET],
+        ['%(?<type>\w+)/list%',         'list',      Http::GET],
         // ['%(?<type>\w+)/(?<id>\d+)%',  'delete',   Request::DELETE],
         // ['%(?<type>\w+)/(?<id>\d+)%',  'get',      Request::GET],
     ];

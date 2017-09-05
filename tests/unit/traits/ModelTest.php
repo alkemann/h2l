@@ -1,9 +1,9 @@
 <?php
 
-namespace alkemann\h2l\tests\unit;
+namespace alkemann\h2l\tests\unit\traits;
 
 use alkemann\h2l\{
-    Connections, exceptions\ConfigMissing, interfaces\Source, Model
+    Connections, exceptions\ConfigMissing, interfaces\Source, traits\Model
 };
 use alkemann\h2l\tests\mocks\model\Person;
 
@@ -14,7 +14,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
     {
         $p = new class {
             use Model;
-
+            public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
             public function data(array $data = null): array {}
@@ -28,7 +28,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
         $p = new class {
             use Model;
-
+            public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
             public function data(array $data = null): array {}
@@ -50,7 +50,7 @@ class ModelTest extends \PHPUnit_Framework_TestCase
         $p = new class {
             use Model;
             static $connection = 'ModelTest testMissingTableConfig';
-
+            public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
             public function data(array $data = null): array {}

@@ -2,6 +2,8 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\util\Http;
+
 /**
  * Class Message
  *
@@ -11,12 +13,6 @@ namespace alkemann\h2l;
  */
 class Message
 {
-    const CONTENT_JSON = 'application/json';
-    const CONTENT_FORM = 'application/x-www-form-urlencoded';
-    const CONTENT_HTML = 'text/html';
-    const CONTENT_TEXT = 'text/plain';
-    const CONTENT_XML = 'application/xml';
-    const CONTENT_TEXT_XML = 'text/xml';
 
     /**
      * @var int
@@ -30,7 +26,7 @@ class Message
      * Enum with Request::GET, Request::POST etc
      * @var string
      */
-    protected $method = Request::GET;
+    protected $method = Http::GET;
     /**
      * @var string
      */
@@ -50,7 +46,7 @@ class Message
     /**
      * @var string
      */
-    protected $content_type = Message::CONTENT_HTML;
+    protected $content_type = Http::CONTENT_HTML;
     /**
      * @var string
      */
@@ -86,11 +82,11 @@ class Message
     public function content()
     {
         switch ($this->contentType()) {
-            case static::CONTENT_JSON:
+            case Http::CONTENT_JSON:
                 return json_decode($this->body, true);
-            case static::CONTENT_XML:
+            case Http::CONTENT_XML:
                 return new \SimpleXMLElement($this->body);
-            case static::CONTENT_HTML:
+            case Http::CONTENT_HTML:
                 $doc = new \DOMDocument();
                 $doc->loadHTML($this->body);
                 return $doc;

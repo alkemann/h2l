@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Chain, Dispatch, Message, Request, Environment, Response, Route, Router, exceptions\NoRouteSetError, interfaces\Session as SessionInterface, response\Error, response\Json
+    Request, Route, util\Http
 };
 
 class RequestTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'route' => null,
             'code' => null,
             'url' => '',
-            'method' => Request::GET,
+            'method' => Http::GET,
             'body' => null,
             'meta' => [],
             'headers' => [],
@@ -31,26 +31,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         ];
         $result = $ref_class->getDefaultProperties();
         $this->assertEquals($expected_defaults, $result);
-
-        $expected_constants = [
-            'GET' => 'GET',
-            'HEAD' => 'HEAD',
-            'POST' => 'POST',
-            'PUT' => 'PUT',
-            'DELETE' => 'DELETE',
-            'CONNECT' => 'CONNECT',
-            'OPTIONS' => 'OPTIONS',
-            'TRACE' => 'TRACE',
-            'PATCH' => 'PATCH',
-            'CONTENT_JSON' => 'application/json',
-            'CONTENT_FORM' => 'application/x-www-form-urlencoded',
-            'CONTENT_HTML' => 'text/html',
-            'CONTENT_TEXT' => 'text/plain',
-            'CONTENT_XML' => 'application/xml',
-            'CONTENT_TEXT_XML' => 'text/xml',
-        ];
-        $result = $ref_class->getConstants();
-        $this->assertEquals($expected_constants, $result);
 
         $request = new Request();
         $properties = $ref_class->getProperties();
@@ -97,7 +77,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'route' => $route,
             'code' => null,
             'url' => '/place/oslo',
-            'method' => Request::POST,
+            'method' => Http::POST,
             'body' => null,
             'meta' => [],
             'headers' => ['Accept' => 'application/json;q=0.9', 'Content-Type' => 'application/x-www-form-urlencoded'],
@@ -126,9 +106,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['Accept' => 'application/json;q=0.9', 'Content-Type' => 'application/x-www-form-urlencoded'], $r2->headers());
         $this->assertEquals('application/json;q=0.9', $r2->header('Accept'));
         $this->assertEquals('utf-8', $r2->charset());
-        $this->assertEquals(Message::CONTENT_FORM, $r2->contentType());
-        $this->assertEquals(Message::CONTENT_JSON, $r2->acceptType());
-        $this->assertEquals(Request::POST, $r2->method());
+        $this->assertEquals(Http::CONTENT_FORM, $r2->contentType());
+        $this->assertEquals(Http::CONTENT_JSON, $r2->acceptType());
+        $this->assertEquals(Http::POST, $r2->method());
     }
 
     public function testDefailtServerParamsXML()
@@ -137,7 +117,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             ->withServerParams([
                 'HTTP_ACCEPT' => 'text/html, application/xhtml+xml, application/xml;q=0.9, */*;q=0.8'
             ]);
-        $this->assertEquals(Message::CONTENT_HTML, $request->acceptType());
+        $this->assertEquals(Http::CONTENT_HTML, $request->acceptType());
     }
     public function testAlternativeServerParamsXML()
     {
@@ -146,7 +126,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 'HTTP_CONTENT_TYPE' => 'application/xml; charset=utf-8',
                 'HTTP_ACCEPT' => 'application/xml;q=0.9, */*;q=0.8'
             ]);
-        $this->assertEquals(Message::CONTENT_XML, $request->acceptType());
-        $this->assertEquals(Message::CONTENT_XML, $request->contentType());
+        $this->assertEquals(Http::CONTENT_XML, $request->acceptType());
+        $this->assertEquals(Http::CONTENT_XML, $request->contentType());
     }
 }

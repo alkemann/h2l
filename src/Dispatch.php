@@ -4,6 +4,7 @@ namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\NoRouteSetError;
+use alkemann\h2l\util\Chain;
 
 /**
  * Class Request
@@ -63,6 +64,9 @@ class Dispatch
 
     public function setRouteFromRouter(string $router = Router::class): bool
     {
+        /**
+         * @var Router $router
+         */
         $route = $router::match($this->request->url(), $this->request->method());
         if (is_null($route)) {
             return false;

@@ -7,6 +7,11 @@ use alkemann\h2l\interfaces\Source;
 use alkemann\h2l\Log;
 use PDO as _PDO;
 
+/**
+ * Class PDO
+ *
+ * @package alkemann\h2l\data
+ */
 class PDO implements Source
 {
 

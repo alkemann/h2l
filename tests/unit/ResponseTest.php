@@ -2,8 +2,8 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\Message;
 use alkemann\h2l\Response;
+use alkemann\h2l\util\Http;
 
 
 class ResponseTest extends \PHPUnit_Framework_TestCase
@@ -53,9 +53,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             public function render(): string { return ''; }
         };
 
-        $this->assertEquals('json', $c->fileEndingFromType(Message::CONTENT_JSON));
-        $this->assertEquals('xml', $c->fileEndingFromType(Message::CONTENT_XML));
-        $this->assertEquals('html', $c->fileEndingFromType(Message::CONTENT_HTML));
+        $this->assertEquals('json', $c->fileEndingFromType(Http::CONTENT_JSON));
+        $this->assertEquals('xml', $c->fileEndingFromType(Http::CONTENT_XML));
+        $this->assertEquals('html', $c->fileEndingFromType(Http::CONTENT_HTML));
         $this->assertEquals('html', $c->fileEndingFromType('text/csv'));
     }
 }

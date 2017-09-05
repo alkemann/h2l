@@ -1,6 +1,6 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\util;
 
 use OutOfBoundsException;
 
@@ -9,9 +9,8 @@ use OutOfBoundsException;
  *
  * @package alkemann\h2l
  */
-class Util
+class ArrayManipulations
 {
-
     /**
      * Look for a deeo value in a nested data array.
      *
@@ -60,30 +59,12 @@ class Util
             return $data;
         }
         if (array_key_exists($key, $data) === false) {
-            throw new OutOfBoundsException("Key [" . join('.', $keys) . ".$key] not set in " . print_r($data, 1));
+            throw new OutOfBoundsException("Key [{$key}." . join('.', $keys) . "] not set in " . print_r($data, 1));
         }
         if (empty($keys)) {
             return $data[$key];
         } else {
             return self::getArrayValueByKeys($keys, $data[$key]);
         }
-    }
-
-    public static function getRequestHeadersFromServerArray(array $server_array)
-    {
-        $out = [];
-        foreach ($server_array as $name => $value) {
-            if (substr($name, 0, 5) == "HTTP_") {
-                $name = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($name, 5)))));
-                $out[$name] = $value;
-            }
-        }
-        if (array_key_exists("CONTENT_TYPE", $server_array)) {
-            $out["Content-Type"] = $server_array['CONTENT_TYPE'];
-        }
-        if (array_key_exists("CONTENT_LENGTH", $server_array)) {
-            $out["Content-Length"] = $server_array['CONTENT_LENGTH'];
-        }
-        return $out;
     }
 }

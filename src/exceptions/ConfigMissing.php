@@ -2,6 +2,11 @@
 
 namespace alkemann\h2l\exceptions;
 
+/**
+ * Class ConfigMissing
+ *
+ * @package alkemann\h2l\exceptions
+ */
 class ConfigMissing extends \Error
 {
     const MISSING_TABLE = 100;

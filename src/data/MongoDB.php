@@ -11,6 +11,11 @@ use MongoDB\Collection;
 use MongoDB\Driver\Exception\RuntimeException;
 use MongoDB\Model\BSONDocument;
 
+/**
+ * Class MongoDb
+ *
+ * @package alkemann\h2l\data
+ */
 class MongoDb implements Source
 {
     public static $operators = [

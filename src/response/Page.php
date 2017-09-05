@@ -5,10 +5,10 @@ namespace alkemann\h2l\response;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\Log;
-use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\Environment;
+use alkemann\h2l\util\Http;
 
 /**
  * Class Page
@@ -30,7 +30,7 @@ class Page extends Response
     protected $request;
     protected $data = [];
     protected $template = 'error';
-    protected $content_type = Message::CONTENT_HTML;
+    protected $content_type = Http::CONTENT_HTML;
     protected $code = 200;
 
     protected $config = [];

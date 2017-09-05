@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\integration;
 
 use alkemann\h2l\{
-    exceptions\CurlFailure, Message, Remote, Request
+    exceptions\CurlFailure, Message, Remote, util\Http
 };
 
 class RemoteTest extends \PHPUnit_Framework_TestCase
@@ -15,7 +15,7 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
         $response = (new Remote)->http($request);
         $this->assertInstanceOf(Message::class, $response);
         $this->assertEquals(200, $response->code());
-        $this->assertEquals(Request::GET, $response->method());
+        $this->assertEquals(Http::GET, $response->method());
     }
 
     public function testPostRequest()
@@ -23,7 +23,7 @@ class RemoteTest extends \PHPUnit_Framework_TestCase
         $response = (new Remote)->postForm('http://mockbin.org/bin/cf21c2d2-bb7a-46d5-aa3c-b0d52faa25ad?foo=bar&foo=baz', ['name' => 'Alek']);
         $this->assertInstanceOf(Message::class, $response);
         $this->assertEquals(200, $response->code());
-        $this->assertEquals(Request::POST, $response->method());
+        $this->assertEquals(Http::POST, $response->method());
     }
 
     public function testCurlFailure()

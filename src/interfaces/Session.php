@@ -2,6 +2,11 @@
 
 namespace alkemann\h2l\interfaces;
 
+/**
+ * Interface Session
+ *
+ * @package alkemann\h2l\interfaces
+ */
 interface Session
 {
     public function startIfNotStarted(): void;

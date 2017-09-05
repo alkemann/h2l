@@ -1,12 +1,11 @@
 <?php
 
-namespace alkemann\h2l\tests\unit;
+namespace alkemann\h2l\tests\unit\traits;
 
-use alkemann\h2l\Entity;
 use alkemann\h2l\exceptions\ConfigMissing;
-use alkemann\h2l\tests\mocks\relationship\{
-    Car, Father, Son
-};
+use alkemann\h2l\tests\mocks\relationship\{ Car, Father, Son };
+use alkemann\h2l\traits\Entity;
+
 
 class MockEntity implements \JsonSerializable { use Entity; public static function fields():?array {return null; } };
 

@@ -2,7 +2,7 @@
 
 namespace alkemann\h2l\tests\mocks\relationship;
 
-use alkemann\h2l\{Entity, Model};
+use alkemann\h2l\traits\{ Model, Entity };
 
 class Car
 {

@@ -41,7 +41,7 @@ class LogTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckHandlerValidityObject()
     {
-        Log::handler('not a logg interface', new \stdClass());
+        Log::handler('not a logg interfaces', new \stdClass());
     }
 
     /**

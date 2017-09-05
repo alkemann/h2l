@@ -1,12 +1,12 @@
 <?php
 
-namespace alkemann\h2l\tests\unit;
+namespace alkemann\h2l\tests\unit\util;
 
-use alkemann\h2l\Chain;
 use alkemann\h2l\exceptions\EmptyChainError;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\response\Json;
+use alkemann\h2l\util\Chain;
 
 class ChainTest extends \PHPUnit_Framework_TestCase
 {

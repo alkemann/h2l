@@ -1,17 +1,24 @@
 <?php
 
-namespace alkemann\h2l;
+namespace alkemann\h2l\traits;
 
+use alkemann\h2l\Connections;
+use alkemann\h2l\exceptions;
 use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\interfaces\Source;
 
 /**
  * Class Model
  *
- * Use this for prototyping only, use a real ORM for production studd
+ * Use this for prototyping only, use a real ORM for production stud
  *
  * Depends on \alkemann\h2l\Entity trait
  *
+ * @property string $pk
+ * @property string $connection
+ * @property array $fields
+ * @property string $table
+ * @property array $data
  * @package alkemann\h2l
  */
 trait Model
@@ -49,8 +56,8 @@ trait Model
     }
 
     /**
-     * @throws ConfigMissing
-     * @throws \InvalidArgumentException
+     * @TODO throw exception instead of returning null of insert failed?
+     * @return null|static
      */
     public static function get($id, array $conditions = [], array $options = []) //: ?Model
     {

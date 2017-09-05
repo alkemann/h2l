@@ -1,16 +1,12 @@
 # Task list on the road to 1.0
 
 Features:
- ☐ Cache
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
  ☐ XML response render
 
 Cache:
- ☐ Cached routes
- ☐ Cached templates
  ☐ Join templates
- ☐ Cached model relations?
 
 Documentation:
  ☐ Templates
@@ -22,7 +18,6 @@ Documentation:
  ☐ Logger
  ☐ Model/Entity & Connections
  ☐ Example app & Skeletons
- ☐ Cache
  ☐ Environments
  ☐ Session
  ☐ Middleware
@@ -31,8 +26,7 @@ Documentation:
  ☐ Dispatch
 
 Skeletons:
- ☐ Add a Heroku skeleton
- ☐ Alternately, add an option at end of task to remove when having installed one
+ ✔ Add a Heroku skeleton
 
 Tests:
  ☐ Integration test for the default Session $_SESSION wrapper?

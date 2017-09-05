@@ -3,6 +3,7 @@
 namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\CurlFailure;
+use alkemann\h2l\util\Http;
 
 /**
  * Class Remote
@@ -39,12 +40,12 @@ class Remote
     {
         $request = (new Message)
             ->withUrl($url)
-            ->withMethod(Request::GET)
+            ->withMethod(Http::GET)
             ->withHeaders($headers);
         return $this->http($request);
     }
 
-    public function postJson(string $url, array $data, array $headers = [], string $method = Request::POST): Message
+    public function postJson(string $url, array $data, array $headers = [], string $method = Http::POST): Message
     {
         $headers['Content-Type'] = 'application/json; charset=utf-8';
         $headers['Accept'] = 'application/json';
@@ -58,7 +59,7 @@ class Remote
         return $this->http($request);
     }
 
-    public function postForm(string $url, array $data, array $headers = [], string $method = Request::POST): Message
+    public function postForm(string $url, array $data, array $headers = [], string $method = Http::POST): Message
     {
         $headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
         $data_string = http_build_query($data);
@@ -75,7 +76,7 @@ class Remote
     {
         $request = (new Message)
             ->withUrl($url)
-            ->withMethod(Request::DELETE)
+            ->withMethod(Http::DELETE)
             ->withHeaders($headers);
         return $this->http($request);
     }
