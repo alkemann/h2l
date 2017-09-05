@@ -10,14 +10,21 @@ use alkemann\h2l\interfaces\Source;
 /**
  * Class Model
  *
- * Use this for prototyping only, use a real ORM for production studd
+ * Use this for prototyping only, use a real ORM for production stud
  *
  * Depends on \alkemann\h2l\Entity trait
  *
+ * @property string $pk
+ * @property string $connection
+ * @property array $fields
+ * @property array $table
+ * @property array $data
  * @package alkemann\h2l
  */
 trait Model
 {
+    abstract function __construct(array $data = []);
+
     /**
      * @throws ConfigMissing
      */
@@ -51,8 +58,8 @@ trait Model
     }
 
     /**
-     * @throws ConfigMissing
-     * @throws \InvalidArgumentException
+     * @TODO throw exception instead of returning null of insert failed?
+     * @return null|static
      */
     public static function get($id, array $conditions = [], array $options = []) //: ?Model
     {

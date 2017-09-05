@@ -5,6 +5,7 @@ namespace alkemann\h2l\traits;
 /**
  * Class Entity
  *
+ * @property array $relations
  * @package alkemann\h2l
  */
 trait Entity

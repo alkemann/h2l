@@ -9,7 +9,6 @@ namespace alkemann\h2l;
  */
 abstract class Response extends Message
 {
-
     protected static $contentTypes = [
         'text/html' => 'html',
         'application/json' => 'json',
