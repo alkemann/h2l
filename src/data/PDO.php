@@ -197,9 +197,9 @@ class PDO implements Source
     private function data(array $data): string
     {
         $fun = function ($o, $v) {
-            return "{$o}{$v} = :d_{$v}";
+            return "{$o}, {$v} = :d_{$v}";
         };
-        return (string)array_reduce(array_keys($data), $fun, "");
+        return trim((string) array_reduce(array_keys($data), $fun, ""), ", ");
     }
 
     public function insert(string $table, array $data, array $options = []): ?string

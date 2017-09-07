@@ -181,12 +181,12 @@ class PDOTest extends \PHPUnit_Framework_TestCase
 
     public function testUpdate()
     {
-        $eq = "UPDATE things SET status = :d_status WHERE id = :c_id ;";
+        $eq = "UPDATE things SET status = :d_status, place = :d_place WHERE id = :c_id ;";
         $ec = function() { return true; };
         $mi = new MockStatement($ec, [1]);
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
         $expected = 1;
-        $result = $m->update('things', ['id' => 12], ['status' => 'DONE']);
+        $result = $m->update('things', ['id' => 12], ['status' => 'DONE', 'place' => 'Oslo']);
         $this->assertEquals($expected, $result);
     }
 
