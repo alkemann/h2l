@@ -43,6 +43,11 @@ class Error extends Response
         $this->config = $config + [
                 'page_class' => Page::class
             ];
+
+        $this->message = (new Message())
+            ->withCode($this->code)
+            ->withHeader('Content-Type', $this->content_type)
+        ;
     }
 
     public function request(): ?Request
@@ -50,19 +55,10 @@ class Error extends Response
         return $this->request;
     }
 
-    /**
-     * @throws \Error
-     */
     public function render(): string
     {
-        $h = $this->config['header_func'] ?? 'header';
-        if (is_callable($h) === false) {
-            throw new \Error("Header function injected to Error is not callable");
-        }
+        $response = '';
         $page_class = $this->config['page_class'];
-
-        $msg = Http::httpCodeToMessage($this->code);
-        $h("HTTP/1.0 {$this->code} {$msg}");
         try {
             $page_config = $this->config + [
                     'code' => $this->code,
@@ -81,9 +77,10 @@ class Error extends Response
         } catch (InvalidUrl $e) {
             Log::debug("No error page made at " . $e->getMessage());
             if (Environment::get('debug')) {
-                return "No error page made at " . $e->getMessage();
+                $response = "No error page made at " . $e->getMessage();
             }
         }
-        return '';
+        $this->setHeaders();
+        return $response;
     }
 }

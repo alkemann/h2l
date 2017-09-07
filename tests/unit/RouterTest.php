@@ -98,7 +98,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
         $response = $route($r);
         $this->assertEquals(12, $id);
         $this->assertEquals("tasks", $name);
-        $this->assertEquals('{"id":12,"name":"tasks"}', $response->render());
+        $this->assertEquals('{"data":{"id":12,"name":"tasks"}}', $response->render());
     }
 
     public function testDirectMatchedRoute()

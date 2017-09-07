@@ -3,6 +3,7 @@
 namespace alkemann\h2l\response;
 
 use alkemann\h2l\Message;
+use alkemann\h2l\Response;
 use alkemann\h2l\util\Http;
 
 /**
@@ -10,18 +11,18 @@ use alkemann\h2l\util\Http;
  *
  * @package alkemann\h2l
  */
-class Json extends \alkemann\h2l\Response
+class Json extends Response
 {
-    protected $content_type = 'json';
-
-    private $content;
-    private $config;
-
-    public function __construct($content = null, int $code = 200, array $config = [])
+    public function __construct($content = null, int $code = Http::CODE_OK, array $config = [])
     {
         $this->config = $config;
-        $this->content = $content;
-        $this->code = $code;
+        $this->message = (new Message())
+            ->withCode($code)
+            ->withHeaders([
+                'Content-Type' => Http::CONTENT_JSON
+            ])
+            ->withBody($this->encodeAndContainData($content))
+        ;
     }
 
     /**
@@ -32,28 +33,17 @@ class Json extends \alkemann\h2l\Response
     public function render(): string
     {
         $this->setHeaders();
-        return $this->formattedContent();
+        return $this->message->body();
     }
 
-    private function setHeaders(): void
+    private function encodeAndContainData($content): string
     {
-        $h = $this->config['header_func'] ?? 'header';
-        $h("Content-type: application/json");
-        if ($this->code != 200) {
-            $msg = Http::httpCodeToMessage($this->code);
-            $h("HTTP/1.0 {$this->code} {$msg}");
-        }
-    }
-
-    private function formattedContent(): string
-    {
-        $content = $this->content;
         if (empty($content)) {
             return "";
         }
         if ($content instanceof \Generator) {
             $content = iterator_to_array($content);
         }
-        return json_encode($content);
+        return json_encode(['data' => $content]);
     }
 }

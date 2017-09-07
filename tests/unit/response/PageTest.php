@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit\response;
 
 use alkemann\h2l\{
-    Environment, exceptions\ConfigMissing, response\Page, Router, Route, Request, Response
+    Environment, exceptions\ConfigMissing, response\Page, Router, Route, Request, Response, util\Http
 };
 
 class PageTest extends \PHPUnit_Framework_TestCase
@@ -40,6 +40,9 @@ class PageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('text/html', $page->contentType());
         $this->assertEquals('places' . DIRECTORY_SEPARATOR . 'norway.html', $ref_templateFromUrl->invoke($page, 'places/norway'));
+
+        $this->assertEquals(Http::CODE_OK, $page->code());
+        $this->assertEquals(Http::CONTENT_HTML, $page->contentType());
     }
 
     public function testJsonFormat()

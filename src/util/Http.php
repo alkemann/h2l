@@ -73,6 +73,13 @@ class Http
     const CODE_GATEWAY_TIMEOUT = 504;
     const CODE_HTTP_VERSION_NOT_SUPPORTED = 505;
 
+    protected static $contentTypeToFileEnding = [
+        'text/html' => 'html',
+        'application/json' => 'json',
+        'application/xml' => 'xml',
+        'text/xml' => 'xml',
+    ];
+
     private static $code_to_message = [
         // Informational 1xx
         100 => 'Continue',
@@ -120,6 +127,20 @@ class Http
         504 => 'Gateway Timeout',
         505 => 'HTTP Version Not Supported',
     ];
+
+    public static function fileEndingFromType(string $type): string
+    {
+        foreach (self::$contentTypeToFileEnding as $type_key => $ending) {
+            if ($type === $type_key) {
+                return $ending;
+            }
+        }
+        return 'html';
+    }
+    public static function contentTypeFromFileEnding(string $ending): string
+    {
+        return array_search($ending, static::$contentTypeToFileEnding);
+    }
 
     public static function httpCodeToMessage(int $code): string
     {

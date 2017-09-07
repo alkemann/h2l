@@ -219,18 +219,33 @@ class Message
     {
         $new = clone $this;
         $new->headers = $headers;
-        $content_header = $new->header('Content-Type');
+        $new->setContentHeaderTypeAndCharset();
+        return $new;
+    }
+
+    private function setContentHeaderTypeAndCharset(): void
+    {
+        $content_header = $this->header('Content-Type');
         if (is_string($content_header)) {
             if (strpos($content_header, ';') === false) {
-                $new->content_type = trim(strtolower($content_header));
+                $this->content_type = trim(strtolower($content_header));
             } else {
                 list($type, $other) = explode(';', $content_header, 2);
-                $new->content_type = trim(strtolower($type));
+                $this->content_type = trim(strtolower($type));
                 list($key, $charset) = explode('=', $other, 2);
                 if ('charset' === strtolower(trim($key))) {
-                    $new->content_charset = strtolower(trim(trim($charset, '"')));
+                    $this->content_charset = strtolower(trim(trim($charset, '"')));
                 }
             }
+        }
+    }
+
+    public function withHeader(string $name, string $value): Message
+    {
+        $new = clone $this;
+        $new->headers[$name] = $value;
+        if ($name === 'Content-Type') {
+            $new->setContentHeaderTypeAndCharset();
         }
         return $new;
     }

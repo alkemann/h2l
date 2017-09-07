@@ -5,6 +5,7 @@ namespace alkemann\h2l\response;
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\Log;
+use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\Environment;
@@ -23,16 +24,29 @@ class Page extends Response
      * @var string
      */
     public $layout = 'default';
-
     /**
      * @var Request
      */
     protected $request;
+    /**
+     * @var array
+     */
     protected $data = [];
-    protected $template = 'error';
-    protected $content_type = Http::CONTENT_HTML;
-    protected $code = 200;
-
+    /**
+     * @var string
+     */
+    private $template = 'error';
+    /**
+     * @var string
+     */
+    private $content_type = Http::CONTENT_HTML;
+    /**
+     * @var int
+     */
+    private $code = 200;
+    /**
+     * @var array
+     */
     protected $config = [];
 
     public function __construct($data = [], array $config = [])
@@ -48,6 +62,11 @@ class Page extends Response
             $this->setTemplate($config['template']);
         }
         $this->config = $config;
+
+        $this->message = (new Message())
+            ->withCode($this->code)
+            ->withHeader('Content-Type', $this->content_type)
+        ;
     }
 
     /**
@@ -138,7 +157,7 @@ class Page extends Response
         if (is_null($path)) {
             Log::debug("As there is no configured `layout_path` in Environment, layouts are skipped");
         }
-        $ending = static::$contentTypes[$this->content_type];
+        $ending = Http::fileEndingFromType($this->content_type);
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $ending . '.php';
     }
 
@@ -204,14 +223,13 @@ class Page extends Response
      */
     public function render(): string
     {
-        $h = $this->config['header_func'] ?? 'header';
-        $contentType = $this->contentType();
-        $h("Content-type: $contentType");
+        $this->setHeaders();
         $view = $this->view($this->template);
         $response = $this->head();
         $response .= $view;
         $response .= $this->foot();
-        return $response;
+        $this->message = $this->message->withBody($response);
+        return $this->message->body();
     }
 
     /**
@@ -219,7 +237,7 @@ class Page extends Response
      */
     public function setTemplate(string $template): void
     {
-        $ending = $this->fileEndingFromType($this->content_type);
+        $ending = Http::fileEndingFromType($this->content_type);
         $this->template = "{$template}.{$ending}";
     }
 
@@ -236,13 +254,19 @@ class Page extends Response
         $period = strrpos($view, '.');
         if ($period) {
             $ending = substr($view, $period + 1);
-            if ($type = array_search($ending, static::$contentTypes)) {
-                $this->content_type = $type;
+            if ($type = Http::contentTypeFromFileEnding($ending)) {
+                $this->setContentType($type);
                 $view = substr($view, 0, $period);
             }
         }
-        $ending = $this->fileEndingFromType($this->content_type);
+        $ending = Http::fileEndingFromType($this->content_type);
         $ret = join(DIRECTORY_SEPARATOR, $parts) . DIRECTORY_SEPARATOR . $view . '.' . $ending;
         return trim($ret, DIRECTORY_SEPARATOR);
+    }
+
+    private function setContentType($type)
+    {
+        $this->content_type = $type;
+        $this->message = $this->message->withHeader('Content-Type', $this->content_type);
     }
 }
