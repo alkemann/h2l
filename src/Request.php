@@ -45,7 +45,7 @@ class Request extends Message
     {
         $path = $path ?? $this->url();
         return
-            $this->getServerParam('REQUEST_SCHEME') . '://' .
+            ($this->getServerParam('REQUEST_SCHEME') ?? 'http') . '://' .
             $this->getServerParam('HTTP_HOST') . $path;
     }
 
