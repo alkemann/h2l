@@ -14,7 +14,7 @@ abstract class Response
     /**
      * @var array
      */
-    protected $config;
+    protected $config = [];
     /**
      * @var Message
      */
@@ -47,7 +47,7 @@ abstract class Response
         $code = $this->message->code();
         if ($code != Http::CODE_OK) {
             $msg = Http::httpCodeToMessage($code);
-            $h("HTTP/1.0 {$code} {$msg}");
+            $h("HTTP/1.1 {$code} {$msg}");
         }
 
         foreach ($this->message->headers() as $name => $value) {

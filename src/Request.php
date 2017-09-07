@@ -41,6 +41,14 @@ class Request extends Message
         return null;
     }
 
+    public function fullUrl(?string $path = null): string
+    {
+        $path = $path ?? $this->url();
+        return
+            $this->getServerParam('REQUEST_SCHEME') . '://' .
+            $this->getServerParam('HTTP_HOST') . $path;
+    }
+
     /**
      * @param array $request
      * @return Request
@@ -117,9 +125,14 @@ class Request extends Message
     /**
      * @return array
      */
-    public function getServerParam(): array
+    public function getServerParams(): array
     {
         return $this->server;
+    }
+
+    public function getServerParam(string $name): ?string
+    {
+        return $this->server[$name] ?? null;
     }
 
     /**
