@@ -58,7 +58,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
 
         $expected = [
-            'HTTP/1.0 400 Bad Request',
+            'HTTP/1.1 400 Bad Request',
             'Content-Type: application/json'
         ];
         $this->assertEquals($expected, $headers);
@@ -75,7 +75,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
 
         $expected = [
-            'HTTP/1.0 500 Internal Server Error',
+            'HTTP/1.1 500 Internal Server Error',
             'Content-Type: application/json'
         ];
         $this->assertEquals($expected, $headers);

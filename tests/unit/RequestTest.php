@@ -101,7 +101,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['token' => 'hash123'], $r2->getGetData());
         $this->assertEquals(['weather' => 'nice'], $r2->getPostData());
         $this->assertEquals(['token' => 'hash123', 'weather' => 'nice'], $r2->getRequestParams());
-        $this->assertEquals($server_params, $r2->getServerParam());
+        $this->assertEquals($server_params, $r2->getServerParams());
         $this->assertEquals('/place/oslo', $r2->url());
         $this->assertEquals(['Accept' => 'application/json;q=0.9', 'Content-Type' => 'application/x-www-form-urlencoded'], $r2->headers());
         $this->assertEquals('application/json;q=0.9', $r2->header('Accept'));

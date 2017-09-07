@@ -48,7 +48,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $ref_method->invoke($r);
 
         $expected = [
-            'HTTP/1.0 202 Accepted',
+            'HTTP/1.1 202 Accepted',
             'Content-Type: text/html;charset=utf8'
         ];
         $this->assertEquals($expected, $headers);
