@@ -2,6 +2,7 @@
 
 namespace alkemann\h2l\tests\unit;
 
+use alkemann\h2l\Message;
 use alkemann\h2l\Response;
 use alkemann\h2l\util\Http;
 
@@ -20,42 +21,39 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
     public function testContentType()
     {
-
-        $r = new class extends Response {
-            protected $code = 202;
+        $headers = [];
+        $h = function($s) use (&$headers) { $headers[] = $s; };
+        $config = ['header_func' => $h];
+        $r = new class($config) extends Response {
+            protected $config;
+            public function __construct($config) { $this->config = $config; }
             public function render():string { return "HEY"; }
         };
 
+        $m = $this->getMockBuilder(Message::class)
+            ->setMethods(['code', 'headers'])
+            ->getMock();
+        $m->expects($this->once())->method('code')->willReturn(Http::CODE_ACCEPTED);
+        $m->expects($this->once())->method('headers')->willReturn([
+            'Content-Type' => 'text/html;charset=utf8'
+        ]);
+
         $ref_class = new \ReflectionClass($r);
-        $ref_method = $ref_class->getMethod('contentType');
+        $ref_method = $ref_class->getMethod('setHeaders');
         $ref_method->setAccessible(true);
-        $ref_property = $ref_class->getProperty('content_type');
+        $ref_property = $ref_class->getProperty('message');
         $ref_property->setAccessible(true);
+        $ref_property->setValue($r, $m);
 
-        $this->assertEquals('text/html', $r->contentType());
-        $expected = "text/html";
-        $result = $ref_method->invoke($r);
-        $this->assertEquals($expected, $result);
+        $ref_method->invoke($r);
 
-        $ref_property->setValue($r, 'application/json');
+        $expected = [
+            'HTTP/1.1 202 Accepted',
+            'Content-Type: text/html;charset=utf8'
+        ];
+        $this->assertEquals($expected, $headers);
 
-        $this->assertEquals('application/json', $r->contentType());
-        $expected = "application/json";
-        $result = $ref_method->invoke($r);
-        $this->assertEquals($expected, $result);
-
-        $this->assertEquals(202, $r->code());
-    }
-
-    public function testFileEndingTypes()
-    {
-        $c = new class() extends Response {
-            public function render(): string { return ''; }
-        };
-
-        $this->assertEquals('json', $c->fileEndingFromType(Http::CONTENT_JSON));
-        $this->assertEquals('xml', $c->fileEndingFromType(Http::CONTENT_XML));
-        $this->assertEquals('html', $c->fileEndingFromType(Http::CONTENT_HTML));
-        $this->assertEquals('html', $c->fileEndingFromType('text/csv'));
+        $message = $r->message();
+        $this->assertInstanceOf(Message::class, $message);
     }
 }

@@ -2,28 +2,57 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\util\Http;
+
 /**
  * Abstract class Response
  *
  * @package alkemann\h2l
  */
-abstract class Response extends Message
+abstract class Response
 {
-    protected static $contentTypes = [
-        'text/html' => 'html',
-        'application/json' => 'json',
-        'application/xml' => 'xml',
-        'text/xml' => 'xml',
-    ];
+    /**
+     * @var array
+     */
+    protected $config = [];
+    /**
+     * @var Message
+     */
+    protected $message;
 
-    public function fileEndingFromType(string $type): string
+    public function code(): int
     {
-        foreach (static::$contentTypes as $type_key => $ending) {
-            if ($type === $type_key) {
-                return $ending;
-            }
+        return $this->message->code();
+    }
+
+    public function contentType(): string
+    {
+        return $this->message->contentType();
+    }
+
+    public function message(): ?Message
+    {
+        return $this->message;
+    }
+
+    /**
+     * @throws \Error
+     */
+    protected function setHeaders(): void
+    {
+        $h = $this->config['header_func'] ?? 'header';
+        if (is_callable($h) === false) {
+            throw new \Error("header_func is not callable");
         }
-        return 'html';
+        $code = $this->message->code();
+        if ($code != Http::CODE_OK) {
+            $msg = Http::httpCodeToMessage($code);
+            $h("HTTP/1.1 {$code} {$msg}");
+        }
+
+        foreach ($this->message->headers() as $name => $value) {
+            $h("{$name}: $value");
+        }
     }
 
     abstract public function render(): string;

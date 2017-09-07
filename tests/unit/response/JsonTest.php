@@ -19,7 +19,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $data = ['id' => 12, 'title' => 'Hello there'];
         $r = new Json(['id' => 12, 'title' => 'Hello there'], 200, ['header_func' => function($h) {}]);
 
-        $expected = json_encode($data);
+        $expected = json_encode(compact('data'));
         $result = $r->render();
         $this->assertEquals($expected, $result);
     }
@@ -32,11 +32,11 @@ class JsonTest extends \PHPUnit_Framework_TestCase
             'header_func' => function($h) use (&$headers) { $headers[] = $h; }
         ]);
 
-        $expected = json_encode([["id"=>0],["id"=>1],["id"=>2]]);
+        $expected = json_encode(['data' => [["id"=>0],["id"=>1],["id"=>2]]]);
         $result = $r->render();
         $this->assertEquals($expected, $result);
 
-        $expected = ['Content-type: application/json'];
+        $expected = ['Content-Type: application/json'];
         $this->assertEquals($expected, $headers);
     }
 
@@ -58,8 +58,8 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
 
         $expected = [
-            'Content-type: application/json',
-            'HTTP/1.0 400 Bad Request'
+            'HTTP/1.1 400 Bad Request',
+            'Content-Type: application/json'
         ];
         $this->assertEquals($expected, $headers);
     }
@@ -75,8 +75,8 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
 
         $expected = [
-            'Content-type: application/json',
-            'HTTP/1.0 500 Internal Server Error'
+            'HTTP/1.1 500 Internal Server Error',
+            'Content-Type: application/json'
         ];
         $this->assertEquals($expected, $headers);
     }

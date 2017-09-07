@@ -22,8 +22,9 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $e = new Error([], compact('header_func', 'code'));
         $this->assertInstanceOf(Response::class, $e);
         $this->assertInstanceOf(Error::class, $e);
-        $e->render();
-        $expected = ['HTTP/1.0 406 Not Acceptable'];
+        $result = $e->render();
+        $this->assertEquals('', $result);
+        $expected = ['HTTP/1.1 406 Not Acceptable', 'Content-Type: text/html'];
         $this->assertEquals($expected, $header);
         $this->assertEquals("text/html", $e->contentType());
     }
@@ -53,7 +54,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $code = 404;
         $e = new Error([], compact('header_func', 'code'));
         $e->render();
-        $expected = ['HTTP/1.0 404 Not Found'];
+        $this->assertEquals(404, $e->code());
+        $expected = ['HTTP/1.1 404 Not Found', 'Content-Type: text/html'];
         $this->assertEquals($expected, $header);
     }
 
@@ -66,7 +68,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
         $content_type = 'application/xml';
         $e = new Error(['message' => 'Not Found'], compact('header_func', 'content_type', 'code'));
         $e->render();
-        $expected = ['HTTP/1.0 404 Not Found', 'Content-type: application/xml'];
+        $expected = ['HTTP/1.1 404 Not Found', 'Content-Type: application/xml'];
         $this->assertEquals($expected, $header);
     }
 

@@ -48,4 +48,12 @@ class HttpTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Unknown', Http::httpCodeToMessage(45345));
         $this->assertEquals('Accepted', Http::httpCodeToMessage(202));
     }
+
+    public function testFileEndingTypes()
+    {
+        $this->assertEquals('json', Http::fileEndingFromType(Http::CONTENT_JSON));
+        $this->assertEquals('xml', Http::fileEndingFromType(Http::CONTENT_XML));
+        $this->assertEquals('html', Http::fileEndingFromType(Http::CONTENT_HTML));
+        $this->assertEquals('html', Http::fileEndingFromType('text/csv'));
+    }
 }
