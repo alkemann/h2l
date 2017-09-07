@@ -129,4 +129,27 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Http::CONTENT_XML, $request->acceptType());
         $this->assertEquals(Http::CONTENT_XML, $request->contentType());
     }
+
+    public function testServerParam()
+    {
+        $request = (new Request)
+            ->withServerParams([
+                'HOME' => '/var/www',
+            ]);
+        $this->assertEquals('/var/www', $request->getServerParam('HOME'));
+        $this->assertNull($request->getServerParam('THING'));
+    }
+
+    public function testFullUrl()
+    {
+        $request = (new Request)
+            ->withRequestParams(['url' => '/places/oslo'])
+            ->withServerParams([
+                'REQUEST_SCHEME' => 'https',
+                'HTTP_HOST' => 'example.com:8080'
+            ])
+        ;
+        $this->assertEquals('https://example.com:8080/places/oslo', $request->fullUrl());
+        $this->assertEquals('https://example.com:8080/winning/12', $request->fullUrl('/winning/12'));
+    }
 }

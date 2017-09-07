@@ -52,5 +52,8 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
             'Content-Type: text/html;charset=utf8'
         ];
         $this->assertEquals($expected, $headers);
+
+        $message = $r->message();
+        $this->assertInstanceOf(Message::class, $message);
     }
 }
