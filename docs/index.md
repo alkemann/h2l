@@ -14,7 +14,9 @@ You can see [the structure page](structure.md) for more details about what is in
 
 ## Install
 
-Add to any PHP Composer project using <pre><kbd>composer require alkemann/h2l</kbd></pre>.
+Add to any PHP Composer project using
+
+<pre><kbd>composer require alkemann/h2l</kbd></pre>
 
 You may then choose to get started by installing one of the [skeletons](skeletons.md).
 
