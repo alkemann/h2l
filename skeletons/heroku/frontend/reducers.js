@@ -5,7 +5,7 @@ const api = (state = {
         case "EXAMPLE_TYPE_FULFILLED":
             state = {
                 ...state,
-                example: action.payload.response
+                example: action.payload.response.data
             }
             break;
 
