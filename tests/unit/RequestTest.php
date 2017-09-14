@@ -3,7 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Request, Route, util\Http
+    Request, Route, util\Http, interfaces\Session as SessionInterface
 };
 
 class RequestTest extends \PHPUnit_Framework_TestCase
@@ -12,6 +12,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $ref_class = new \ReflectionClass(Request::class);
         $expected_defaults = [
+            'session' => null,
             'parameters' => [],
             'request' => [],
             'server' => [],
@@ -69,6 +70,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         ;
 
         $expected = [
+            'session' => null,
             'parameters' => ['city' => 'oslo'],
             'request' => ['token' => 'hash123', 'weather' => 'nice'],
             'server' => $server_params,
@@ -111,7 +113,31 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(Http::POST, $r2->method());
     }
 
-    public function testDefailtServerParamsXML()
+    public function testSession()
+    {
+        $s = $this->getMockBuilder(SessionInterface::class)
+            ->setMethods(['set', 'get', 'startIfNotStarted'])
+            ->getMock();
+        $s->expects($this->exactly(3))
+            ->method('get')
+            ->withConsecutive(['ask one'], ['ask two'], ['ask three'])
+            ->willReturnOnConsecutiveCalls(
+                'one',
+                'two',
+                null
+            );
+
+        $this->assertInstanceOf(SessionInterface::class, $s);
+        $request = (new Request)->withSession($s);
+        $this->assertEquals('one', $request->session('ask one'));
+        $this->assertEquals('two', $request->session('ask two'));
+        $this->assertEquals(null, $request->session('ask three'));
+
+        $result = $request->session();
+        $this->assertEquals($s, $result);
+    }
+
+    public function testDefaultServerParamsXML()
     {
         $request = (new Request)
             ->withServerParams([

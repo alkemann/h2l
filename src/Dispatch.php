@@ -45,21 +45,21 @@ class Dispatch
         interfaces\Session $session = null
     ) {
         unset($get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
+
+        if (is_null($session)) {
+            $session = new Session;
+        }
+
         $this->request = (new Request)
             ->withRequestParams($request)
             ->withServerParams($server)
             ->withGetData($get)
             ->withPostData($post)
+            ->withSession($session)
 
             // @TODO Always do this? Can we know from $_SERVER or $_REQUEST ?
             ->withBody(file_get_contents('php://input'));
         ;
-
-        if (is_null($session)) {
-            $this->session = new Session;
-        } else {
-            $this->session = $session;
-        }
     }
 
     public function setRouteFromRouter(string $router = Router::class): bool
@@ -132,35 +132,5 @@ class Dispatch
         foreach ($cbs as $cb) {
             $this->middlewares[] = $cb;
         }
-    }
-
-    /**
-     * Returns the session var at $key or the Session object
-     *
-     * First call to this method will initiate the session
-     *
-     * @param string $key Dot notation for deeper values, i.e. `user.email`
-     * @return mixed|interfaces\Session
-     */
-    public function session(?string $key = null)
-    {
-        if (is_null($key)) {
-            $this->session->startIfNotStarted();
-            return $this->session;
-        }
-        return $this->session->get($key);
-    }
-
-    /**
-     * Redirect NOW the request to $url
-     *
-     * @codeCoverageIgnore
-     * @param $url
-     */
-    public function redirect($url)
-    {
-        // @TODO add support for reverse route match
-        header("Location: " . $url);
-        exit;
     }
 }

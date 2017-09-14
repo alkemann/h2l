@@ -12,6 +12,7 @@ use alkemann\h2l\util\Http;
  */
 class Request extends Message
 {
+    protected $session = null;
     protected $parameters = [];
     protected $request = [];
     protected $server = [];
@@ -218,5 +219,41 @@ class Request extends Message
     public function route(): ?interfaces\Route
     {
         return $this->route;
+    }
+
+    public function withSession(interfaces\Session $session): Request
+    {
+        $new = clone $this;
+        $new->session = $session;
+        return $new;
+    }
+    /**
+     * Returns the session var at $key or the Session object
+     *
+     * First call to this method will initiate the session
+     *
+     * @param string $key Dot notation for deeper values, i.e. `user.email`
+     * @return mixed|interfaces\Session
+     */
+    public function session(?string $key = null)
+    {
+        if (is_null($key)) {
+            $this->session->startIfNotStarted();
+            return $this->session;
+        }
+        return $this->session->get($key);
+    }
+
+    /**
+     * Redirect NOW the request to $url
+     *
+     * @codeCoverageIgnore
+     * @param $url
+     */
+    public function redirect($url)
+    {
+        // @TODO add support for reverse route match
+        header("Location: " . $url);
+        exit;
     }
 }

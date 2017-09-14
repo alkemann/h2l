@@ -147,30 +147,6 @@ class DispatchTests extends \PHPUnit_Framework_TestCase
         $this->assertNull($request->param('paris'));
     }
 
-    public function testSession()
-    {
-        $s = $this->getMockBuilder(SessionInterface::class)
-            ->setMethods(['set', 'get', 'startIfNotStarted'])
-            ->getMock();
-        $s->expects($this->exactly(3))
-            ->method('get')
-            ->withConsecutive(['ask one'], ['ask two'], ['ask three'])
-            ->willReturnOnConsecutiveCalls(
-                'one',
-                'two',
-                null
-            );
-
-        $this->assertInstanceOf(SessionInterface::class, $s);
-        $request = new Dispatch([], [], [], [], $s);
-        $this->assertEquals('one', $request->session('ask one'));
-        $this->assertEquals('two', $request->session('ask two'));
-        $this->assertEquals(null, $request->session('ask three'));
-
-        $result = $request->session();
-        $this->assertEquals($s, $result);
-    }
-
     public function testNoRouteResponse()
     {
         $this->expectException(NoRouteSetError::class);
