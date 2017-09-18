@@ -100,6 +100,42 @@ class PDOTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testFindWithInArray()
+    {
+        $ec = function($v) { return sizeof($v) === 0; };
+        $r  = [['id' => 12, 'title' => 'Gore', 'status' => 1], ['id' => 15, 'title' => 'Space', 'status' => 1]];
+        $mi = new MockStatement($ec, $r);
+        $eq = 'SELECT * FROM things WHERE status IN ( :c_status_1, :c_status_2, :c_status_3 ) ;';
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+
+        $result = $m->find('things', ['status' => [1, 2, 3]]);
+        $this->assertTrue($result instanceof \Traversable);
+        $this->assertEquals("Iterator", $result->name);
+        $expected = $r;
+        $result = iterator_to_array($result);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testFindWithMultipleConditions()
+    {
+        $pdo = new PDO;
+        $ref_method = new \ReflectionMethod(PDO::class, 'where');
+        $ref_method->setAccessible(true);
+        $expected = 'WHERE id = :c_id AND status = :c_status ';
+        $result = $ref_method->invoke($pdo, ['id' => 1, 'status' => 1]);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testFindWithArrayConditions()
+    {
+        $pdo = new PDO;
+        $ref_method = new \ReflectionMethod(PDO::class, 'where');
+        $ref_method->setAccessible(true);
+        $expected = 'WHERE status IN ( :c_status_1, :c_status_2, :c_status_3, :c_status_4 ) ';
+        $result = $ref_method->invoke($pdo, ['status' => [1, 2, 3, 4]]);
+        $this->assertEquals($expected, $result);
+    }
+
     public function testFindNoResults()
     {
         $ec = function() { return false; };

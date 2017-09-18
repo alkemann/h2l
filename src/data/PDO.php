@@ -111,7 +111,14 @@ class PDO implements Source
         $dbh = $this->handler();
         $stmt = $dbh->prepare($query);
         foreach ($conditions as $key => $value) {
-            $stmt->bindValue(":c_{$key}", $value);
+            if (is_array($value)) {
+                foreach ($value as $index => $v) {
+                    $i = $index + 1;
+                    $stmt->bindValue(":c_{$key}_{$i}", $v);
+                }
+            } else {
+                $stmt->bindValue(":c_{$key}", $value);
+            }
         }
         $this->bindPaginationToStatement($options, $stmt);
         $result = $stmt->execute();
@@ -131,10 +138,20 @@ class PDO implements Source
         if (empty($conditions)) {
             return "";
         }
-        $fun = function ($o, $v) {
-            return "{$o}{$v} = :c_{$v}";
+        $fun = function ($o, $v) use ($conditions) {
+            if (is_array($conditions[$v])) {
+                $qa = [];
+                foreach ($conditions[$v] as $key => $value) {
+                    $i = $key + 1;
+                    $qa[] = ":c_{$v}_{$i}";
+                }
+                $qs = join(', ', $qa);
+                return "{$o} AND {$v} IN ( $qs )";
+            } else {
+                return "{$o} AND {$v} = :c_{$v}";
+            }
         };
-        $where = array_reduce(array_keys($conditions), $fun, "");
+        $where = trim(array_reduce(array_keys($conditions), $fun, ""), ' AND ');
         return "WHERE {$where} ";
     }
 
@@ -147,6 +164,7 @@ class PDO implements Source
     {
         $out = [];
         foreach ($conditions as $k => $v) {
+            if (is_array($v)) $v = join(',', $v);
             $out[] = "c_{$k}:'{$v}'";
         }
         foreach ($data as $k => $v) {
