@@ -52,7 +52,7 @@ class Page extends Response
     public function __construct($data = [], array $config = [])
     {
         $this->data = $data;
-        foreach (['request', 'content_type', 'code'] as $key) {
+        foreach (['request', 'content_type', 'code', 'layout'] as $key) {
             if (isset($config[$key])) {
                 $this->{$key} = $config[$key];
                 unset($config[$key]);
