@@ -67,4 +67,45 @@ class ArrayManipulations
             return self::getArrayValueByKeys($keys, $data[$key]);
         }
     }
+
+    /**
+     * Update or Insert a value in a nested array by "dot" notation string
+     *
+     * Given $data = ['one' => ['two' => ['three' => 55]], 'four' => []];
+     *
+     * ```php
+     *  setToArrayByKey('one.two.three', 42, $data) // will replace 55 with 42
+     *  setToArrayByKey('one.two.five', 42, $data) // will add a second key in the 'two' array
+     * ```
+     *
+     * @param string $key
+     * @param mixed $value the value to assign
+     * @param array $data The array to update
+     * @param string $delimiter defaults to `.`
+     */
+    public static function setToArrayByKey(string $key, $value, array &$data, string $delimiter = '.')
+    {
+        $keys = explode($delimiter, $key);
+        return self::setArrayValueByKeys($keys, $value, $data);
+    }
+
+    /**
+     * Update or Insert value in a nested array
+     *
+     * @param array $keys
+     * @param mixed $value
+     * @param mixed $data passed by reference
+     */
+    public static function setArrayValueByKeys(array $keys, $value, &$data)
+    {
+        $key = array_shift($keys);
+        if (empty($keys)) {
+            $data[$key] = $value;
+        } else {
+            if (array_key_exists($key, $data) === false) {
+                $data[$key] = [];
+            }
+            self::setArrayValueByKeys($keys, $value, $data[$key]);
+        }
+    }
 }

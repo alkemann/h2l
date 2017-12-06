@@ -45,10 +45,11 @@ class Session implements interfaces\Session
         if ($this->active() === false) {
             session_start();
         }
-        if (strpos($key, '.') !== false) {
-            throw new \Error("Dot notation setting of Session values not implemented yet");
+        if (strpos($key, '.') === false) {
+            $_SESSION[$key] = $value;
+        } else {
+            ArrayManipulations::setToArrayByKey($key, $value, $_SESSION);
         }
-        $_SESSION[$key] = $value;
     }
 
     /**
@@ -56,6 +57,9 @@ class Session implements interfaces\Session
      */
     public function unset(string $key): void
     {
+        if (strpos($key, '.') !== false) {
+            throw new \InvalidArgumentException(__METHOD__ . ' does not support "dot" notation');
+        }
         unset($_SESSION[$key]);
     }
 
@@ -88,6 +92,9 @@ class Session implements interfaces\Session
      */
     public function check(string $key): bool
     {
+        if (strpos($key, '.') !== false) {
+            throw new \InvalidArgumentException(__METHOD__ . ' does not support "dot" notation');
+        }
         return isset($_SESSION[$key]);
     }
 }

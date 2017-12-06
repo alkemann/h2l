@@ -90,4 +90,59 @@ class ArrayManipulationsTest extends \PHPUnit_Framework_TestCase
         }
         $this->assertTrue($thrown, "Out of bounds exceptions was not thrown");
     }
+
+
+    public function testSetByArray()
+    {
+        $data = $expected = [
+            'one' => [
+                'one_one' => 87,
+                'one_two' => [
+                    'one_two_one' => 56
+                ]
+            ],
+            'two' => 98,
+            'three' => [
+                'three_one' => 73
+            ]
+        ];
+        ArrayManipulations::setArrayValueByKeys(['one','one_two','one_two_one'], 42, $data);
+        $expected['one']['one_two']['one_two_one'] = 42;
+        $this->assertEquals($expected, $data);
+
+        ArrayManipulations::setArrayValueByKeys(['one','one_three'], 42, $data);
+        $expected['one']['one_three'] = 42;
+        $this->assertEquals($expected, $data);
+
+        ArrayManipulations::setArrayValueByKeys(['four','four_one','four_one_one'], 420, $data);
+        $expected['four'] = ['four_one' => ['four_one_one' => 420]];
+        $this->assertEquals($expected, $data);
+    }
+
+    public function testSetByKey()
+    {
+        $data = $expected = [
+            'one' => [
+                'one_one' => 87,
+                'one_two' => [
+                    'one_two_one' => 56
+                ]
+            ],
+            'two' => 98,
+            'three' => [
+                'three_one' => 73
+            ]
+        ];
+        ArrayManipulations::setToArrayByKey('one.one_two.one_two_one', 42, $data);
+        $expected['one']['one_two']['one_two_one'] = 42;
+        $this->assertEquals($expected, $data);
+
+        ArrayManipulations::setToArrayByKey('one:one_three', 42, $data, ':');
+        $expected['one']['one_three'] = 42;
+        $this->assertEquals($expected, $data);
+
+        ArrayManipulations::setToArrayByKey('four.four_one.four_one_one', 420, $data);
+        $expected['four'] = ['four_one' => ['four_one_one' => 420]];
+        $this->assertEquals($expected, $data);
+    }
 }
