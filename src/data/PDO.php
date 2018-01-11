@@ -164,7 +164,9 @@ class PDO implements Source
     {
         $out = [];
         foreach ($conditions as $k => $v) {
-            if (is_array($v)) $v = join(',', $v);
+            if (is_array($v)) {
+                $v = join(',', $v);
+            }
             $out[] = "c_{$k}:'{$v}'";
         }
         foreach ($data as $k => $v) {
