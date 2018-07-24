@@ -13,6 +13,11 @@ use alkemann\h2l\util\Http;
  */
 class Json extends Response
 {
+    /**
+     * @param mixed $content JSON encodable payload
+     * @param int $code HTTP code to respond with, defaults to `200`
+     * @param array $config inject config/overrides like `header_func`
+     */
     public function __construct($content = null, int $code = Http::CODE_OK, array $config = [])
     {
         $this->config = $config;
