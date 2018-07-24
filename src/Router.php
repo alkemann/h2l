@@ -12,12 +12,17 @@ use Closure;
  */
 class Router
 {
+    /**
+     * Defines which character is used by regex dynamic routes
+     */
     public static $DELIMITER = '|';
 
     private static $aliases = [];
     private static $routes = [];
 
     /**
+     * Add an alias route, i.e. `/` as alias for `home.html`
+     *
      * @param string $alias
      * @param string $real
      */
@@ -31,7 +36,7 @@ class Router
      *
      * @param string $url Regex that is valid for preg_match, including named groups
      * @param callable $callable
-     * @param mixed $methods a single Request::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
+     * @param mixed $methods a single Http::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
      * @internal param Closure $closure Code to run on this match
      */
     public static function add(string $url, callable $callable, $methods = [Http::GET]): void
@@ -47,10 +52,10 @@ class Router
     }
 
     /**
-     * Given a request url and request method, identify dynamic route or return fixed route
+     * Given a request url and request method, identify route (dynamic or fixed)
      *
      * @param string $url Request url, i.e. '/api/user/32'
-     * @param string $method Request::<GET/POST/PATCH/PUT/DELETE>
+     * @param string $method Http::<GET/POST/PATCH/PUT/DELETE>
      * @return interfaces\Route
      */
     public static function match(string $url, string $method = Http::GET): interfaces\Route
