@@ -3,20 +3,20 @@
 use alkemann\h2l\Environment;
 use alkemann\h2l\Log;
 
-$base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR ;
+$base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR ;
 
 Environment::set([
     Environment::DEV => [
         'debug' => true,
         'logs_path' => $base . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR,
-        'content_path' => $base . 'pages' . DIRECTORY_SEPARATOR,
-        'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
+        'content_path' => $base . 'content' . DIRECTORY_SEPARATOR . 'pages' . DIRECTORY_SEPARATOR,
+        'layout_path'  => $base . 'content' . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR
     ],
     Environment::PROD => [
         'debug' => false,
         'logs_path' => $base . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR,
-        'content_path' => $base . 'pages' . DIRECTORY_SEPARATOR,
-        'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
+        'content_path' => $base . 'content' . DIRECTORY_SEPARATOR . 'pages' . DIRECTORY_SEPARATOR,
+        'layout_path'  => $base . 'content' . DIRECTORY_SEPARATOR . 'layouts' . DIRECTORY_SEPARATOR
     ]
 ], Environment::ALL);
 
