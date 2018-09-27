@@ -64,7 +64,10 @@ class PDO implements Source
         }
         $opts = [
             _PDO::ATTR_EMULATE_PREPARES => false,
-            _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION
+            _PDO::ATTR_ERRMODE => _PDO::ERRMODE_EXCEPTION,
+
+            'useUnicode' => true,
+            'characterEncoding' => 'UTF-8',
         ];
         $dsn = "{$scheme}:host={$host}{$port}{$modifiers};dbname={$db}";
         $class = $this->pdo_class;
