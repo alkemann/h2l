@@ -108,7 +108,8 @@ class PDO implements Source
     {
         $where = $this->where($conditions);
         $limit = $this->limit($options);
-        $query = "SELECT * FROM {$table} {$where}{$limit};";
+        $order = $this->order($options);
+        $query = "SELECT * FROM {$table} {$where}{$order}{$limit};";
         $params = $this->boundDebugString($conditions, $options);
         Log::debug("PDO:QUERY [$query][$params]");
         $dbh = $this->handler();
@@ -161,6 +162,15 @@ class PDO implements Source
     private function limit(array $options): string
     {
         return array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : '';
+    }
+
+    private function order(array $options): string
+    {
+        if (array_key_exists('order', $options)) {
+            // @TODO Add more protection?
+            return "ORDER BY {$options['order']}";
+        }
+        return '';
     }
 
     private function boundDebugString(array $conditions, array $options, array $data = []): string
