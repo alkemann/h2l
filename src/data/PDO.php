@@ -168,7 +168,7 @@ class PDO implements Source
     {
         if (array_key_exists('order', $options)) {
             // @TODO Add more protection?
-            return "ORDER BY {$options['order']}";
+            return "ORDER BY {$options['order']} ";
         }
         return '';
     }
