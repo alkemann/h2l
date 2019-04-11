@@ -50,10 +50,67 @@ class PDOTest extends \PHPUnit_Framework_TestCase
             "mysql:host=localhost;sslmode=true;win=1;dbname=dbname",
             'user',
             'pass',
-            [ \PDO::ATTR_EMULATE_PREPARES => false, \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION ]
+            [
+                \PDO::ATTR_EMULATE_PREPARES => false,
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                'useUnicode' => true,
+                'characterEncoding' => 'UTF-8',
+            ]
         ];
         $this->assertEquals($expected, $result->config);
     }
+
+    public function testHandlerWithQueryParamOptionsNoQuery()
+    {
+        $pdo_mock = new class()
+        {
+            public $config;
+            public function __construct() { $this->config = func_get_args(); }
+        };
+        $mock_class =  get_class($pdo_mock);
+        $url = 'mysql://user:pass@localhost/dbname';
+        $config = ['url' => $url];
+        $pdo = new PDO($config, $mock_class);
+
+        $ref_method = new \ReflectionMethod(PDO::class, 'handler');
+        $ref_method->setAccessible(true);
+        $result = $ref_method->invoke($pdo);
+        $this->assertInstanceOf($mock_class, $result);
+
+        $expected = [
+            "mysql:host=localhost;dbname=dbname",
+            'user',
+            'pass',
+            [
+                \PDO::ATTR_EMULATE_PREPARES => false,
+                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                'useUnicode' => true,
+                'characterEncoding' => 'UTF-8',
+            ]
+        ];
+        $this->assertEquals($expected, $result->config);
+    }
+
+    /**
+     * Constructor can't be mocked?
+     *
+
+    public function testConnectionError()
+    {
+
+        $handler = $this->getMockBuilder(\PDO::class)
+            ->disableOriginalConstructor()
+            ->setMockClassName('PdoHandler') // Mock class name
+            ->setMethods(['__construct', 'query']) // mocked methods
+            ->getMock();
+        $handler->expects($this->once())->method('__construct')->will($this->throwException(new \PDOException('test')));
+
+        $m = new PDO;
+
+        $result = $m->find('things', ['status' => 1], ['limit' => 10, 'offset' => 20]);
+    }
+
+    */
 
     public function testQuery()
     {
@@ -93,6 +150,23 @@ class PDOTest extends \PHPUnit_Framework_TestCase
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
 
         $result = $m->find('things', ['status' => 1], ['limit' => 10]);
+        $this->assertTrue($result instanceof \Traversable);
+        $this->assertEquals("Iterator", $result->name);
+        $expected = $r;
+        $result = iterator_to_array($result);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testFindWithOrder()
+    {
+        $ec = function($v) { return sizeof($v) === 0; };
+        $r  = [['id' => 15, 'title' => 'Space', 'status' => 1], ['id' => 12, 'title' => 'Gore', 'status' => 1]];
+        $mi = new MockStatement($ec, $r);
+        $eq = 'SELECT * FROM things WHERE status = :c_status ORDER BY `id` DESC ;';
+        $m = $this->createInstanceWithMockedHandler($eq, $mi);
+
+        $result = $m->find('things', ['status' => 1], ['order' => '`id` DESC']);
+
         $this->assertTrue($result instanceof \Traversable);
         $this->assertEquals("Iterator", $result->name);
         $expected = $r;

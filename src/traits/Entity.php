@@ -210,10 +210,8 @@ trait Entity
     public function to(string $type)
     {
         switch ($type) {
-            case 'array':
-                return $this->data;
-            case 'json':
-                return json_encode($this->data);
+            case 'array': return $this->data;
+            case 'json': return json_encode($this->data);
             default:
                 throw new \InvalidArgumentException("Unkown type $type");
         }
