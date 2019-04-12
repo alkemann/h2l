@@ -23,7 +23,7 @@ class Message
      */
     protected $url = '';
     /**
-     * Enum with Request::GET, Request::POST etc
+     * Enum with Http::GET, Http::POST etc
      * @var string
      */
     protected $method = Http::GET;
