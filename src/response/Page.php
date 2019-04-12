@@ -131,7 +131,7 @@ class Page extends Response
         try {
             $headfile = $this->getLayoutFile('head');
             if (file_exists($headfile)) {
-                (function($sldkfjlksejflskjflskdjflskdfj) {
+                (function ($sldkfjlksejflskjflskdjflskdfj) {
                     extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
                 })($headfile);
@@ -139,7 +139,7 @@ class Page extends Response
 
             $neckfile = $this->getLayoutFile('neck');
             if (file_exists($neckfile)) {
-                (function($lidsinqjhsdfytqkwjkasjdksadsdg) {
+                (function ($lidsinqjhsdfytqkwjkasjdksadsdg) {
                     extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
                 })($neckfile);
@@ -180,7 +180,7 @@ class Page extends Response
 
         ob_start();
         try {
-            (function($ldkfoskdfosjicyvutwehkshfskjdf) {
+            (function ($ldkfoskdfosjicyvutwehkshfskjdf) {
                 extract($this->data);
                 include $ldkfoskdfosjicyvutwehkshfskjdf;
             })($footfile);
@@ -204,7 +204,7 @@ class Page extends Response
         ob_start();
         try {
             // or another way to hide the file variable?
-            (function($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
+            (function ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
                 extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })($file);

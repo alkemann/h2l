@@ -75,7 +75,7 @@ class Router
         }
 
         // TODO cache of valid static routes, maybe with a try, catch, finally?
-        return new Route($url, function(Request $request) {
+        return new Route($url, function (Request $request) {
             $page = response\Page::fromRequest($request);
             if ($page->isValid()) {
                 return $page;
@@ -96,7 +96,7 @@ class Router
 
             $parameters = array_filter(
                 $matches,
-                function($v) {
+                function ($v) {
                     return !is_int($v);
                 },
                 \ARRAY_FILTER_USE_KEY
