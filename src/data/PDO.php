@@ -142,7 +142,7 @@ class PDO implements Source
         if (empty($conditions)) {
             return "";
         }
-        $fun = function($o, $v) use ($conditions) {
+        $fun = function ($o, $v) use ($conditions) {
             if (is_array($conditions[$v])) {
                 $qa = [];
                 foreach ($conditions[$v] as $key => $value) {
@@ -229,7 +229,7 @@ class PDO implements Source
 
     private function data(array $data): string
     {
-        $fun = function($o, $v) {
+        $fun = function ($o, $v) {
             return "{$o}, {$v} = :d_{$v}";
         };
         return trim((string) array_reduce(array_keys($data), $fun, ""), ", ");
