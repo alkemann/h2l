@@ -120,4 +120,27 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase
         Environment::setEnvironment(Environment::PROD);
         $this->assertEquals(68, Environment::get($key, 12));
     }
+
+    public function testMiddleWareStorage()
+    {
+        $this->assertEquals([], Environment::middlewares());
+        Environment::setEnvironment(Environment::PROD);
+        $f1 = function() { return 1; };
+        Environment::addMiddle($f1, Environment::DEV);
+        $this->assertEquals([], Environment::middlewares());
+
+        $f2 = function() { return 2; };
+        Environment::addMiddle($f2, Environment::ALL);
+
+        $f3 = function() { return 3; };
+        Environment::addMiddle($f3);
+
+        $f4 = function() { return 4; };
+        Environment::addMiddle($f4, Environment::PROD);
+
+        $this->assertEquals([$f2, $f3, $f4], Environment::middlewares());
+
+        Environment::setEnvironment(Environment::DEV);
+        $this->assertEquals([$f1, $f2], Environment::middlewares());
+    }
 }

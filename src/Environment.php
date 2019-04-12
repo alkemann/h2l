@@ -30,6 +30,13 @@ final class Environment
         ]
     ];
 
+    private static $middlewares = [
+        Environment::LOCAL => [],
+        Environment::DEV => [],
+        Environment::TEST => [],
+        Environment::PROD => []
+    ];
+
     // Defaults to DEV
     private static $current_env = Environment::DEV;
 
@@ -41,6 +48,35 @@ final class Environment
     public static function current(): string
     {
         return self::$current_env;
+    }
+
+    /**
+     * Add a middleware to the environment, you can then register them to Dispatcher later based on the env.
+     *
+     * Middlewares should be closures that matches: `function(Request $request, Chain $chain): ?Response`
+     *
+     * @param callable $mw A callable closure that matches the middleware interface
+     * @param null|string $environment if not specified, configures CURRENT environment only. E::ALL, sets for all envs.
+     */
+    public static function addMiddle(callable $mw, ?string $environment = null): void
+    {
+        $environment = $environment ?? static::current();
+        if ($environment === Environment::ALL) {
+            foreach (array_keys(self::$settings) as $env) {
+                static::$middlewares[$env][] = $mw;
+            }
+        } else {
+            static::$middlewares[$environment][] = $mw;
+        }
+    }
+
+    /**
+     * Get all middlewares, mostly to be sent to Dispatch::registerMiddleware
+     * @return array of callables that match the middleware interface
+     */
+    public static function middlewares(): array
+    {
+        return static::$middlewares[static::current()];
     }
 
     /**
