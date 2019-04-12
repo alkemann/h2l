@@ -118,6 +118,19 @@ class PageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testDataFromRequestPageVars()
+    {
+        $request = (new Request())->withPageVars(['place' => 'Norway', 'city' => 'Oslo', 'height' => 12]);
+        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $page = Page::fromRequest($request);
+
+        $ref_data = new \ReflectionProperty($page, 'data');
+        $ref_data->setAccessible(true);
+        $expected = ['place' => 'Norway', 'city' => 'Oslo', 'height' => 12];
+        $result = $ref_data->getvalue($page);
+        $this->assertEquals($expected, $result);
+    }
+
     public function testMissingContentPathConfigs()
     {
         $this->expectException(ConfigMissing::class);

@@ -21,6 +21,7 @@ class Request extends Message
     protected $route = null;
     protected $content_type = '';
     protected $accept_type = Http::CONTENT_HTML;
+    protected $page_vars = [];
 
     /**
      * Get request parameters from url as url params, get queries or post, in that order
@@ -227,6 +228,19 @@ class Request extends Message
         $new->session = $session;
         return $new;
     }
+
+    public function pageVars(): array
+    {
+        return $this->page_vars;
+    }
+
+    public function withPageVars(array $vars): Request
+    {
+        $new = clone $this;
+        $new->page_vars = $vars;
+        return $new;
+    }
+
     /**
      * Returns the session var at $key or the Session object
      *

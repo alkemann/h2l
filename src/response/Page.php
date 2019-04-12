@@ -82,7 +82,7 @@ class Page extends Response
             'request' => $request,
             'content_type' => $request->acceptType(),
         ];
-        $page = new static([], $config);
+        $page = new static($request->pageVars(), $config);
         $route = $request->route();
         $url = $route ? $route->url() : $request->url();
         $page->template = $config['template'] ?? $page->templateFromUrl($url);

@@ -29,6 +29,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'content_type' => '',
             'accept_type' => 'text/html',
             'content_charset' => 'utf-8',
+            'page_vars' => [],
         ];
         $result = $ref_class->getDefaultProperties();
         $this->assertEquals($expected_defaults, $result);
@@ -87,6 +88,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
             'content_type' => 'application/x-www-form-urlencoded',
             'accept_type' => 'application/json',
             'content_charset' => 'utf-8',
+            'page_vars' => [],
         ];
         $properties = (new \ReflectionClass(Request::class))->getProperties();
         $result = array_reduce($properties, function(array $o, \ReflectionProperty $v) use ($request) {
@@ -177,5 +179,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         ;
         $this->assertEquals('https://example.com:8080/places/oslo', $request->fullUrl());
         $this->assertEquals('https://example.com:8080/winning/12', $request->fullUrl('/winning/12'));
+    }
+
+    public function testPageVars()
+    {
+        $request1 = new Request;
+        $this->assertEquals([], $request1->pageVars());
+
+        $vars = ['e' => 1, 'em' => 2];
+        $request2 = $request1->withPageVars($vars);
+        $this->assertFalse($request1 === $request2);
+        $this->assertEquals($vars, $request2->pageVars());
     }
 }
