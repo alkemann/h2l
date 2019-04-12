@@ -63,10 +63,10 @@ final class Environment
         $environment = $environment ?? static::current();
         if ($environment === Environment::ALL) {
             foreach (array_keys(self::$settings) as $env) {
-                static::$middlewares[$env][] = $mw;
+                self::$middlewares[$env][] = $mw;
             }
         } else {
-            static::$middlewares[$environment][] = $mw;
+            self::$middlewares[$environment][] = $mw;
         }
     }
 
@@ -76,7 +76,7 @@ final class Environment
      */
     public static function middlewares(): array
     {
-        return static::$middlewares[static::current()];
+        return self::$middlewares[static::current()];
     }
 
     /**
