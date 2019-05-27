@@ -40,7 +40,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $request->expects($this->once())->method('acceptType')->willReturn('application/json');
-
+        $content_path = '/tmp';
+        $code = 404;
         $e = new Error([], compact('header_func', 'content_path', 'code', 'request'));
         $this->assertInstanceOf(Error::class, $e);
         $this->assertEquals("application/json", $e->contentType());

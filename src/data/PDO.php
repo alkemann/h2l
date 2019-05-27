@@ -161,7 +161,7 @@ class PDO implements Source
 
     private function limit(array $options): string
     {
-        return array_key_exists('limit', $options) ? "LIMIT :o_offset,:o_limit " : '';
+        return array_key_exists('limit', $options) ? "LIMIT :o_limit OFFSET :o_offset " : '';
     }
 
     private function order(array $options): string

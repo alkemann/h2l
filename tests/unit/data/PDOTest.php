@@ -137,7 +137,7 @@ class PDOTest extends \PHPUnit_Framework_TestCase
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore', 'status' => 1], ['id' => 15, 'title' => 'Space', 'status' => 1]];
         $mi = new MockStatement($ec, $r);
-        $eq = 'SELECT * FROM things WHERE status = :c_status LIMIT :o_offset,:o_limit ;';
+        $eq = 'SELECT * FROM things WHERE status = :c_status LIMIT :o_limit OFFSET :o_offset ;';
         $m = $this->createInstanceWithMockedHandler($eq, $mi);
 
         $result = $m->find('things', ['status' => 1], ['limit' => 10, 'offset' => 20]);
