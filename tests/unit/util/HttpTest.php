@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\unit\util;
 
 use alkemann\h2l\util\Http;
 
-class HttpTest extends \PHPUnit_Framework_TestCase
+class HttpTest extends \PHPUnit\Framework\TestCase
 {
     public function testHeaderExtractAndConvert()
     {

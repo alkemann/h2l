@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Environment, exceptions\InvalidUrl, Request, Response, response\Error, util\Http
 };
 
-class ErrorTest extends \PHPUnit_Framework_TestCase
+class ErrorTest extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass()
     {

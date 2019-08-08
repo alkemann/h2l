@@ -7,7 +7,7 @@ use alkemann\h2l\{
 };
 use alkemann\h2l\tests\mocks\model\Person;
 
-class ModelTest extends \PHPUnit_Framework_TestCase
+class ModelTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testUse()

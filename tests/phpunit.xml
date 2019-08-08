@@ -10,8 +10,7 @@
     processIsolation            = "false"
     stopOnFailure               = "false"
     stopOnError                 = "false"
-    stopOnIncomplete            = "false"
-    syntaxCheck                 = "false">
+    stopOnIncomplete            = "false">
 
     <testsuites>
         <testsuite name="Unit">

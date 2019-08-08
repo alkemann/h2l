@@ -8,7 +8,7 @@ use alkemann\h2l\Response;
 use alkemann\h2l\response\Json;
 use alkemann\h2l\util\Chain;
 
-class ChainTest extends \PHPUnit_Framework_TestCase
+class ChainTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testEmptyChain()

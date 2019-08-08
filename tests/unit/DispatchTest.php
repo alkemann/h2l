@@ -8,7 +8,7 @@ use alkemann\h2l\{
 use alkemann\h2l\interfaces\Session as SessionInterface;
 
 
-class DispatchTests extends \PHPUnit_Framework_TestCase
+class DispatchTests extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \ReflectionProperty

@@ -9,7 +9,7 @@ use alkemann\h2l\traits\Entity;
 
 class MockEntity implements \JsonSerializable { use Entity; public static function fields():?array {return null; } };
 
-class EntityTest extends \PHPUnit_Framework_TestCase
+class EntityTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testUse()

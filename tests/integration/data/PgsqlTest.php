@@ -7,7 +7,7 @@ use alkemann\h2l\data\PDO;
 use PDO as _PDO;
 use PDOException;
 
-class PgsqlTest extends \PHPUnit_Framework_TestCase
+class PgsqlTest extends \PHPUnit\Framework\TestCase
 {
     private static $config = [];
     /**

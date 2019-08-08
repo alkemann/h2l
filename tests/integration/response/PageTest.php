@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Environment, exceptions\InvalidUrl, Request, response\Page, Route
 };
 
-class PageTest extends \PHPUnit_Framework_TestCase
+class PageTest extends \PHPUnit\Framework\TestCase
 {
     private static $config = [];
 

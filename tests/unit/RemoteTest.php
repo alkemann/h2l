@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Message, Remote, util\Http
 };
 
-class RemoteTest extends \PHPUnit_Framework_TestCase
+class RemoteTest extends \PHPUnit\Framework\TestCase
 {
     public function testExtractHeaders()
     {

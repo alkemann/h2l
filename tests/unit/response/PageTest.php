@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Environment, exceptions\ConfigMissing, response\Page, Router, Route, Request, Response, util\Http
 };
 
-class PageTest extends \PHPUnit_Framework_TestCase
+class PageTest extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass()
     {

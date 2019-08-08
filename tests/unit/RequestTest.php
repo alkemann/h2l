@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Request, Route, util\Http, interfaces\Session as SessionInterface
 };
 
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstructBlank()
     {

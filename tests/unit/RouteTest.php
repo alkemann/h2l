@@ -7,7 +7,7 @@ use alkemann\h2l\response\Error;
 use alkemann\h2l\Route;
 
 
-class RouteTest extends \PHPUnit_Framework_TestCase
+class RouteTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testRoute()

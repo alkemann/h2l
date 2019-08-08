@@ -5,7 +5,7 @@ namespace alkemann\h2l\tests\unit\data;
 use alkemann\h2l\data\PDO;
 use alkemann\h2l\tests\mocks\mysql\Statement as MockStatement;
 
-class PDOTest extends \PHPUnit_Framework_TestCase
+class PDOTest extends \PHPUnit\Framework\TestCase
 {
     public function testConfigFromUrl()
     {

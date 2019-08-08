@@ -7,7 +7,7 @@ use alkemann\h2l\exceptions\ConnectionError;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Client;
 
-class MongodbTest extends \PHPUnit_Framework_TestCase
+class MongodbTest extends \PHPUnit\Framework\TestCase
 {
     private static $config = [];
     private static $collection_handler;

@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\Log;
 
-class LogTest extends \PHPUnit_Framework_TestCase
+class LogTest extends \PHPUnit\Framework\TestCase
 {
 
     private static $ref_log;

@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\unit\util;
 
 use alkemann\h2l\util\ArrayManipulations;
 
-class ArrayManipulationsTest extends \PHPUnit_Framework_TestCase
+class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testGetArrayValueByKeys()

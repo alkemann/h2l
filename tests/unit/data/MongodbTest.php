@@ -7,7 +7,7 @@ use MongoDB\{
     BSON\ObjectID, Collection, DeleteResult, InsertOneResult, Model\BSONDocument, UpdateResult
 };
 
-class MongodbTest extends \PHPUnit_Framework_TestCase
+class MongodbTest extends \PHPUnit\Framework\TestCase
 {
     static $ref_client;
     public static function setUpBeforeClass()

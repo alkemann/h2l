@@ -7,7 +7,7 @@ use alkemann\h2l\{
 };
 
 
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testEmptyRoute()

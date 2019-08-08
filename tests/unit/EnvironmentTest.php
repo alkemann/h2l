@@ -10,7 +10,7 @@ namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\Environment;
 
-class EnvironmentTest extends \PHPUnit_Framework_TestCase
+class EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
     private static $test_env = null;
 

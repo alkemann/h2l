@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{Connections, exceptions\ConfigMissing};
 
-class ConnectionsTest extends \PHPUnit_Framework_TestCase
+class ConnectionsTest extends \PHPUnit\Framework\TestCase
 {
 
     private static $ref_class;
@@ -111,9 +111,9 @@ class ConnectionsTest extends \PHPUnit_Framework_TestCase
 
     public function testOkToCallCloseWithoutCloseConfigured()
     {
-
         static::$ref_connections->setValue(['tested' => true]);
         static::$ref_open->setValue(['tested' => function() {}]);
         Connections::close('tested');
+        $this->assertTrue(true);
     }
 }

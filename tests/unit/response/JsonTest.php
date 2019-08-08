@@ -4,7 +4,7 @@ namespace alkemann\h2l\tests\unit\response;
 
 use alkemann\h2l\{Response, response\Json};
 
-class JsonTest extends \PHPUnit_Framework_TestCase
+class JsonTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testConstructor()

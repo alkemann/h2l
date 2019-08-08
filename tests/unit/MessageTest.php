@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Message, traits\Entity, traits\Model, util\Http
 };
 
-class MessageTest extends \PHPUnit_Framework_TestCase
+class MessageTest extends \PHPUnit\Framework\TestCase
 {
     public function testRequest()
     {
