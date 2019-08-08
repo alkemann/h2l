@@ -118,4 +118,13 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['id' => 123], $route->parameters());
         $this->assertEquals('/dynamic/123', "$route");
     }
+
+    public function testFallback()
+    {
+        $this->assertNull(Router::getFallback());
+        Router::fallback(function() { return new \alkemann\h2l\response\Text("test123"); });
+        $route = Router::getFallback();
+        $this->assertTrue($route instanceof \alkemann\h2l\interfaces\Route);
+        $this->assertEquals("test123", $route(new Request)->render());
+    }
 }
