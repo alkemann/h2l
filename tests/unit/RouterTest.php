@@ -13,8 +13,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testEmptyRoute()
     {
         $result = Router::match('/things');
-        $this->assertTrue($result instanceof Route);
-        $this->assertEquals('/things', $result->url());
+        $this->assertNull($result);
     }
 
     public function testRouteWithCallables()
@@ -48,7 +47,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     {
         Router::alias('/', 'home.html');
 
-        $result = Router::match('/');
+        $result = Router::getPageRoute('/');
         $this->assertTrue($result instanceof Route);
         $this->assertEquals('home.html', "$result");
         $this->assertEquals([], $result->parameters());

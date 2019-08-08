@@ -10,7 +10,7 @@ use Closure;
  *
  * @package alkemann\h2l
  */
-class Router
+class Router implements interfaces\Router
 {
     /**
      * Defines which character is used by regex dynamic routes
@@ -19,6 +19,7 @@ class Router
 
     private static $aliases = [];
     private static $routes = [];
+    private static $fallback = null;
 
     /**
      * Add an alias route, i.e. `/` as alias for `home.html`
@@ -52,13 +53,31 @@ class Router
     }
 
     /**
+     * Sets fallback route to be used if no other route is matched and Page is not used.
+     *
+     * @param callable $callable
+     */
+    public static function fallback(callable $callable): void
+    {
+        self::$fallback = $callable;
+    }
+
+    public static function getFallback(): ?interfaces\Route
+    {
+        if (isset(self::$fallback)) {
+            return new Route('FALLBACK', self::$fallback);
+        }
+        return null;
+    }
+
+    /**
      * Given a request url and request method, identify route (dynamic or fixed)
      *
      * @param string $url Request url, i.e. '/api/user/32'
      * @param string $method Http::<GET/POST/PATCH/PUT/DELETE>
-     * @return interfaces\Route
+     * @return ?interfaces\Route
      */
-    public static function match(string $url, string $method = Http::GET): interfaces\Route
+    public static function match(string $url, string $method = Http::GET): ?interfaces\Route
     {
         $url = self::$aliases[$url] ?? $url;
 
@@ -73,14 +92,7 @@ class Router
                 return $route;
             }
         }
-
-        // TODO cache of valid static routes, maybe with a try, catch, finally?
-        return new Route($url, function (Request $request) {
-            $page = response\Page::fromRequest($request);
-            if ($page->isValid()) {
-                return $page;
-            }
-        });
+        return null;
     }
 
     private static function matchDynamicRoute(string $url, string $method = Http::GET): ?interfaces\Route
@@ -106,5 +118,25 @@ class Router
         }
 
         return null;
+    }
+
+    /**
+     * Set up a route that uses the Page response for url to view files automation
+     *
+     * @param string $url
+     * @return interfaces\Route
+     */
+    public static function getPageRoute(string $url): interfaces\Route
+    {
+        $url = self::$aliases[$url] ?? $url;
+        return new Route(
+            $url,
+            function (Request $request) {
+                $page = response\Page::fromRequest($request);
+                if ($page->isValid()) {
+                    return $page;
+                }
+            }
+        );
     }
 }

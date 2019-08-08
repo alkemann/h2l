@@ -62,17 +62,41 @@ class Dispatch
         ;
     }
 
+    /**
+     * Tries to identify route by configured static, dynamic or fallback configurations.
+     *
+     * First a string match on url is attempted, then fallback to see if Page is configured
+     * with a 'content_path'. Then checks if Router has a fallback callback configured.
+     * Return false if all 3 fails to set a route.
+     *
+     * @param string $router class name to use for Router matching
+     * @return bool true if a route is set on the Request
+     */
     public function setRouteFromRouter(string $router = Router::class): bool
     {
         /**
+         * matching dynamic or static routes
          * @var Router $router
          */
-        $route = $router::match($this->request->url(), $this->request->method());
-        if (is_null($route)) {
-            return false;
+        $matched = $router::match($this->request->url(), $this->request->method());
+        if ($matched) {
+            $this->request = $this->request->withRoute($matched);
+            return true;
         }
-        $this->request = $this->request->withRoute($route);
-        return true;
+        // If content path is configured, enable automatic Page responses
+        if (Environment::get('content_path')) {
+            $route = Router::getPageRoute($this->request->url());
+            $this->request = $this->request->withRoute($route);
+            return true;
+        }
+
+        $fallback = $router::getFallback();
+        if ($fallback) {
+            $this->request = $this->request->withRoute($fallback);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -108,7 +132,10 @@ class Dispatch
         $call_eventual_route_at_end_of_chain = function (Request $request, Chain $chain): ?Response {
             $route = $request->route();
             if (is_null($route)) {
-                throw new NoRouteSetError("Response called without Route set");
+                if (Environment::get('debug')) {
+                    throw new NoRouteSetError("Response called without Route set");
+                }
+                return null;
             }
             try {
                 return $route($request);

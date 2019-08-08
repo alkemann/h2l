@@ -6,7 +6,7 @@ use alkemann\h2l\{
     Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, response\Error, response\Json, Route, Router, util\Chain, util\Http
 };
 use alkemann\h2l\interfaces\Session as SessionInterface;
-
+use alkemann\h2l\interfaces\Route as RouteInterface;
 
 class DispatchTests extends \PHPUnit\Framework\TestCase
 {
@@ -149,9 +149,8 @@ class DispatchTests extends \PHPUnit\Framework\TestCase
 
     public function testNoRouteResponse()
     {
-        $this->expectException(NoRouteSetError::class);
         $request = new Dispatch;
-        $request->response();
+        $this->assertNull($request->response());
     }
 
     public function testResponse()
@@ -215,16 +214,60 @@ class DispatchTests extends \PHPUnit\Framework\TestCase
 
     public function testSetFromRouterWithNoMatch()
     {
-        $mock_router = new class
+        $mock_router = new class implements \alkemann\h2l\interfaces\Router
         {
-            public static function match()
+            public static function match(string $url, string $method = Http::GET): ?RouteInterface
+            {
+                return null;
+            }
+            public static function getFallback(): ?RouteInterface
+            {
+                return null;
+            }
+            public static function getPageRoute(string $url): RouteInterface
             {
                 return null;
             }
         };
+        Environment::setEnvironment('testSetFromRouterWithNoMatch');
+        Environment::put('debug', true);
 
-        $r = new Dispatch;
-        $result = $r->setRouteFromRouter(get_class($mock_router));
+        $dispatch = new Dispatch;
+        $result = $dispatch->setRouteFromRouter(get_class($mock_router));
         $this->assertFalse($result);
+        $this->assertNull($dispatch->route());
+
+        $this->expectException(\alkemann\h2l\exceptions\NoRouteSetError::class);
+        $dispatch->response();
+
+        Environment::setEnvironment(Environment::TEST);
+    }
+
+    public function testFallback()
+    {
+        Environment::setEnvironment('testFallback');
+        $dispatch = new Dispatch;
+        $mock_router = new class implements \alkemann\h2l\interfaces\Router
+        {
+            public static function match(string $url, string $method = Http::GET): ?RouteInterface
+            {
+                return null;
+            }
+            public static function getFallback(): ?RouteInterface
+            {
+                $callback = function() { return new \alkemann\h2l\response\Text('content123'); };
+                $route123 = new Route('fallback123', $callback);
+                return $route123;
+            }
+            public static function getPageRoute(string $url): RouteInterface
+            {
+                return null;
+            }
+        };
+        $this->assertTrue($dispatch->setRouteFromRouter(get_class($mock_router)));
+        $r = $dispatch->route();
+        $this->assertEquals('fallback123', $r->url());
+        $this->assertEquals('content123', $r(new Request)->render());
+        Environment::setEnvironment(Environment::TEST);
     }
 }

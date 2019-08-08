@@ -14,6 +14,19 @@ class PageTest extends \PHPUnit\Framework\TestCase
         Environment::setEnvironment(Environment::TEST);
     }
 
+    private function createPageRoute(Request $request): Route
+    {
+        return new Route(
+            $request->url(),
+            function (Request $r): ?Response {
+                $page = response\Page::fromRequest($r);
+                if ($page->isValid()) {
+                    return $page;
+                }
+            }
+        );
+    }
+
     public function testConstruct()
     {
         /**
@@ -29,7 +42,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
             ->withGetData(['filter' => 'all'])
             ->withUrl('places/norway')
         ;
-        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $request = $request->withRoute($this->createPageRoute($request));
         $page = Page::fromRequest($request);
         $this->assertTrue($page instanceof Response);
         $this->assertTrue($page instanceof Page);
@@ -59,7 +72,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
             ])
             ->withUrl('tasks')
         ;
-        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $request = $request->withRoute($this->createPageRoute($request));
         $page = Page::fromRequest($request);
         $this->assertEquals('application/json', $page->contentType());
     }
@@ -78,7 +91,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
             ])
             ->withUrl('tasks.json')
         ;
-        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $request = $request->withRoute($this->createPageRoute($request));
         $page = Page::fromRequest($request);
         $this->assertEquals('application/json', $page->contentType());
     }
@@ -98,7 +111,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
             ])
             ->withUrl('somethig.csv')
         ;
-        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $request = $request->withRoute($this->createPageRoute($request));
         $page = Page::fromRequest($request, $conf);
         $this->assertEquals('text/html', $page->contentType());
     }
@@ -106,7 +119,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
     public function testSetData()
     {
         $request = new Request;
-        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $request = $request->withRoute($this->createPageRoute($request));
         $page = Page::fromRequest($request);
         $page->setData('place', 'Norway');
         $page->setData(['city' => 'Oslo', 'height' => 12]);
@@ -121,7 +134,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
     public function testDataFromRequestPageVars()
     {
         $request = (new Request())->withPageVars(['place' => 'Norway', 'city' => 'Oslo', 'height' => 12]);
-        $request = $request->withRoute(Router::match($request->url(), $request->method()));
+        $request = $request->withRoute($this->createPageRoute($request));
         $page = Page::fromRequest($request);
 
         $ref_data = new \ReflectionProperty($page, 'data');
@@ -136,7 +149,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->expectException(ConfigMissing::class);
         Environment::setEnvironment('testMissingContentPathConfigs');
         $r = (new Request)->withUrl('testMissingContentPathConfigs');
-        $r = $r->withRoute(Router::match($r->url()));
+        $this->assertNull(Router::match($r->url()));
         $h = function() {};
         $page = Page::fromRequest($r, ['header_func' => $h]);
         $page->render();
@@ -150,7 +163,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         unset($conf['layout_path']);
         Environment::set($conf, 'testMissingContentPathConfigs');
         $r = (new Request)->withUrl('place');
-        $r = $r->withRoute(Router::match($r->url()));
+        $this->assertNull(Router::match($r->url()));
         $h = function() {};
         $page = Page::fromRequest($r, ['header_func' => $h]);
         $expected = "<h1>Win!</h1>";
