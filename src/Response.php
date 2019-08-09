@@ -36,7 +36,7 @@ abstract class Response
     }
 
     /**
-     * @throws \Error
+     * @throws \Error if the configured `header_fun` is not callable
      */
     protected function setHeaders(): void
     {

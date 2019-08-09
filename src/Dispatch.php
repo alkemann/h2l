@@ -107,9 +107,6 @@ class Dispatch
         return $this->request->route();
     }
 
-    /**
-     * @param interfaces\Route $route
-     */
     public function setRoute(interfaces\Route $route): void
     {
         if (!$this->request) {
@@ -123,7 +120,6 @@ class Dispatch
      *
      * Catches InvalidUrl exceptions and returns a response\Error with 404 instead
      *
-     * @return Response|null
      * @throws NoRouteSetError if a route has not been set prior to calling this, or by a middleware
      */
     public function response(): ?Response

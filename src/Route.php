@@ -26,13 +26,6 @@ class Route implements interfaces\Route
      */
     private $parameters;
 
-    /**
-     * Route constructor.
-     *
-     * @param string $url
-     * @param Closure $cb
-     * @param array $parameters
-     */
     public function __construct(string $url, ?Closure $cb, array $parameters = [])
     {
         $this->url = $url;
