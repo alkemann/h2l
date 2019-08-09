@@ -86,7 +86,8 @@ final class Environment
     }
 
     /**
-     * @TODO apply Util::getFromArrayByKey
+     * Get a config value from the current environment, with a default value if not set
+     *
      * @param string $config_name
      * @param mixed $default Value to return in named config is not configured
      * @return mixed|null returns `null` if config is not set or no default is specified
