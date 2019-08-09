@@ -8,7 +8,7 @@ that respond to the matched urls.
 ```php
 <?php
 
-use alkemann\h2l\{Request, Router, response\Json};
+use alkemann\h2l\{Request, Router, response\Json, response\Text};
 use app\Task; // Your model class  that maybe uses the Model and Entity traits
 
 // Get task by id, i.e. http://example.com/api/tasks/12
@@ -21,6 +21,16 @@ Router::add('|^/api/tasks/(?<id>\d+)$|', function(Request $request) {
 // Any url with `version` in it, i.e. http://example.com/somethi/versionista
 Router::add('/version', function($r) {
     return new Json(['version' => '1.3']);
+});
+
+// A Text version renders strings or newline-joins arrays
+Router::add('/names', function($r) {
+    return new Text(['Ole', 'Dole', 'Doffen']);
+});
+
+// When not using the "Page" automagic error handling, the fallback route catches all
+Router::fallback(function(Request $r) {
+    return new Json(['error' => 'No such route'], 404);
 });
 ```
 
