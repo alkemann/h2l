@@ -62,6 +62,11 @@ class Router implements interfaces\Router
         self::$fallback = $callable;
     }
 
+    /**
+     * Returns the 404/fallback route, if it is configured
+     *
+     * @return ?interfaces\Route
+     */
     public static function getFallback(): ?interfaces\Route
     {
         if (isset(self::$fallback)) {

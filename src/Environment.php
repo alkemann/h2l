@@ -40,11 +40,21 @@ final class Environment
     // Defaults to DEV
     private static $current_env = Environment::DEV;
 
+    /**
+     * Changes current environment to provided name
+     *
+     * @param string $env
+     */
     public static function setEnvironment(string $env): void
     {
         self::$current_env = $env;
     }
 
+    /**
+     * Returns the name of the current Environment
+     *
+     * @return string
+     */
     public static function current(): string
     {
         return self::$current_env;
@@ -96,6 +106,12 @@ final class Environment
         return self::$settings[$environment][$config_name];
     }
 
+    /**
+     * Returns an array of all environment variables for selected env (or all)
+     *
+     * @param ?string $environment Name of environment to grab, or Environment::ALL
+     * @return array
+     */
     public static function grab(?string $environment = null): array
     {
         if (is_null($environment)) {

@@ -51,6 +51,8 @@ class Route implements interfaces\Route
     }
 
     /**
+     * Converts the Route to a Response that can be rendered for the final output
+     *
      * @param Request $request
      * @return Response|null
      * @throws InvalidCallback if callback did not return Response|null
@@ -64,6 +66,11 @@ class Route implements interfaces\Route
         throw new InvalidCallback("Route callbacks must only return null or a subclass of alkemann\h2l\Response");
     }
 
+    /**
+     * Returns the URL (after domain) of the route
+     *
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->url;
