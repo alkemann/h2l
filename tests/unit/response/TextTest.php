@@ -63,6 +63,17 @@ class TextTest extends \PHPUnit\Framework\TestCase
         }
     }
 
+    public function testDeepArraysError()
+    {
+        $headers = [];
+        $r = new Text(['one', ['two', ['three', 'four']], 'five'], 200, [
+            'header_func' => function($h) use (&$headers) { $headers[] = $h; }
+        ]);
+        $result = $r->render();
+        $expected = "one\ntwo\nthree\nfour\nfive";
+        $this->assertEquals($expected, $result);
+    }
+
     public function testErrorResponse()
     {
         $headers = [];

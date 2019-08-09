@@ -24,11 +24,8 @@ class Text extends Response
             case is_string($content):
                 // passthrough
                 break;
-            case is_array($content):
-                $content = join($content, "\n");
-                break;
-            case $content instanceof \Generator:
-                $content = join(iterator_to_array($content), "\n");
+            case is_array($content) || $content instanceof \Generator:
+                $content = trim(static::implode_recur("\n", $content), "\n");
                 break;
             default:
                 $content = (string) $content;
@@ -40,6 +37,18 @@ class Text extends Response
             ->withHeaders(['Content-Type' => Http::CONTENT_TEXT])
             ->withBody($content)
         ;
+    }
+
+    protected static function implode_recur($glue, $arr){
+        $output = '';
+        foreach ($arr as $v) {
+            if (is_array($v)) {
+                $output .= static::implode_recur($glue, $v);
+            } else {
+                $output .= $glue . $v;
+            }
+        }
+        return $output;
     }
 
     /**
