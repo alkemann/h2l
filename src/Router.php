@@ -87,10 +87,7 @@ class Router implements interfaces\Router
             }
 
             // TODO cache of previous matched dynamic routes
-            $route = self::matchDynamicRoute($url, $method);
-            if ($route) {
-                return $route;
-            }
+            return self::matchDynamicRoute($url, $method);
         }
         return null;
     }
@@ -131,11 +128,10 @@ class Router implements interfaces\Router
         $url = self::$aliases[$url] ?? $url;
         return new Route(
             $url,
-            function (Request $request) {
+            function (Request $request): ?Response {
                 $page = response\Page::fromRequest($request);
-                if ($page->isValid()) {
-                    return $page;
-                }
+                // @TODO BC breaking, but move this?
+                return $page->isValid() ? $page : null;
             }
         );
     }

@@ -140,6 +140,7 @@ class Dispatch
             try {
                 return $route($request);
             } catch (InvalidUrl $e) {
+                // @TODO Backwards breaking, but remove this?
                 return new response\Error(['message' => $e->getMessage()],
                     ['code' => 404, 'request' => $this->request]);
             }
