@@ -39,7 +39,8 @@ class Text extends Response
         ;
     }
 
-    protected static function implode_recur($glue, $arr){
+    protected static function implode_recur($glue, $arr)
+    {
         $output = '';
         foreach ($arr as $v) {
             if (is_array($v)) {
