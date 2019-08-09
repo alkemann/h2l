@@ -10,7 +10,7 @@ use alkemann\h2l\util\Http;
  * Class Html
  *
  * Content should be either a rendered HTML string or an object that when cast to string renders the HTML.
- * Also a slim templateing system is provided. You can use this by sending an array as content, but the 
+ * Also a slim templateing system is provided. You can use this by sending an array as content, but the
  * array must follow some strict rules. The first value (no key), should be the template string. Any key/value
  * pair added to this array will be applied as replacements in the template in the following manner:
  *
