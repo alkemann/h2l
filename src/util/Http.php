@@ -78,6 +78,7 @@ class Http
         'application/json' => 'json',
         'application/xml' => 'xml',
         'text/xml' => 'xml',
+        'text/plain' => 'txt',
     ];
 
     private static $code_to_message = [

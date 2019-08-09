@@ -19,7 +19,7 @@ class Request extends Message
     protected $get = [];
     protected $post = [];
     protected $route = null;
-    protected $content_type = '';
+    protected $content_type = ''; // Type of the REQUEST BODY, not response
     protected $accept_type = Http::CONTENT_HTML;
     protected $page_vars = [];
 
@@ -93,7 +93,8 @@ class Request extends Message
             Http::CONTENT_JSON,
             Http::CONTENT_XML,
             Http::CONTENT_TEXT_XML,
-            Http::CONTENT_FORM
+            Http::CONTENT_FORM,
+            Http::CONTENT_TEXT,
         ];
         foreach ($known_content_types as $t) {
             if (strpos($content_type, $t) !== false) {
@@ -110,6 +111,7 @@ class Request extends Message
             Http::CONTENT_HTML,
             Http::CONTENT_XML,
             Http::CONTENT_TEXT_XML,
+            Http::CONTENT_TEXT,
         ];
         foreach ($known_accept_types as $t) {
             if (strpos($accept_type, $t) !== false) {

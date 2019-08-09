@@ -77,6 +77,25 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('application/json', $page->contentType());
     }
 
+    public function testTextFormat()
+    {
+        /**
+         * @var $request Request
+          */
+        $request = (new Request)
+            ->withRequestParams(['url' => 'tasks'])
+            ->withServerParams([
+                'HTTP_ACCEPT' => 'text/plain;q=0.8',
+                'REQUEST_URI' => '/name',
+                'REQUEST_METHOD' => 'GET',
+            ])
+            ->withUrl('tasks')
+        ;
+        $request = $request->withRoute($this->createPageRoute($request));
+        $page = Page::fromRequest($request);
+        $this->assertEquals('text/plain', $page->contentType());
+    }
+
     public function testJsonUrlpart()
     {
         /**
