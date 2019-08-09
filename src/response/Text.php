@@ -14,18 +14,30 @@ use alkemann\h2l\util\Http;
 class Text extends Response
 {
     /**
-     * @param string $content Content to render
+     * @param mixed $content Content to render, arrays will be joined by newline, everything else cast to string
      * @param int $code HTTP code to respond with, defaults to `200`
      * @param array $config inject config/overrides like `header_func`
      */
-    public function __construct(string $content, int $code = Http::CODE_OK, array $config = [])
+    public function __construct($content, int $code = Http::CODE_OK, array $config = [])
     {
+        switch (true) {
+            case is_string($content):
+                // passthrough
+                break;
+            case is_array($content):
+                $content = join($content, "\n");
+                break;
+            case $content instanceof \Generator:
+                $content = join(iterator_to_array($content), "\n");
+                break;
+            default:
+                $content = (string) $content;
+                break;
+        }
         $this->config = $config;
         $this->message = (new Message())
             ->withCode($code)
-            ->withHeaders([
-                'Content-Type' => Http::CONTENT_TEXT
-            ])
+            ->withHeaders(['Content-Type' => Http::CONTENT_TEXT])
             ->withBody($content)
         ;
     }
