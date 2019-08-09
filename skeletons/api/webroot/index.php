@@ -17,7 +17,7 @@ Environment::set([
     ]
 ], Environment::ALL);
 
-require_once $ROOT . 'api/App.php'; /* Replace this with autoloading the api folder with composer:
+require_once $ROOT . 'api' . DIRECTORY_SEPARATOR .  'App.php'; /* Replace this with autoloading the api folder with composer:
 	"autoload": {
         "psr-4": {
             "api\\": "api/"
@@ -26,10 +26,10 @@ require_once $ROOT . 'api/App.php'; /* Replace this with autoloading the api fol
 */
 
 // This adds all the routes from the app
-api\App::addAppRoutes();
+api\App::addRoutes();
 
 $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
-$dispatch->registerMiddle(api\App::getMiddlewares()); // Optional if middlewares are created for the App
+$dispatch->registerMiddle(...api\App::getMiddlewares()); // Optional if middlewares are created for the App
 $response = $dispatch->response();
 echo ($response) ? $response->render() : '';

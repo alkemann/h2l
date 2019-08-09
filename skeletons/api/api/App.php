@@ -30,7 +30,7 @@ class App
 
         Router::add('/', function(Request $r): Response { return new Json(['status' => 'ok']); });
         Router::add('name', function(Request $r): Response { return new Text(['One line', 'Second line']); });
-        Router::add('|city/(?<city>\w+)|', 'app\App::city');
+        Router::add('|city/(?<city>\w+)|', 'api\App::city');
     }
 
     public static function city(Request $r): Html {
