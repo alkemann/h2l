@@ -81,6 +81,10 @@ class Log
 
     /**
      * Send $message with level $level to all handlers
+     *
+     * @param $level
+     * @param $message
+     * @param array $context
      */
     public static function log($level, $message, array $context = []): void
     {
@@ -99,6 +103,9 @@ class Log
      * You can enable it like this: `Log::handler('standard', [Log::class, 'std']);`
      *
      * @codeCoverageIgnore
+     * @param string $level
+     * @param string $message
+     * @param array $context
      */
     private static function std(string $level, string $message, array $context = []): void
     {
@@ -112,6 +119,9 @@ class Log
      * A default naive file handler that can be used initially, but should be replaced for prod
      *
      * @codeCoverageIgnore
+     * @param string $level
+     * @param string $message
+     * @param array $context
      * @throws ConfigMissing
      */
     private static function file(string $level, string $message, array $context = []): void

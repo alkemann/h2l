@@ -52,16 +52,25 @@ class Message
      */
     protected $content_charset = 'utf-8';
 
+    /**
+     * @return string
+     */
     public function url(): string
     {
         return $this->url;
     }
 
+    /**
+     * @return string
+     */
     public function method(): string
     {
         return $this->method;
     }
 
+    /**
+     * @return null|string
+     */
     public function body(): ?string
     {
         return $this->body;
@@ -87,16 +96,26 @@ class Message
         }
     }
 
+    /**
+     * @return string
+     */
     public function contentType(): string
     {
         return $this->content_type;
     }
 
+    /**
+     * @return string
+     */
     public function charset(): string
     {
         return $this->content_charset;
     }
 
+    /**
+     * @param string $name
+     * @return null|string
+     */
     public function header(string $name): ?string
     {
         foreach ($this->headers as $key => $value) {
@@ -116,26 +135,42 @@ class Message
         return new $class($this->content());
     }
 
+    /**
+     * @return array
+     */
     public function headers(): array
     {
         return $this->headers;
     }
 
+    /**
+     * @return array
+     */
     public function meta(): array
     {
         return $this->meta;
     }
 
+    /**
+     * @return array
+     */
     public function options(): array
     {
         return $this->options;
     }
 
+    /**
+     * @return int|null
+     */
     public function code(): ?int
     {
         return $this->code;
     }
 
+    /**
+     * @param int $code
+     * @return Message
+     */
     public function withCode(int $code): Message
     {
         $new = clone $this;
@@ -143,6 +178,10 @@ class Message
         return $new;
     }
 
+    /**
+     * @param string $url
+     * @return Message
+     */
     public function withUrl(string $url): Message
     {
         $new = clone $this;
@@ -150,6 +189,10 @@ class Message
         return $new;
     }
 
+    /**
+     * @param string $method
+     * @return Message
+     */
     public function withMethod(string $method): Message
     {
         $new = clone $this;
@@ -157,6 +200,10 @@ class Message
         return $new;
     }
 
+    /**
+     * @param string $body
+     * @return Message
+     */
     public function withBody(string $body): Message
     {
         $new = clone $this;
@@ -164,6 +211,10 @@ class Message
         return $new;
     }
 
+    /**
+     * @param array $headers
+     * @return Message
+     */
     public function withHeaders(array $headers): Message
     {
         $new = clone $this;
@@ -199,6 +250,10 @@ class Message
         return $new;
     }
 
+    /**
+     * @param array $options
+     * @return Message
+     */
     public function withOptions(array $options): Message
     {
         $new = clone $this;
@@ -206,6 +261,10 @@ class Message
         return $new;
     }
 
+    /**
+     * @param array $meta
+     * @return Message
+     */
     public function withMeta(array $meta): Message
     {
         $new = clone $this;

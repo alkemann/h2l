@@ -71,6 +71,10 @@ class Page extends Response
 
     /**
      * Analyze the request url to convert to a view template
+     *
+     * @param Request $request
+     * @param array $config
+     * @return Page
      */
     public static function fromRequest(Request $request, array $config = []): Page
     {
@@ -86,6 +90,7 @@ class Page extends Response
     }
 
     /**
+     * @return bool
      * @throws InvalidUrl
      */
     public function isValid(): bool
@@ -196,6 +201,8 @@ class Page extends Response
     // @TODO refactor, and cache
 
     /**
+     * @param string $view
+     * @return string
      * @throws InvalidUrl
      */
     public function view(string $view): string
@@ -232,12 +239,19 @@ class Page extends Response
         return $this->message->body();
     }
 
+    /**
+     * @param string $template
+     */
     public function setTemplate(string $template): void
     {
         $ending = Http::fileEndingFromType($this->content_type);
         $this->template = "{$template}.{$ending}";
     }
 
+    /**
+     * @param null|string $url
+     * @return string
+     */
     private function templateFromUrl(?string $url = null): string
     {
         $parts = \explode('/', $url);

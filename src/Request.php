@@ -126,6 +126,9 @@ class Request extends Message
         return $this->accept_type;
     }
 
+    /**
+     * @return array
+     */
     public function getServerParams(): array
     {
         return $this->server;
@@ -136,6 +139,10 @@ class Request extends Message
         return $this->server[$name] ?? null;
     }
 
+    /**
+     * @param array $post
+     * @return Request
+     */
     public function withPostData(array $post): Request
     {
         $new = clone $this;
@@ -143,11 +150,18 @@ class Request extends Message
         return $new;
     }
 
+    /**
+     * @return array
+     */
     public function getPostData(): array
     {
         return $this->post;
     }
 
+    /**
+     * @param array $get
+     * @return Request
+     */
     public function withGetData(array $get): Request
     {
         $new = clone $this;
@@ -155,16 +169,26 @@ class Request extends Message
         return $new;
     }
 
+    /**
+     * @return array
+     */
     public function getGetData(): array
     {
         return $this->get;
     }
 
+    /**
+     * @return array
+     */
     public function query(): array
     {
         return $this->get;
     }
 
+    /**
+     * @param array $parameters
+     * @return Request
+     */
     public function withUrlParams(array $parameters): Request
     {
         $new = clone $this;
@@ -172,11 +196,18 @@ class Request extends Message
         return $new;
     }
 
+    /**
+     * @return array
+     */
     public function getUrlParams(): array
     {
         return $this->parameters;
     }
 
+    /**
+     * @param interfaces\Route $route
+     * @return Request
+     */
     public function withRoute(interfaces\Route $route): Request
     {
         $new = clone $this;
@@ -185,6 +216,9 @@ class Request extends Message
         return $new;
     }
 
+    /**
+     * @return interfaces\Route|null
+     */
     public function route(): ?interfaces\Route
     {
         return $this->route;

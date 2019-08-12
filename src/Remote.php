@@ -103,6 +103,9 @@ class Remote
         ;
     }
 
+    /**
+     * @param Message $request
+     */
     private function createCurlHandlerFromRequest(Message $request)
     {
         $this->start = microtime(true);
@@ -143,6 +146,8 @@ class Remote
     }
 
     /**
+     * @param Message $request
+     * @return string
      * @throws CurlFailure if curl_exec returns false or throws an Exception
      */
     private function execute_curl(Message $request): string
