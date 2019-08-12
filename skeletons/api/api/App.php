@@ -5,7 +5,7 @@ namespace api;
 
 use alkemann\h2l\{ Request, Environment, Response, Router, Route, Log };
 use alkemann\h2l\util\Chain;
-use alkemann\h2l\response\{Json, Text, Html };
+use alkemann\h2l\response\{Json, Text, Html, Page };
 
 class App
 {
@@ -35,6 +35,12 @@ class App
 
         $router::add(
             '/', // i.e. http://localhost:8088/
+            function(Request $r): Response {
+                return new Page(['msg' => 'Hello World!'], ['template' => 'home']);
+            }
+        );
+        $router::add(
+            '/status', // i.e. http://localhost:8088/status
             function(Request $r): Response {
                 return new Json(['status' => 'ok']);
             }

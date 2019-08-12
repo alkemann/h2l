@@ -9,13 +9,9 @@ require_once($VENDOR_PATH . 'autoload.php');
 use alkemann\h2l\{ Environment, Dispatch, Log };
 
 Environment::set([
-    Environment::DEV => [
-        'debug' => true,
-    ],
-    Environment::PROD => [
-        'debug' => false,
-    ]
-], Environment::ALL);
+    'debug' => true,
+    'template_path' => $ROOT . 'templates' . DIRECTORY_SEPARATOR,
+]);
 
 Log::handler('standard', [Log::class, 'std']);
 

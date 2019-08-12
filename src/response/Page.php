@@ -161,9 +161,13 @@ class Page extends Response
 
     private function getContentFile(string $view): string
     {
-        $path = $this->config['content_path'] ?? Environment::get('content_path');
+        $path = $this->config['content_path']
+            ?? Environment::get('content_path')
+            ?? $this->config['template_path']
+            ?? Environment::get('template_path');
+
         if (is_null($path)) {
-            throw new ConfigMissing("Page requires a `content_path` in Environment");
+            throw new ConfigMissing("No `content_path` or `template_path` configured!");
         }
         return $path . $view . '.php';
     }
