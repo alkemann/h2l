@@ -15,6 +15,12 @@ Environment::set([
 
 Log::handler('standard', [Log::class, 'std']);
 
+
+require_once $ROOT . 'api' . DIRECTORY_SEPARATOR .  'error_handlers.php';
+set_exception_handler('api\handleError');
+set_error_handler('api\handleWarning', E_WARNING|E_USER_WARNING);
+
+
 require_once $ROOT . 'api' . DIRECTORY_SEPARATOR .  'App.php'; /* Replace this with autoloading the api folder with composer:
 	"autoload": {
         "psr-4": {
