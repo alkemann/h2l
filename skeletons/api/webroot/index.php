@@ -6,7 +6,7 @@ $VENDOR_PATH = $ROOT . 'vendor' . DIRECTORY_SEPARATOR;
 
 require_once($VENDOR_PATH . 'autoload.php');
 
-use alkemann\h2l\{ Environment, Dispatch };
+use alkemann\h2l\{ Environment, Dispatch, Log };
 
 Environment::set([
     Environment::DEV => [
