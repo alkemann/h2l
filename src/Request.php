@@ -219,7 +219,7 @@ class Request extends Message
      */
     public function query(): array
     {
-        return $this->getGetData;
+        return $this->getGetData();
     }
 
     /**

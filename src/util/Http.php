@@ -170,7 +170,7 @@ class Http
      * @param array $server_array
      * @return array
      */
-    public static function getRequestHeadersFromServerArray(array $server_array)
+    public static function getRequestHeadersFromServerArray(array $server_array): array
     {
         $out = [];
         foreach ($server_array as $name => $value) {
