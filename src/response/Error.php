@@ -17,15 +17,33 @@ use alkemann\h2l\util\Http;
  */
 class Error extends Response
 {
+    /**
+     * @var string
+     */
     protected $content_type = 'text/html';
+    /**
+     * @var int
+     */
     protected $code = 500;
+    /**
+     * @var array
+     */
     protected $data = [];
     /**
      * @var Request
      */
     protected $request = null;
+    /**
+     * @var array
+     */
     protected $config = [];
 
+    /**
+     * Constructor
+     *
+     * @param array $data
+     * @param array $config
+     */
     public function __construct(array $data = [], array $config = [])
     {
         $this->data = $data;
@@ -50,11 +68,21 @@ class Error extends Response
         ;
     }
 
+    /**
+     * Returns the `Request` of this response
+     *
+     * @return Request
+     */
     public function request(): ?Request
     {
         return $this->request;
     }
 
+    /**
+     * Use the Page class configured to render the response
+     *
+     * @return string
+     */
     public function render(): string
     {
         $response = '';

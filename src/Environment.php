@@ -30,6 +30,9 @@ final class Environment
         ]
     ];
 
+    /**
+     * @var array
+     */
     private static $middlewares = [
         Environment::LOCAL => [],
         Environment::DEV => [],
@@ -37,7 +40,10 @@ final class Environment
         Environment::PROD => []
     ];
 
-    // Defaults to DEV
+    /**
+     * Defaults to DEV
+     * @var string
+     */
     private static $current_env = Environment::DEV;
 
     /**
@@ -82,6 +88,7 @@ final class Environment
 
     /**
      * Get all middlewares, mostly to be sent to Dispatch::registerMiddleware
+     *
      * @return array of callables that match the middleware interface
      */
     public static function middlewares(): array

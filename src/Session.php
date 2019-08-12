@@ -20,6 +20,10 @@ class Session implements interfaces\Session
     }
 
     /**
+     * Returns the value stored in `$key`, may return null if no value is set
+     *
+     * `$key` may be a 'dot.notation.string' to access ['dot']['notation']['string']
+     *
      * @param string $key
      * @return mixed|null
      */
@@ -36,9 +40,12 @@ class Session implements interfaces\Session
     }
 
     /**
+     * Set `$value` into the session array
+     *
+     * `$key` may be a 'dot.notation.string' to access ['dot']['notation']['string']
+     *
      * @param string $key
      * @param $value
-     * @throws \Error if trying to set with dot notation
      */
     public function set(string $key, $value): void
     {
@@ -53,7 +60,10 @@ class Session implements interfaces\Session
     }
 
     /**
+     * Remove value at `$key` from session array
+     *
      * @param string $key
+     * @throws \InvalidArgumentException `$key` does not support "dot" notation
      */
     public function unset(string $key): void
     {
@@ -64,6 +74,8 @@ class Session implements interfaces\Session
     }
 
     /**
+     * Returns `true` if the PHP session is active
+     *
      * @return bool
      */
     private function active(): bool
@@ -72,6 +84,10 @@ class Session implements interfaces\Session
     }
 
     /**
+     * Unsets and destroys any active session, returns `false` if no active session
+     *
+     * also returns `false` if session was not successfully destroyed.
+     *
      * @return bool
      */
     public function destroy(): bool
@@ -87,8 +103,11 @@ class Session implements interfaces\Session
     }
 
     /**
+     * Check if `$key` is set in session on root of the session array
+     *
      * @param string $key
      * @return bool
+     * @throws \InvalidArgumentException `$key` does not support "dot" notation
      */
     public function check(string $key): bool
     {

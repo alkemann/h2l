@@ -49,6 +49,12 @@ class Page extends Response
      */
     protected $config = [];
 
+    /**
+     * Constructor
+     *
+     * @param array $data
+     * @param array $config
+     */
     public function __construct($data = [], array $config = [])
     {
         $this->data = $data;
@@ -90,8 +96,10 @@ class Page extends Response
     }
 
     /**
+     * Returns true if a file can be found that matches the "template" that is set
+     *
      * @return bool
-     * @throws InvalidUrl
+     * @throws InvalidUrl is thrown if the file is missing
      */
     public function isValid(): bool
     {
@@ -119,6 +127,11 @@ class Page extends Response
         }
     }
 
+    /**
+     * Returns the `Request` of this response
+     *
+     * @return Request
+     */
     public function request(): ?Request
     {
         return $this->request;
@@ -201,6 +214,7 @@ class Page extends Response
     // @TODO refactor, and cache
 
     /**
+     * @TODO BUG, method should be private
      * @param string $view
      * @return string
      * @throws InvalidUrl
@@ -240,6 +254,8 @@ class Page extends Response
     }
 
     /**
+     * Creates a filename from template and content type
+     *
      * @param string $template
      */
     public function setTemplate(string $template): void

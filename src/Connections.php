@@ -15,8 +15,17 @@ use UnderflowException;
  */
 class Connections
 {
+    /**
+     * @var array
+     */
     private static $connections = [];
+    /**
+     * @var array
+     */
     private static $open = [];
+    /**
+     * @var array
+     */
     private static $close = [];
 
     /**
@@ -62,6 +71,8 @@ class Connections
     }
 
     /**
+     * Close the named connection
+     *
      * @param string $name name of of connection
      * @throws UnderflowException when connection is already closed
      * @throws InvalidArgumentException if connection does not exist

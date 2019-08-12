@@ -240,6 +240,11 @@ class Message
         }
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     * @return Message
+     */
     public function withHeader(string $name, string $value): Message
     {
         $new = clone $this;

@@ -14,11 +14,20 @@ class Router implements interfaces\Router
 {
     /**
      * Defines which character is used by regex dynamic routes
+     * @var string
      */
     public static $DELIMITER = '|';
-
+    /**
+     * @var array
+     */
     private static $aliases = [];
+    /**
+     * @var array
+     */
     private static $routes = [];
+    /**
+     * @var callable|null
+     */
     private static $fallback = null;
 
     /**

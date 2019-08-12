@@ -13,6 +13,9 @@ use alkemann\h2l\util\Chain;
  */
 class Dispatch
 {
+    /**
+     * @var array
+     */
     private $middlewares = [];
 
     /**
@@ -108,6 +111,8 @@ class Dispatch
     }
 
     /**
+     * Recreates the `Request` with the specified `Route`. `Request` may be created as side effect.
+     *
      * @param interfaces\Route $route
      */
     public function setRoute(interfaces\Route $route): void

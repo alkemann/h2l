@@ -129,6 +129,9 @@ class Http
         505 => 'HTTP Version Not Supported',
     ];
 
+    /**
+     * Convert a content type, i.e. "appliction/json", to a file ending, i.e. json"
+     */
     public static function fileEndingFromType(string $type): string
     {
         foreach (self::$contentTypeToFileEnding as $type_key => $ending) {
@@ -138,16 +141,35 @@ class Http
         }
         return 'html';
     }
+
+    /**
+     * Convert a file ending, i.e. ".json", into a content type, i.e. "appliction/json"
+     *
+     * @param string $ending
+     * @return string
+     */
     public static function contentTypeFromFileEnding(string $ending): string
     {
         return array_search($ending, static::$contentTypeToFileEnding);
     }
 
+    /**
+     * Convert and return the string "name" of a HTTP response code, or "Unknown"
+     *
+     * @param int $code
+     * @return string
+     */
     public static function httpCodeToMessage(int $code): string
     {
         return self::$code_to_message[$code] ?? "Unknown";
     }
 
+    /**
+     * Returns the request headers of a PHP Server array
+     *
+     * @param array $server_array
+     * @return array
+     */
     public static function getRequestHeadersFromServerArray(array $server_array)
     {
         $out = [];

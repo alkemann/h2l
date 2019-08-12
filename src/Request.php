@@ -43,6 +43,14 @@ class Request extends Message
         return null;
     }
 
+    /**
+     * Returns the full url (with domain) of the request, alternatively for the provided path
+     *
+     * Alternative usage is for creating full urls, i.e. reverse routing
+     *
+     * @param null|string $path
+     * @return string
+     */
     public function fullUrl(?string $path = null): string
     {
         $path = $path ?? $this->url();
@@ -52,19 +60,23 @@ class Request extends Message
     }
 
     /**
-     * @param array $request
+     * Recreate the `Request` with specified request parameters
+     *
+     * @param array $request_params
      * @return Request
      */
-    public function withRequestParams(array $request): Request
+    public function withRequestParams(array $request_params): Request
     {
         $new = clone $this;
-        $new->url = $request['url'] ?? '/';
-        unset($request['url']);
-        $new->request = $request;
+        $new->url = $request_params['url'] ?? '/';
+        unset($request_params['url']);
+        $new->request = $request_params;
         return $new;
     }
 
     /**
+     * Returns the request parameters of the request
+     *
      * @return array
      */
     public function getRequestParams(): array
@@ -73,6 +85,8 @@ class Request extends Message
     }
 
     /**
+     * Recreates the `Request` with specified server parameters
+     *
      * @param array $server
      * @return Request
      */
@@ -121,12 +135,19 @@ class Request extends Message
         }
     }
 
+    /**
+     * Returns the header specified accept type(s) of the request
+     *
+     * @return string
+     */
     public function acceptType(): string
     {
         return $this->accept_type;
     }
 
     /**
+     * Returns the server parameters of the request
+     *
      * @return array
      */
     public function getServerParams(): array
@@ -134,12 +155,20 @@ class Request extends Message
         return $this->server;
     }
 
+    /**
+     * Returns the server parameter value of `$name` or null if not set
+     *
+     * @param string $name
+     * @return null|string
+     */
     public function getServerParam(string $name): ?string
     {
         return $this->server[$name] ?? null;
     }
 
     /**
+     * Recreates the `Request` with the specified post data
+     *
      * @param array $post
      * @return Request
      */
@@ -151,6 +180,8 @@ class Request extends Message
     }
 
     /**
+     * Returns the post data of the request
+     *
      * @return array
      */
     public function getPostData(): array
@@ -159,6 +190,8 @@ class Request extends Message
     }
 
     /**
+     * Recreates the `Request` with the specified get (quary) data
+     *
      * @param array $get
      * @return Request
      */
@@ -170,6 +203,8 @@ class Request extends Message
     }
 
     /**
+     * Returns the request data of the request
+     *
      * @return array
      */
     public function getGetData(): array
@@ -178,14 +213,21 @@ class Request extends Message
     }
 
     /**
+     * Alias of `getGetData`
+     *
      * @return array
      */
     public function query(): array
     {
-        return $this->get;
+        return $this->getGetData;
     }
 
     /**
+     * Recreates the `Request` with the specified Url parameters
+     *
+     * Url parameters are extracted with dynamic routes, aka:
+     * `/api/location/(?<city>\w+)/visit` the "city" part.
+     *
      * @param array $parameters
      * @return Request
      */
@@ -197,6 +239,8 @@ class Request extends Message
     }
 
     /**
+     * Returns the url parameters of the request
+     *
      * @return array
      */
     public function getUrlParams(): array
@@ -205,6 +249,8 @@ class Request extends Message
     }
 
     /**
+     * Recreates the `Request` with the specified Route
+     *
      * @param interfaces\Route $route
      * @return Request
      */
@@ -217,6 +263,8 @@ class Request extends Message
     }
 
     /**
+     * Returns the `Route` of the request, if set, null if not.
+     *
      * @return interfaces\Route|null
      */
     public function route(): ?interfaces\Route
@@ -224,6 +272,12 @@ class Request extends Message
         return $this->route;
     }
 
+    /**
+     * Recreates the `Request` with the given `Session` object
+     *
+     * @param interfaces\Session $session
+     * @return Request
+     */
     public function withSession(interfaces\Session $session): Request
     {
         $new = clone $this;
@@ -231,11 +285,19 @@ class Request extends Message
         return $new;
     }
 
+    /**
+     * Returns the page variables (those variables to be injected into templates) of request
+     *
+     * @return array
+     */
     public function pageVars(): array
     {
         return $this->page_vars;
     }
 
+    /**
+     * Recreates the `Request` with the given page variables
+     */
     public function withPageVars(array $vars): Request
     {
         $new = clone $this;
@@ -262,6 +324,8 @@ class Request extends Message
 
     /**
      * Redirect NOW the request to $url
+     *
+     * Method includes usage of the `exit` php command
      *
      * @codeCoverageIgnore
      * @param $url

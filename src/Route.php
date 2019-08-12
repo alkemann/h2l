@@ -40,11 +40,21 @@ class Route implements interfaces\Route
         $this->parameters = $parameters;
     }
 
+    /**
+     *  Returns the url that the route was created for/with
+     *
+     * @return string
+     */
     public function url(): string
     {
         return $this->url;
     }
 
+    /**
+     * Returns all the parameters that the route was created with
+     *
+     * @return array
+     */
     public function parameters(): array
     {
         return $this->parameters;

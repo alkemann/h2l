@@ -16,12 +16,29 @@ use alkemann\h2l\util\Http;
  */
 class Remote
 {
+    /**
+     * @var array
+     */
     private $config = [];
+    /**
+     * @var array
+     */
     private $curl_options = [];
+    /**
+     * @var resource
+     */
     private $curl_handler;
-    // @var float
+    /**
+     * @var float
+     */
     private $start;
 
+    /**
+     * Creatues the Remote instance, only sets configurations
+     *
+     * @param array $curl_options
+     * @param array $config
+     */
     public function __construct(array $curl_options = [], array $config = [])
     {
         $this->config = $config;
@@ -36,6 +53,13 @@ class Remote
             ] + $curl_options;
     }
 
+    /**
+     * Make a HTTP GET request to `$url` and return the `Message` response
+     *
+     * @param string $url
+     * @param array $headers
+     * @return Message
+     */
     public function get(string $url, array $headers = []): Message
     {
         $request = (new Message)
@@ -45,6 +69,15 @@ class Remote
         return $this->http($request);
     }
 
+    /**
+     * Make a HTTP POST request to `$url`, posting `$data` as a json body, and return the `Message` response
+     *
+     * @param string $url
+     * @param array $data
+     * @param array $headers
+     * @param string $method Http::POST | Http::PUT
+     * @return Message
+     */
     public function postJson(string $url, array $data, array $headers = [], string $method = Http::POST): Message
     {
         $headers['Content-Type'] = 'application/json; charset=utf-8';
@@ -59,6 +92,15 @@ class Remote
         return $this->http($request);
     }
 
+    /**
+     * Make a HTTP POST request to `$url`, posting `$data` as a "form" and return the `Message` response
+     *
+     * @param string $url
+     * @param array $data
+     * @param array $headers
+     * @param string $method Http::POST | Http::PUT
+     * @return Message
+     */
     public function postForm(string $url, array $data, array $headers = [], string $method = Http::POST): Message
     {
         $headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
@@ -72,6 +114,13 @@ class Remote
         return $this->http($request);
     }
 
+    /**
+     * Make a HTTP DELETE request to `$url` and return the `Message` response
+     *
+     * @param string $url
+     * @param array $headers
+     * @return Message
+     */
     public function delete(string $url, array $headers = []): Message
     {
         $request = (new Message)
@@ -81,10 +130,16 @@ class Remote
         return $this->http($request);
     }
 
-    public function http(Message $request): Message
+    /**
+     * Make a HTTP request as specified by `$message` and return the `Message` response
+     *
+     * @param Message $message
+     * @return Message
+     */
+    public function http(Message $message): Message
     {
-        $this->createCurlHandlerFromRequest($request);
-        $content = $this->execute_curl($request);
+        $this->createCurlHandlerFromRequest($message);
+        $content = $this->execute_curl($message);
         $meta = curl_getinfo($this->curl_handler);
         $header_size = curl_getinfo($this->curl_handler, CURLINFO_HEADER_SIZE);
         $header = substr($content, 0, $header_size);
@@ -94,8 +149,8 @@ class Remote
         unset($this->curl_handler);
         $meta['latency'] = microtime(true) - $this->start;
         return (new Message)
-            ->withUrl($request->url())
-            ->withMethod($request->method())
+            ->withUrl($message->url())
+            ->withMethod($message->method())
             ->withBody($content)
             ->withCode($meta['http_code'])
             ->withHeaders($headers)
@@ -173,6 +228,10 @@ class Remote
         }
     }
 
+    /**
+     * @param string $header
+     * @return array
+     */
     private function extractHeaders(string $header): array
     {
         $parts = explode("\n", $header);
