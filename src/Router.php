@@ -65,7 +65,7 @@ class Router implements interfaces\Router
     /**
      * Returns the 404/fallback route, if it is configured
      *
-     * @return ?interfaces\Route
+     * @return null|interfaces\Route
      */
     public static function getFallback(): ?interfaces\Route
     {
@@ -80,7 +80,7 @@ class Router implements interfaces\Router
      *
      * @param string $url Request url, i.e. '/api/user/32'
      * @param string $method Http::<GET/POST/PATCH/PUT/DELETE>
-     * @return ?interfaces\Route
+     * @return null|interfaces\Route
      */
     public static function match(string $url, string $method = Http::GET): ?interfaces\Route
     {

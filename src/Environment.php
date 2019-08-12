@@ -110,8 +110,8 @@ final class Environment
     /**
      * Returns an array of all environment variables for selected env (or all)
      *
-     * @param ?string $environment Name of environment to grab, or Environment::ALL
-     * @return array
+     * @param null|string $environment Name of environment to grab, or Environment::ALL
+     * @return array all configurations for selected env in deep array
      */
     public static function grab(?string $environment = null): array
     {
