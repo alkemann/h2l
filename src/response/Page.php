@@ -122,18 +122,21 @@ class Page extends Response
     // @TODO refactor, and cache
     private function head(): string
     {
+        $headfile = $this->getLayoutFile('head');
+        $neckfile = $this->getLayoutFile('neck');
+        if (!$headfile && !$neckfile) {
+            return '';
+        }
         ob_start();
         try {
-            $headfile = $this->getLayoutFile('head');
-            if (file_exists($headfile)) {
+            if ($headfile && file_exists($headfile)) {
                 (function ($sldkfjlksejflskjflskdjflskdfj) {
                     extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
                 })($headfile);
             }
 
-            $neckfile = $this->getLayoutFile('neck');
-            if (file_exists($neckfile)) {
+            if ($neckfile && file_exists($neckfile)) {
                 (function ($lidsinqjhsdfytqkwjkasjdksadsdg) {
                     extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
@@ -146,11 +149,11 @@ class Page extends Response
         return $ret;
     }
 
-    private function getLayoutFile(string $name): string
+    private function getLayoutFile(string $name): ?string
     {
         $path = $this->config['layout_path'] ?? Environment::get('layout_path');
         if (is_null($path)) {
-            Log::debug("As there is no configured `layout_path` in Environment, layouts are skipped");
+            return null;
         }
         $ending = Http::fileEndingFromType($this->content_type);
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $ending . '.php';
@@ -169,21 +172,21 @@ class Page extends Response
     private function foot(): string
     {
         $footfile = $this->getLayoutFile('foot');
-        if (!file_exists($footfile)) {
+        if ($footfile && file_exists($footfile)) {
+            ob_start();
+            try {
+                (function ($ldkfoskdfosjicyvutwehkshfskjdf) {
+                    extract($this->data);
+                    include $ldkfoskdfosjicyvutwehkshfskjdf;
+                })($footfile);
+            } finally {
+                $ret = ob_get_contents();
+                ob_end_clean();
+            }
+            return $ret;
+        } else {
             return '';
         }
-
-        ob_start();
-        try {
-            (function ($ldkfoskdfosjicyvutwehkshfskjdf) {
-                extract($this->data);
-                include $ldkfoskdfosjicyvutwehkshfskjdf;
-            })($footfile);
-        } finally {
-            $ret = ob_get_contents();
-            ob_end_clean();
-        }
-        return $ret;
     }
 
     // @TODO refactor, and cache
