@@ -35,7 +35,7 @@ class Page extends Response
     /**
      * @var string
      */
-    private $template = 'error';
+    private $template = 'error.html';
     /**
      * @var string
      */
