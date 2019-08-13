@@ -83,7 +83,7 @@ class Html extends Response
 
     private function convertToString($content, array $config = []): string
     {
-        if (is_array($content) == false) {
+        if (is_array($content) === false) {
             return (string) $content;
         }
         reset($content);
