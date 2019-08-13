@@ -126,3 +126,4 @@ $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
 $response = $dispatch->response();
 echo ($response) ? $response->render() : '';
+```
