@@ -18,6 +18,12 @@ Welcome to H2L a micro framework for PHP 7.1+
 
 You can see [the structure page](structure.md) for more details about what is included in the library.
 
+### Classes
+ - [Router](classes/Router.md)
+
+## Examples
+ - [Use Twig templating engine](examples/twig.md)
+
 ## Install
 
 Add to any PHP Composer project using
