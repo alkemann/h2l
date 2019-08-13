@@ -160,17 +160,12 @@ class Remote
 
     /**
      * @param Message $request
-     * @throws \Error if curl_init returns false
      */
     private function createCurlHandlerFromRequest(Message $request)
     {
         $this->start = microtime(true);
 
-        $handler = curl_init();
-        if ($handler === false) {
-            throw new \Error("Unable to initialize cURL");
-        }
-        $this->curl_handler = $handler;
+        $this->curl_handler = curl_init();
 
         $options = $this->curl_options;
         $options += [
