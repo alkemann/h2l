@@ -10,7 +10,7 @@
 - Request
 - Response
 - Route
-- Router
+- [Router](classes/Router.md)
 - Session
 
 ### Interfaces (alkemann/h2l/interfaces)
@@ -31,8 +31,8 @@
     - Error
     - Json
     - Page
-- traits
-    - Model
+    - Text
+    - Html
     - Entity
 - util
     - ArrayManipulations
