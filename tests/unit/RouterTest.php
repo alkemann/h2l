@@ -46,12 +46,21 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     public function testAlias()
     {
         Router::alias('/', 'home.html');
+        Router::alias('alias/noslash', 'real/noslash');
+        Router::alias('/alias/slash', '/real/slash');
 
         $result = Router::getPageRoute('/');
         $this->assertTrue($result instanceof Route);
-        $this->assertEquals('home.html', "$result");
+        $this->assertEquals('/home.html', "$result");
         $this->assertEquals([], $result->parameters());
         $this->assertTrue(is_callable($result));
+
+        $ref_class = new \ReflectionClass(Router::class);
+        $ref_prop = $ref_class->getProperty('aliases');
+        $ref_prop->setAccessible(true);
+        $result = $ref_prop->getValue('aliases');
+        $this->assertTrue(isset($result['/alias/noslash']));
+        $this->assertEquals('/real/noslash', $result['/alias/noslash']);
     }
 
     public function testDynamicRoutes()
@@ -104,9 +113,18 @@ class RouterTest extends \PHPUnit\Framework\TestCase
     {
         $cb = function(Request $r) { return ""; };
         Router::add('/api/people', $cb, Http::GET);
+        Router::add('api/cars', $cb, Http::GET);
         $route = Router::match('/api/people', Http::GET);
         $this->assertTrue($route instanceof Route);
         $this->assertEquals('/api/people', "$route");
+
+        $route = Router::match('/api/cars', Http::GET);
+        $this->assertTrue($route instanceof Route);
+        $this->assertEquals('/api/cars', "$route");
+
+        $route = Router::match('api/cars', Http::GET);
+        $this->assertTrue($route instanceof Route);
+        $this->assertEquals('/api/cars', "$route");
     }
 
     public function testMatch()
@@ -126,5 +144,23 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $route = Router::getFallback();
         $this->assertTrue($route instanceof \alkemann\h2l\interfaces\Route);
         $this->assertEquals("test123", $route(new Request)->render());
+    }
+
+    public function testRoutesAndSlash()
+    {
+        $f = function($r) { return $r; };
+        Router::add('noslash', $f);
+        Router::add('/slash', $f);
+
+        $route = Router::match('noslash');
+        $this->assertTrue($route instanceof Route);
+        $route = Router::match('/noslash');
+        $this->assertTrue($route instanceof Route);
+
+        $route = Router::match('slash');
+        $this->assertTrue($route instanceof Route);
+        $route = Router::match('/slash');
+        $this->assertTrue($route instanceof Route);
+
     }
 }

@@ -38,6 +38,8 @@ class Router implements interfaces\Router
      */
     public static function alias(string $alias, string $real): void
     {
+        if ($alias[0] !== static::$DELIMITER && $alias[0] !== '/') { $alias = '/' . $alias; }
+        if ($real[0] !== static::$DELIMITER && $real[0] !== '/') { $real = '/' . $real; }
         self::$aliases[$alias] = $real;
     }
 
@@ -51,6 +53,7 @@ class Router implements interfaces\Router
      */
     public static function add(string $url, callable $callable, $methods = [Http::GET]): void
     {
+        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') { $url = '/' . $url; }
         if ($callable instanceof Closure) {
             $closure = $callable;
         } else {
@@ -93,6 +96,7 @@ class Router implements interfaces\Router
      */
     public static function match(string $url, string $method = Http::GET): ?interfaces\Route
     {
+        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') { $url = '/' . $url; }
         $url = self::$aliases[$url] ?? $url;
 
         if (isset(self::$routes[$method])) {
@@ -139,6 +143,7 @@ class Router implements interfaces\Router
      */
     public static function getPageRoute(string $url): interfaces\Route
     {
+        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') { $url = '/' . $url; }
         $url = self::$aliases[$url] ?? $url;
         return new Route(
             $url,
