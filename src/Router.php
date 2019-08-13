@@ -151,7 +151,9 @@ class Router implements interfaces\Router
      */
     public static function getPageRoute(string $url): interfaces\Route
     {
-        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') { $url = '/' . $url; }
+        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') {
+            $url = '/' . $url;
+        }
         $url = self::$aliases[$url] ?? $url;
         return new Route(
             $url,
