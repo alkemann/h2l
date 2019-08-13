@@ -179,6 +179,16 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         ;
         $this->assertEquals('https://example.com:8080/places/oslo', $request->fullUrl());
         $this->assertEquals('https://example.com:8080/winning/12', $request->fullUrl('/winning/12'));
+
+        $request = (new Request)
+            ->withRequestParams(['url' => 'status'])
+            ->withServerParams([
+                'REQUEST_SCHEME' => 'https',
+                'HTTP_HOST' => 'example.com:8080'
+            ])
+        ;
+        $this->assertEquals('https://example.com:8080/status', $request->fullUrl());
+        $this->assertEquals('https://example.com:8080/winning', $request->fullUrl('winning'));
     }
 
     public function testPageVars()

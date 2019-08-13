@@ -54,6 +54,9 @@ class Request extends Message
     public function fullUrl(?string $path = null): string
     {
         $path = $path ?? $this->url();
+        if ($path && $path[0] != '/') {
+            $path = '/' . $path;
+        }
         return
             ($this->getServerParam('REQUEST_SCHEME') ?? 'http') . '://' .
             $this->getServerParam('HTTP_HOST') . $path;
