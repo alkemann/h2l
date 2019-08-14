@@ -10,7 +10,6 @@ namespace alkemann\h2l\traits;
  */
 trait Entity
 {
-
     /**
      * @var array
      */

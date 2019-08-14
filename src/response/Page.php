@@ -2,13 +2,13 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\exceptions\InvalidUrl;
+use alkemann\h2l\Environment;
 use alkemann\h2l\exceptions\ConfigMissing;
+use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\Log;
 use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
-use alkemann\h2l\Environment;
 use alkemann\h2l\util\Http;
 
 /**
