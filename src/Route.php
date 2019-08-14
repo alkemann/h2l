@@ -12,7 +12,6 @@ use Closure;
  */
 class Route implements interfaces\Route
 {
-
     /**
      * @var string
      */

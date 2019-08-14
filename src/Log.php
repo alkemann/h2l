@@ -32,7 +32,6 @@ use alkemann\h2l\exceptions\ConfigMissing;
  */
 class Log
 {
-
     /**
      * Set handlers here, either a callable or an object that implements Psr\Log\LoggerInterface
      * @var array

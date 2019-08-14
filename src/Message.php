@@ -13,7 +13,6 @@ use alkemann\h2l\util\Http;
  */
 class Message
 {
-
     /**
      * @var int
      */

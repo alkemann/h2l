@@ -50,10 +50,10 @@ class Dispatch
         unset($get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
 
         if (is_null($session)) {
-            $session = new Session;
+            $session = new Session();
         }
 
-        $this->request = (new Request)
+        $this->request = (new Request())
             ->withRequestParams($request)
             ->withServerParams($server)
             ->withGetData($get)
@@ -118,7 +118,7 @@ class Dispatch
     public function setRoute(interfaces\Route $route): void
     {
         if (!$this->request) {
-            $this->request = new Request;
+            $this->request = new Request();
         }
         $this->request = $this->request->withRoute($route);
     }
@@ -146,8 +146,10 @@ class Dispatch
                 return $route($request);
             } catch (InvalidUrl $e) {
                 // @TODO Backwards breaking, but remove this?
-                return new response\Error(['message' => $e->getMessage()],
-                    ['code' => 404, 'request' => $this->request]);
+                return new response\Error(
+                    ['message' => $e->getMessage()],
+                    ['code' => 404, 'request' => $this->request]
+                );
             }
         };
         array_push($cbs, $call_eventual_route_at_end_of_chain);

@@ -13,7 +13,7 @@ interface Source
 
     public function query($query, array $params = []);
 
-    public function one(string $table, array $conditions, array $options = []):?array;
+    public function one(string $table, array $conditions, array $options = []): ?array;
 
     public function find(string $table, array $conditions, array $options = []);
 

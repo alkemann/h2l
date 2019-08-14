@@ -14,7 +14,6 @@ use PDO as _PDO;
  */
 class PDO implements Source
 {
-
     /**
      * @var array
      */
@@ -127,7 +126,7 @@ class PDO implements Source
         $this->bindPaginationToStatement($options, $stmt);
         $result = $stmt->execute();
         if ($result === false) {
-            return new \EmptyIterator;
+            return new \EmptyIterator();
         }
         // @codeCoverageIgnoreStart
         if ($stmt instanceof \PDOStatement) {

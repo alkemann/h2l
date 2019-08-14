@@ -9,11 +9,11 @@ namespace alkemann\h2l;
  */
 final class Environment
 {
-    const ALL = "ALL";
-    const LOCAL = "LOCAL";
-    const DEV = "DEV";
-    const TEST = "TEST";
-    const PROD = "PROD";
+    public const ALL = "ALL";
+    public const LOCAL = "LOCAL";
+    public const DEV = "DEV";
+    public const TEST = "TEST";
+    public const PROD = "PROD";
 
     private static $settings = [
         Environment::LOCAL => [
