@@ -2,7 +2,9 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\{ Message, Response, Environment };
+use alkemann\h2l\Message;
+use alkemann\h2l\Response;
+use alkemann\h2l\Environment;
 use alkemann\h2l\util\Http;
 
 /**
