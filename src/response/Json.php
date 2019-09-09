@@ -2,8 +2,7 @@
 
 namespace alkemann\h2l\response;
 
-use alkemann\h2l\Message;
-use alkemann\h2l\Response;
+use alkemann\h2l\{ Message, Response, Environment };
 use alkemann\h2l\util\Http;
 
 /**
@@ -20,12 +19,14 @@ class Json extends Response
      */
     public function __construct($content = null, int $code = Http::CODE_OK, array $config = [])
     {
-        $this->config = $config;
+        $this->config = $config + [
+            'encode_options' => Environment::get('json_encode_options', JSON_THROW_ON_ERROR),
+            'encode_depth' => Environment::get('json_encode_depth', 512),
+            'container' => Environment::get('json_encode_container', true),
+        ];
         $this->message = (new Message())
             ->withCode($code)
-            ->withHeaders([
-                'Content-Type' => Http::CONTENT_JSON
-            ])
+            ->withHeaders(['Content-Type' => Http::CONTENT_JSON])
             ->withBody($this->encodeAndContainData($content))
         ;
     }
@@ -49,6 +50,11 @@ class Json extends Response
         if ($content instanceof \Generator) {
             $content = iterator_to_array($content);
         }
-        return json_encode(['data' => $content]);
+        $container = $this->config['container'] ? ['data' => $content] : $content;
+        return json_encode(
+            $container,
+            $this->config['encode_options'],
+            $this->config['encode_depth']
+        );
     }
 }

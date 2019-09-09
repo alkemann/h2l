@@ -81,4 +81,53 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $headers);
     }
 
+    public function testNoContainer()
+    {
+        $options = [
+            'container' => false,
+            'header_func' => function($h) {}
+        ];
+        $r = new Json('hey', 200, $options);
+
+        $expected = '"hey"';
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testSetEncodeOptions()
+    {
+        $options = [
+            'container' => false,
+            'encode_options' => JSON_FORCE_OBJECT,
+            'header_func' => function($h) {}
+        ];
+        $r = new Json(['hey'], 200, $options);
+
+        $expected = '{"0":"hey"}';
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+
+        $options = [
+            'container' => false,
+            'encode_options' => 0,
+            'header_func' => function($h) {}
+        ];
+        $r = new Json(['hey'], 200, $options);
+
+        $expected = '["hey"]';
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testJsonException()
+    {
+        $options = ['header_func' => function($h) {}];
+        try {
+            $r = new Json(fopen('php://stdin', 'r'), 200, $options);
+        } catch (\JsonException $e) {
+            $this->assertTrue(true);
+            return;
+        }
+        $this->fail("Json Exception not cast");
+    }
 }
