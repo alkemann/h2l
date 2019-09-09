@@ -81,6 +81,11 @@ class PDO implements Source
         return $this->db;
     }
 
+    /**
+     * @param string $query
+     * @param array $params
+     * @return array|false false on error
+     */
     public function query($query, array $params = [])
     {
         Log::debug("PDO:QUERY [$query]");
@@ -88,6 +93,13 @@ class PDO implements Source
         return $result->fetchAll(_PDO::FETCH_ASSOC);
     }
 
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $options
+     * @return null|array
+     * @throws Error on finding more than 1 match
+     */
     public function one(string $table, array $conditions, array $options = []): ?array
     {
         $result = $this->find($table, $conditions, $options);
@@ -103,6 +115,12 @@ class PDO implements Source
         return $result[0];
     }
 
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $options
+     * @return iterable
+     */
     public function find(string $table, array $conditions, array $options = []): iterable
     {
         $where = $this->where($conditions);
@@ -136,6 +154,10 @@ class PDO implements Source
         return $stmt;
     }
 
+    /**
+     * @param array $conditions
+     * @return string
+     */
     private function where(array $conditions): string
     {
         if (empty($conditions)) {
@@ -202,6 +224,13 @@ class PDO implements Source
         }
     }
 
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $data
+     * @param array $options
+     * @return int
+     */
     public function update(string $table, array $conditions, array $data, array $options = []): int
     {
         if (empty($conditions) || empty($data)) {
@@ -234,6 +263,12 @@ class PDO implements Source
         return trim((string) array_reduce(array_keys($data), $fun, ""), ", ");
     }
 
+    /**
+     * @param string $table
+     * @param array $data
+     * @param array $options
+     * @return null|string
+     */
     public function insert(string $table, array $data, array $options = []): ?string
     {
         $keys = implode(', ', array_keys($data));
@@ -250,6 +285,12 @@ class PDO implements Source
         return ($result === true) ? $dbh->lastInsertId() : null;
     }
 
+    /**
+     * @param string $table
+     * @param array $conditions
+     * @param array $options
+     * @return int
+     */
     public function delete(string $table, array $conditions, array $options = []): int
     {
         $where = $this->where($conditions);

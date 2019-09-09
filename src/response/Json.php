@@ -35,6 +35,8 @@ class Json extends Response
      * Set header and return a string rendered and ready to be echo'ed as response
      *
      * Header 'Content-type:' will be set using `header` or an injeced 'header_func' through constructor
+     *
+     * @return string
      */
     public function render(): string
     {
@@ -42,6 +44,11 @@ class Json extends Response
         return $this->message->body();
     }
 
+    /**
+     * @param mixed something that can be Json Enccoded
+     * @return string
+     * @throws JsonException on encode errors
+     */
     private function encodeAndContainData($content): string
     {
         if (empty($content)) {

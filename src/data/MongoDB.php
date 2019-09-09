@@ -41,6 +41,9 @@ class MongoDb implements Source
     protected $config = [];
     protected $client = null;
 
+    /**
+     * @param array $config
+     */
     public function __construct(array $config = [])
     {
         $defaults = [
@@ -51,6 +54,11 @@ class MongoDb implements Source
         $this->config = $config + $defaults;
     }
 
+    /**
+     * @param string $collection
+     * @return Collection
+     * @throws alkemann\h2l\exceptions\ConnectionError un unable to connect
+     */
     private function collection(string $collection): Collection
     {
         if ($this->client == null) {
@@ -71,19 +79,31 @@ class MongoDb implements Source
         return $this->client->selectCollection($db, $collection);
     }
 
+    /**
+     * @param string $id
+     * @return ObjectID
+     */
     public static function id(string $id): ObjectID
     {
         return new ObjectID($id);
     }
 
     /**
-     * @throws \Exception if called
+     * @param mixed query
+     * @param array $params
+     * @throws \Exception if called as not implemented
      */
     public function query($query, array $params = [])
     {
         throw new \Exception("Query method is not implemented for MongDB");
     }
 
+    /**
+     * @param string $collection_name
+     * @param array $conditions
+     * @param array $options
+     * @return array|null
+     */
     public function one(string $collection_name, array $conditions, array $options = []): ?array
     {
         $collection = $this->collection($collection_name);
@@ -95,6 +115,10 @@ class MongoDb implements Source
         return $result instanceof BSONDocument ? $this->out($result) : $result;
     }
 
+    /**
+     * @param array $conditions
+     * @return array
+     */
     private function idReplaceConditions(array $conditions): array
     {
         if (array_key_exists('id', $conditions)) {
@@ -105,7 +129,11 @@ class MongoDb implements Source
         return $conditions;
     }
 
-    // @TODO keep the BSON object?
+    /**
+     * @TODO keep the BSON object?
+     * @param BSONDocument $document
+     * @return array
+     */
     private function out(BSONDocument $document): array
     {
         $a = $document->getArrayCopy();
@@ -114,6 +142,12 @@ class MongoDb implements Source
         return $a;
     }
 
+    /**
+     * @param string $collection_name
+     * @param array $conditions
+     * @param array $options
+     * @return Generator
+     */
     public function find(string $collection_name, array $conditions, array $options = []): \Generator
     {
         $collection = $this->collection($collection_name);
@@ -124,6 +158,13 @@ class MongoDb implements Source
         }
     }
 
+    /**
+     * @param string $collection_name
+     * @param array $conditions
+     * @param array $data
+     * @param array $options
+     * @return int
+     */
     public function update(string $collection_name, array $conditions, array $data, array $options = []): int
     {
         $collection = $this->collection($collection_name);
@@ -135,6 +176,12 @@ class MongoDb implements Source
         return $result->getModifiedCount() ?? 0;
     }
 
+    /**
+     * @param string $collection_name
+     * @param array $data
+     * @param array $options
+     * @return null|ObjectID
+     */
     public function insert(string $collection, array $data, array $options = []): ?ObjectID
     {
         $collection = $this->collection($collection);
@@ -151,6 +198,12 @@ class MongoDb implements Source
         return $id instanceof ObjectID ? $id : null;
     }
 
+    /**
+     * @param string $collection_name
+     * @param array $conditions
+     * @param array $options
+     * @return int
+     */
     public function delete(string $collection, array $conditions, array $options = []): int
     {
         $collection = $this->collection($collection);

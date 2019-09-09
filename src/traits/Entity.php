@@ -35,20 +35,30 @@ trait Entity
     abstract public static function fields(): ?array;
 
     /**
-     * @param $name
-     * @return mixed
+     * @param string $name
+     * @return null|mixed
      */
     public function __get(string $name)
     {
         return array_key_exists($name, $this->data) ? $this->data[$name] : null;
     }
 
+    /**
+     * @param string $method
+     * @param array $args
+     * @return null|array|object
+     */
     public function __call(string $method, array $args = [])
     {
         $refresh = (bool) array_shift($args);
         return $this->getRelatedModel($method, $refresh);
     }
 
+    /**
+     * @param string $name
+     * @param bool $refresh
+     * @return null|array|object
+     */
     private function getRelatedModel(string $name, bool $refresh = false)
     {
         $this->checkIfRelationIsSet($name);
@@ -58,6 +68,9 @@ trait Entity
         return $this->populateRelation($name);
     }
 
+    /**
+     * @param string $name
+     */
     private function checkIfRelationIsSet(string $name): void
     {
         if (isset(static::$relations) === false || is_array(static::$relations) === false ||
@@ -135,6 +148,10 @@ trait Entity
         return $settings;
     }
 
+    /**
+     * @param array $settings
+     * @return array
+     */
     private function generateRelationshipFromShorthand(array $settings): array
     {
         $field = current($settings);
@@ -203,7 +220,7 @@ trait Entity
      * Cast the data array to $type and return this
      *
      * @param string $type json|array
-     * @return mixed
+     * @return string|array
      * @throws \InvalidArgumentException on unsupported type
      */
     public function to(string $type)

@@ -137,7 +137,10 @@ class Page extends Response
         return $this->request;
     }
 
-    // @TODO refactor, and cache
+    /**
+     * @TODO refactor, and cache
+     * @return string
+     */
     private function head(): string
     {
         $headfile = $this->getLayoutFile('head');
@@ -167,6 +170,10 @@ class Page extends Response
         return $ret;
     }
 
+    /**
+     * @param string $name
+     * @return string|null
+     */
     private function getLayoutFile(string $name): ?string
     {
         $path = $this->config['layout_path'] ?? Environment::get('layout_path');
@@ -177,6 +184,11 @@ class Page extends Response
         return $path . $this->layout . DIRECTORY_SEPARATOR . $name . '.' . $ending . '.php';
     }
 
+    /**
+     * @param string $view
+     * @return string
+     * @throws alkemann\exceptions\ConfigMissing if neither content nor template paths are found
+     */
     private function getContentFile(string $view): string
     {
         $path = $this->config['content_path']
@@ -190,7 +202,10 @@ class Page extends Response
         return $path . $view . '.php';
     }
 
-    // @TODO refactor, and cache
+    /**
+     * @TODO refactor, and cache
+     * @return string
+     */
     private function foot(): string
     {
         $footfile = $this->getLayoutFile('foot');
@@ -211,13 +226,12 @@ class Page extends Response
         }
     }
 
-    // @TODO refactor, and cache
-
     /**
+     * @TODO refactor, and cache
      * @TODO BUG, method should be private
      * @param string $view
      * @return string
-     * @throws InvalidUrl
+     * @throws alkemann\exceptions\InvalidUrl if no view file found
      */
     public function view(string $view): string
     {

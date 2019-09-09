@@ -81,6 +81,11 @@ class Html extends Response
         ;
     }
 
+    /**
+     * @param mixed $content
+     * @param array $config
+     * @return string
+     */
     private function convertToString($content, array $config = []): string
     {
         if (is_array($content) === false) {
@@ -99,6 +104,8 @@ class Html extends Response
      * Set header and return a string rendered and ready to be echo'ed as response
      *
      * Header 'Content-type:' will be set using `header` or an injeced 'header_func' through constructor
+     *
+     * @return string
      */
     public function render(): string
     {
