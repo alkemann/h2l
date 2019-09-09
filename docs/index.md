@@ -23,6 +23,7 @@ You can see [the structure page](structure.md) for more details about what is in
 
 ## Examples
  - [Use Twig templating engine](examples/twig.md)
+ - [Use Tidy to clean up XHTML](examples/tidy.md)
 
 ## Install
 
