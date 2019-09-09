@@ -122,12 +122,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
     public function testJsonException()
     {
         $options = ['header_func' => function($h) {}];
-        try {
-            $r = new Json(fopen('php://stdin', 'r'), 200, $options);
-        } catch (\JsonException $e) {
-            $this->assertTrue(true);
-            return;
-        }
-        $this->fail("Json Exception not cast");
+        $this->expectException(\JsonException::class);
+        $r = new Json(fopen('php://stdin', 'r'), 200, $options);
     }
 }

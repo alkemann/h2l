@@ -82,7 +82,7 @@ class Message
     {
         switch ($this->contentType()) {
             case Http::CONTENT_JSON:
-                return json_decode($this->body, true);
+                return json_decode($this->body, true, 512, JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING);
             case Http::CONTENT_XML:
                 return new \SimpleXMLElement($this->body);
             case Http::CONTENT_HTML:

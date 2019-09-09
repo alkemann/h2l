@@ -56,7 +56,13 @@ class MessageTest extends \PHPUnit\Framework\TestCase
     {
         $data = ['name' => 'John', 'dead' => false];
         $message = (new Message)
-            ->withBody(json_encode($data))
+            ->withBody(json_encode($data, true))
+            ->withHeaders(['Content-Type' => Http::CONTENT_JSON]);
+        $this->assertEquals($data, $message->content());
+
+        $data = ['John', 'dead'];
+        $message = (new Message)
+            ->withBody(json_encode($data, true))
             ->withHeaders(['Content-Type' => Http::CONTENT_JSON]);
         $this->assertEquals($data, $message->content());
 
@@ -92,5 +98,14 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $result = $message->as($class);
         $this->assertInstanceOf($class, $result);
         $this->assertEquals('John', $result->name);
+    }
+
+    public function testJsonError()
+    {
+        $message = (new Message)
+            ->withBody(' { "this": wont work } ')
+            ->withHeaders(['Content-Type' => Http::CONTENT_JSON]);
+        $this->expectException(\JsonException::class);
+        $message->content();
     }
 }
