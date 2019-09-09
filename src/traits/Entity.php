@@ -71,7 +71,7 @@ trait Entity
      * @param string[] ...$relation_names any list of relations to return
      * @return object instance of class that has Entity trait
      */
-    public function with(string ...$relation_names)
+    public function with(string ...$relation_names): object
     {
         foreach ($relation_names as $name) {
             $this->populateRelation($name);

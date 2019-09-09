@@ -129,7 +129,7 @@ class Message
      * @param string $class name of class that must take data array as constructor
      * @return object body json decoded and sent to constructor of $class
      */
-    public function as(string $class)
+    public function as(string $class): object
     {
         return new $class($this->content());
     }

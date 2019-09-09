@@ -104,7 +104,7 @@ trait Model
      * @param string[] ...$relation_names list of names of relationships
      * @return object Instance of class that uses this trait
      */
-    abstract public function with(string ...$relation_names);
+    abstract public function with(string ...$relation_names): object;
     abstract public function reset(): void;
     abstract public function data(array $data = null): array;
 
