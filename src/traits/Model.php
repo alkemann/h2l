@@ -59,7 +59,7 @@ trait Model
      * @TODO throw exception instead of returning null of insert failed?
      * @return null|static
      */
-    public static function get($id, array $conditions = [], array $options = []) //: ?Model
+    public static function get($id, array $conditions = [], array $options = []): ?object
     {
         if (empty($conditions) === false) {
             throw new \InvalidArgumentException("Conditions is not implemented on get");

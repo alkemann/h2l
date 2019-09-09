@@ -44,7 +44,10 @@ class PDO implements Source
         $this->config = $config + $defaults;
     }
 
-    private function handler() //: PDO
+    /**
+     * @return object \PDO
+     */
+    private function handler(): object
     {
         if ($this->db) {
             return $this->db;

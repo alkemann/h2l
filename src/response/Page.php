@@ -301,7 +301,10 @@ class Page extends Response
         return trim($ret, DIRECTORY_SEPARATOR);
     }
 
-    private function setContentType($type)
+    /**
+     * @param string $type
+     */
+    private function setContentType(string $type): void
     {
         $this->content_type = $type;
         $this->message = $this->message->withHeader('Content-Type', $this->content_type);

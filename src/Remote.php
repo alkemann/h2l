@@ -161,7 +161,7 @@ class Remote
     /**
      * @param Message $request
      */
-    private function createCurlHandlerFromRequest(Message $request)
+    private function createCurlHandlerFromRequest(Message $request): void
     {
         $this->start = microtime(true);
 
