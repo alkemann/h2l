@@ -131,6 +131,9 @@ class Log
         }
         $file = $path . 'app.log';
         $fileHandler = fopen($file, 'a');
+        if ($fileHandler === false) {
+            throw new ConfigMissing("File handler requires a `{$file}` to be writeable");
+        }
         $string = date('Y-m-d H:i:s') . " " . strtoupper($level) . " " . $message . PHP_EOL;
         fwrite($fileHandler, $string);
         fclose($fileHandler);

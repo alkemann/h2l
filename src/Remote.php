@@ -250,7 +250,7 @@ class Remote
 
             $regex = '#^HTTP/(\d\.\d) (\d{3})(.*)#';
             if (preg_match($regex, $part, $matches)) {
-                if ($result) {
+                if (!empty($result)) {
                     $result = ['redirected' => $result];
                 }
 
