@@ -12,6 +12,18 @@ class HtmlTest extends \PHPUnit\Framework\TestCase
         $r = new Html('Hello there');
         $this->assertInstanceOf(Response::class, $r);
         $this->assertInstanceOf(Html::class, $r);
+        $expected = 'Hello there';
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testConstructorNoContent()
+    {
+        $r = new Html();
+        $this->assertInstanceOf(Html::class, $r);
+        $expected = '';
+        $result = $r->render();
+        $this->assertEquals($expected, $result);
     }
 
     public function testRender()
