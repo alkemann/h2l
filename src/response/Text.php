@@ -41,7 +41,7 @@ class Text extends Response
 
     /**
      * @param string $blue
-     * @param array|Generator $arr
+     * @param array|\Generator $arr
      * @return string
      */
     protected static function implode_recur(string $glue, $arr): string

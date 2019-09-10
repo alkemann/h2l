@@ -47,7 +47,7 @@ class Json extends Response
     }
 
     /**
-     * @param mixed something that can be Json Enccoded
+     * @param mixed $content something that can be Json Enccoded
      * @return string
      * @throws JsonException on encode errors
      */

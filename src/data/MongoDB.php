@@ -89,7 +89,7 @@ class MongoDb implements Source
     }
 
     /**
-     * @param mixed query
+     * @param mixed $query
      * @param array $params
      * @throws \Exception if called as not implemented
      */
@@ -146,7 +146,7 @@ class MongoDb implements Source
      * @param string $collection_name
      * @param array $conditions
      * @param array $options
-     * @return Generator
+     * @return \Generator
      */
     public function find(string $collection_name, array $conditions, array $options = []): \Generator
     {

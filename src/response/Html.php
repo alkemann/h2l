@@ -74,10 +74,8 @@ class Html extends Response
         $this->config = $config;
         $this->message = (new Message())
             ->withCode($code)
-            ->withHeaders([
-                'Content-Type' => Http::CONTENT_HTML
-            ])
-            ->withBody($content)
+            ->withHeaders(['Content-Type' => Http::CONTENT_HTML]);
+            ->withBody($content ?? '')
         ;
     }
 
