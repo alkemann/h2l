@@ -167,4 +167,35 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         }
         $this->assertTrue($thrown, "Father didnt try to look in DB for his sons");
     }
+
+    public function testEntityStruct()
+    {
+        $data = ['name' => 'John', 'dead' => false];
+        $person = new class($data) {
+            use Entity;
+            public static function fields(): array
+            {
+                return ['name', 'dead'];
+            }
+            public function __set(string $key, $value): void
+            {
+                switch ($key) {
+                    case 'name':
+                        throw new \Exception("People can't get new names");
+                        break;
+                    default:
+                        $this->data[$key] = $value;
+                }
+            }
+        };
+
+        $this->assertEquals("John", $person->name);
+        $this->assertEquals(false, $person->dead);
+        $person->dead = true;
+        $this->assertEquals(true, $person->dead);
+
+        $this->expectException(\Exception::class);
+        $person->name = "Peter";
+        $this->assertEquals("John", $person->name);
+    }
 }

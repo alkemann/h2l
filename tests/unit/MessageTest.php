@@ -88,7 +88,10 @@ class MessageTest extends \PHPUnit\Framework\TestCase
     public function testAs()
     {
         $data = ['name' => 'John', 'dead' => false];
-        $person = new class($data) { use Entity, Model; public function fields() { return ['name', 'dead']; }};
+        $person = new class($data) {
+            use Entity;
+            public static function fields():array { return ['name', 'dead']; }
+        };
         $class = get_class($person);
 
         $message = (new Message)
@@ -98,6 +101,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $result = $message->as($class);
         $this->assertInstanceOf($class, $result);
         $this->assertEquals('John', $result->name);
+        $this->assertEquals(false, $result->dead);
     }
 
     public function testJsonError()
