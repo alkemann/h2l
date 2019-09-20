@@ -6,8 +6,6 @@ that respond to the matched urls.
 ### For example:
 
 ```php
-<?php
-
 use alkemann\h2l\{Request, Router, response\Json, response\Text};
 use app\Task; // Your model class  that maybe uses the Model and Entity traits
 
@@ -47,8 +45,6 @@ Router::add('/version', 'Api::version');
 Or a slightly more complex version that doesnt use static methods
 
 ```php
-<?php
-
 namespace app;
 
 use alkemann\h2l\{Request, Response, Router};
@@ -58,22 +54,17 @@ use app\Task;
 class Api
 {
     static $routes = [
-        // Url                          function    request method
         [
             // Url match
             '|^/api/tasks/(?<id>\d+)$|',
 
             // method to call in this class to handle the request
-            'getTask'
+            'get_task'
 
             // HTTP Method(s) to accept for this route
             Request::GET
         ],
-        [
-            '/version',
-            'get_version',
-            REQUEST::GET
-        ]
+        ['/version', 'get_version', REQUEST::GET]
     ];
 
     public function addRoutes(): void
@@ -84,14 +75,15 @@ class Api
         }
     }
 
-    public function get_task(Request $request)
+    public function get_task(Request $request): Response
     {
         $id = $request->param('id'); // from the regex matched url part
         $data_model = Task::get($id);
         return new Json($data_model); // since Task model implements \JsonSerializable
     }
 
-    public function get_version(Request $request) {
+    public function get_version(Request $request): Response
+    {
         return new Json(['version' => '1.3']);
     }
 }

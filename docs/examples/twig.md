@@ -9,16 +9,21 @@ namespace backend\response;
 
 use alkemann\h2l\{ Environment, Message, Response };
 use alkemann\h2l\util\Http;
+use Twig\Environment as Twig_Environment;
+use Twig\Loader\FilesystemLoader;
 
 class Twig extends Response
 {
 
-    public function __construct(array $data, int $code = Http::CODE_OK, array $config = [])
+    public function __construct(
+        array $data,
+        int $code = Http::CODE_OK,
+        array $config = [])
     {
         $template = ($config['template'] ?? 'fallback') . '.html';
 
-        $twig = new \Twig\Environment(
-            new \Twig\Loader\FilesystemLoader(Environment::get('twig_templates_path')),
+        $twig = new Twig_Environment(
+            new FilesystemLoader(Environment::get('twig_templates_path')),
             ['cache' => Environment::get('twig_cache_path')]
         );
 
@@ -31,7 +36,7 @@ class Twig extends Response
             ->withBody($output)
         ;
     }
- 
+
     public function render(): string
     {
         $this->setHeaders();
@@ -62,7 +67,7 @@ class App
 
 #### configs/environment.php
 ```php
-use alkemann\h2l\{ Environment, Dispatch, Log };
+use alkemann\h2l\Environment;
 
 Environment::set([
     'debug' => true,
@@ -89,7 +94,7 @@ Router::add('|city/(?<city>\w+)|', 'backend\App::city');
 ```
 
 #### templates/city.html
-```html
+```twig
 <h1>Hello {{ name }}!</h1><html>
     <head>
         <title>{{ name }}</title>
@@ -110,19 +115,11 @@ Router::add('|city/(?<city>\w+)|', 'backend\App::city');
 
 #### webroot/index.php
 ```php
-// ***********
 $ROOT = realpath(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR;
 $VENDOR_PATH = $ROOT . 'vendor' . DIRECTORY_SEPARATOR;
-// ***********
-
 require_once($VENDOR_PATH . 'autoload.php');
-
 require_once($ROOT . 'configs' . DIRECTORY_SEPARATOR . 'environment.php');
-require_once($ROOT . 'configs' . DIRECTORY_SEPARATOR . 'routes.php');
-
-use alkemann\h2l\{ Environment, Dispatch };
-
-$dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch = new alkemann\h2l\Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
 $response = $dispatch->response();
 echo ($response) ? $response->render() : '';

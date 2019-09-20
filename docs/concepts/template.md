@@ -1,12 +1,12 @@
 # Templating
 
-Not to be confused with the [Page concept)[page.md], templating still uses the Page and Error
+Not to be confused with the (Page concept)[page.md], templating still uses the Page and Error
 classes, but is a way of providing content without routing. This is best illustrated with an
 example:
 
 ```php
 // Somewhere you keep your application routes
-Router::add('/status', function(Request $request): Page {
+Router::add('/status', function(Request $request): Response {
 	$status = 'UP';
 	$template = 'status_page';
 	$template_path = '/var/html/www/templates'; // ofc better set relative to root

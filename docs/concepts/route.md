@@ -15,7 +15,7 @@ It is also possible to add aliases when the path to the view template file does
 not match the desired url. Most obvious example of this is that you probably
 will need to alias the root (`example.com/`) path to a file with a name like
 `home`. This is done like so:
- 
+
 ```php
 Router::alias('/', 'home.html');
 ```
@@ -29,7 +29,7 @@ Request as the only argument.
 
 Example of explicit Route:
 ```php
-Router::add('version', function($r) {
+Router::add('version', function(Request $r): Response {
     return new Json(['version' => '1.3']);
 });
 ```
@@ -43,7 +43,7 @@ with the url parameters being named groups.
 
 Example of dynamic Route. We see that the url has to start with `/api/tasks/`
 and then followed by digits, at least one. The digits will be extracted and
-made available to the 
+made available to the
 ```php
 // Get task by id, i.e. GET http://example.com/api/tasks/12
 Router::add(
