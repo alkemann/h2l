@@ -1,4 +1,13 @@
-<?php
+# Response
+
+
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+## Class specification
+
+```php
 
 namespace alkemann\h2l;
 
@@ -57,3 +66,4 @@ abstract class Response
 
     abstract public function render(): string;
 }
+```

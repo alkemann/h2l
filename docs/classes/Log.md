@@ -1,4 +1,13 @@
-<?php
+# Log
+
+
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+## Class specification
+
+```php
 
 namespace alkemann\h2l;
 
@@ -127,3 +136,4 @@ class Log
         fclose($fileHandler);
     }
 }
+```

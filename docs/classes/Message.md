@@ -1,4 +1,13 @@
-<?php
+# Message
+
+
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+## Class specification
+
+```php
 
 namespace alkemann\h2l;
 
@@ -221,3 +230,4 @@ class Message
         return $this->body ?? '';
     }
 }
+```

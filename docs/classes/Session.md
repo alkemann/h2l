@@ -1,4 +1,13 @@
-<?php
+# Session
+
+
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+## Class specification
+
+```php
 
 namespace alkemann\h2l;
 
@@ -98,3 +107,4 @@ class Session implements interfaces\Session
         return isset($_SESSION[$key]);
     }
 }
+```

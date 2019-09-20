@@ -1,3 +1,12 @@
+# Connections
+
+
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+## Class specification
+```php
 
 namespace alkemann\h2l;
 
@@ -85,3 +94,4 @@ class Connections
         self::$connections[$name] = false;
     }
 }
+```

@@ -1,4 +1,13 @@
-<?php
+# Remote
+
+
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+## Class specification
+
+```php
 
 namespace alkemann\h2l;
 
@@ -198,3 +207,4 @@ class Remote
         return $result;
     }
 }
+```

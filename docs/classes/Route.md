@@ -1,71 +1,50 @@
-<?php
+# Route
 
-namespace alkemann\h2l;
+The Route object is a container for the
 
-use alkemann\h2l\exceptions\InvalidCallback;
-use Closure;
+### Table of Contents
+
+ - [Class specification](#class-specification)
+
+
+## Class specification
+```php
+/**
+ * The class is immutable so the constructor is only chance to set values
+ *
+ * @param string $url
+ * @param Closure $cb
+ * @param array $parameters
+ */
+public function __construct(string $url, ?Closure $cb, array $parameters = [])
 
 /**
- * Class Route
+ *  Returns the url that the route was created for/with
  *
- * @package alkemann\h2l
+ * @return string
  */
-class Route implements interfaces\Route
-{
+public function url(): string
 
-    /**
-     * @var string
-     */
-    private $url;
-    /**
-     * @var Closure
-     */
-    private $callback;
-    /**
-     * @var array
-     */
-    private $parameters;
+/**
+ * Returns all the parameters that the route was created with
+ *
+ * @return array
+ */
+public function parameters(): array;
 
-    public function __construct(string $url, ?Closure $cb, array $parameters = [])
-    {
-        $this->url = $url;
-        $this->callback = $cb;
-        $this->parameters = $parameters;
-    }
+/**
+ * Converts the Route to a Response that can be rendered for the final output
+ *
+ * @param Request $request
+ * @return Response|null
+ * @throws InvalidCallback if callback did not return Response|null
+ */
+public function __invoke(Request $request): ?Response
 
-    public function url(): string
-    {
-        return $this->url;
-    }
-
-    public function parameters(): array
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * Converts the Route to a Response that can be rendered for the final output
-     *
-     * @param Request $request
-     * @return Response|null
-     * @throws InvalidCallback if callback did not return Response|null
-     */
-    public function __invoke(Request $request): ?Response
-    {
-        $response = call_user_func_array($this->callback, [$request]);
-        if (is_null($response) || $response instanceof Response) {
-            return $response;
-        }
-        throw new InvalidCallback("Route callbacks must only return null or a subclass of alkemann\h2l\Response");
-    }
-
-    /**
-     * Returns the URL (after domain) of the route
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->url;
-    }
-}
+/**
+ * Returns the URL (after domain) of the route
+ *
+ * @return string
+ */
+public function __toString(): string
+```
