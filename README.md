@@ -10,14 +10,13 @@
 <a href="https://styleci.io/repos/54427353"><img src="https://camo.githubusercontent.com/06c5acdd9ceb6df2316e67bec61130f738e462ce/68747470733a2f2f7374796c6563692e696f2f7265706f732f35343432373335332f736869656c643f6272616e63683d6d6173746572267374796c653d666c6174" alt="StyleCI" data-canonical-src="https://styleci.io/repos/54427353/shield?branch=master&amp;style=flat" style="max-width:100%;"></a>
 <a href="https://scrutinizer-ci.com/g/alkemann/h2l/?branch=master"><img src="https://camo.githubusercontent.com/885f3cd511f91cff8d6b85f10a211d818054b3ee/68747470733a2f2f7363727574696e697a65722d63692e636f6d2f672f616c6b656d616e6e2f68326c2f6261646765732f7175616c6974792d73636f72652e706e673f623d6d6173746572" alt="Scrutinizer Code Quality" data-canonical-src="https://scrutinizer-ci.com/g/alkemann/h2l/badges/quality-score.png?b=master" style="max-width:100%;"></a></p>
 
+## Documentation
+
+Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.github.io/h2l/)
 
 ## Requirements
 
  + PHP 7.3
-
-## Documentation
-
-Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.github.io/h2l/)
 
 ## Install
 
