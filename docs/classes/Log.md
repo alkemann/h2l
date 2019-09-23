@@ -57,5 +57,4 @@ public static function emergency(string $message, array $context = []): void;
  */
 public static function handler(string $name, $handler): void
 
-
 ```
