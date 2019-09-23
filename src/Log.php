@@ -81,8 +81,8 @@ class Log
     /**
      * Send $message with level $level to all handlers
      *
-     * @param $level
-     * @param $message
+     * @param string $level
+     * @param string $message
      * @param array $context
      */
     public static function log($level, $message, array $context = []): void
