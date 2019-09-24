@@ -31,7 +31,8 @@ Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.githu
    `vendor/bin/skeleton base` (base automagic website using routes by files and folders).
    There more other skeleton alternatives:
      + `min` (bare bones)
-     + `heroku` (set up for plug and play heroku app with H2L as backend and an react-redux frontend)
+     + `heroku_react` (set up for plug and play heroku app with H2L as backend and an react-redux frontend)
+     + `heroku_min` (set up for plug and play heroku app with H2L)
      + `api` (no automagic routing, for pure api apps and specifically routed responses)
 
 

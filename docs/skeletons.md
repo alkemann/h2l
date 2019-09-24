@@ -17,4 +17,7 @@ $ <kbd>vendor/bin/skeleton <var>name</var></kbd>
 
 - Min
 - Base
-- Heroku
+- Heroku_min
+- Heroku_react
+- Local
+
