@@ -11,3 +11,7 @@ nav span {
     display: inline-block;
     padding-right: 2rem;
 }
+
+#main_content_wrap section.inner {
+	max-width: 800px !important;
+}
