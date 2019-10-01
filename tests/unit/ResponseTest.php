@@ -19,6 +19,15 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("HEY", $r->render());
     }
 
+    public function testToString()
+    {
+        $r = new class extends Response {
+            public function render():string { return "HEY"; }
+        };
+        $this->assertInstanceOf(Response::class, $r);
+        $this->assertEquals("HEY", $r);
+    }
+
     public function testContentType()
     {
         $headers = [];
