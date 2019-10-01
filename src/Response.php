@@ -71,6 +71,16 @@ abstract class Response
     }
 
     /**
+     * Shorthand for rendering the Response object
+     *
+     * Returns the result of calling Response::render()
+     */
+    public function __toString(): string
+    {
+        return $this->render();
+    }
+
+    /**
      * All subclasses of Response must implement render to return the string body
      *
      * @return string
