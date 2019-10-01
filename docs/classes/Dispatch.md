@@ -1,9 +1,29 @@
 # Dispatch
 
+When using H2L as a full on microframework for serving web applications (api or html), the
+*Dispatch* class is the entryway and should be the start of all stacks (except possibly
+error/exception handling). This means that normally you would use an `index.php` (see
+skeleton examples) that includes the Composer autoloader, embeds any configurations (see
+Environment and Connections) and then passes all PHP globals into the Dispatch. It will
+analyse the request, use the Router to pick a Route and then execute the route callable
+(or fallback) and then return a response. That you can then echo.
 
 ### Table of Contents
 
  - [Class specification](#class-specification)
+ - [Minium usage example](#minimum-usage)
+
+## Minimum usage
+
+#### Example
+```php
+$ROOT = realpath(dirname(dirname(__FILE__)));
+require_once($ROOT . '/vendor/autoload.php');
+alkemann\h2l\Environment::put('content_path', $ROOT . '/content/pages/');
+$dispatch = new alkemann\h2l\Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch->setRouteFromRouter();
+echo $dispatch->response(); // Returns a Response object, but toString calls render method
+```
 
 ## Class specification
 ```php
