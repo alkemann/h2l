@@ -16,20 +16,49 @@ called.
 Consider the following minimal implementation of an `index.php`. We pass in
 to the constructor of Dispatch all the request describing globals, after
 this point we will no longer interact with them directly. We then ask the
-Dispatcher to analyze the request and set a Route. We get the Response
-(if there is any) and then we ask it render itself.
+Dispatcher to use the default Router to analyze the request and set a
+Route. We get the Response (if there is any) and then we ask it render itself.
 
 ```php
 $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRouteFromRouter();
+/** @var alkemann\h2l\Response */
 $response = $dispatch->response();
-if ($response) {
+if ($response instanceof Response) {
     echo $response->render();
 }
 ```
 
-#### Further reading
+You can override the Router behavior in several ways, first, you may set the
+Route directly (preseumably having used a different Router):
+
+```php
+$dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch->setRoute($route_that_is_manually_defined);
+$response = $dispatch->response();
+echo $response; // Since Resposne's toString calls render
+```
+
+Of course a better way to use a custom Router is to implement the Router
+(`alkemann\h2l\interfaces\Router`) interface and pass that to Dispatch:
+
+```php
+$dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
+$dispatch->setRouteFromRouter(\app\CustomRouter::class);
+$response = $dispatch->response();
+echo $response;
+```
+
+#### Further concept reading
 
 - [Route](route.md)
 - [Request](request.md)
 - [Response](response.md)
+
+#### Relevant class docs
+
+- [Dispatch](../classes/displatch.md)
+- [Route](../classes/route.md)
+- [Router](../classes/router.md)
+- [Request](../classes/request.md)
+- [Response](../classes/response.md)
