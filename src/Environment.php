@@ -15,6 +15,9 @@ final class Environment
     public const TEST = "TEST";
     public const PROD = "PROD";
 
+    /**
+     * @var array
+     */
     private static $settings = [
         Environment::LOCAL => [
             'debug' => true,

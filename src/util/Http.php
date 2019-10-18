@@ -73,6 +73,9 @@ class Http
     public const CODE_GATEWAY_TIMEOUT = 504;
     public const CODE_HTTP_VERSION_NOT_SUPPORTED = 505;
 
+    /**
+     * @var array<string, string>
+     */
     protected static $contentTypeToFileEnding = [
         'text/html' => 'html',
         'application/json' => 'json',
@@ -81,6 +84,9 @@ class Http
         'text/plain' => 'txt',
     ];
 
+    /**
+     * @var array<int, string>
+     */
     private static $code_to_message = [
         // Informational 1xx
         100 => 'Continue',
@@ -153,7 +159,8 @@ class Http
      */
     public static function contentTypeFromFileEnding(string $ending): string
     {
-        return array_search($ending, static::$contentTypeToFileEnding);
+        $type = array_search($ending, static::$contentTypeToFileEnding);
+        return $type == false ? 'text/html' : $type;
     }
 
     /**

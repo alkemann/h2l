@@ -25,9 +25,9 @@ class Page extends Response
      */
     public $layout = 'default';
     /**
-     * @var Request
+     * @var null|Request
      */
-    protected $request;
+    protected $request = null;
     /**
      * @var array
      */

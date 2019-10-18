@@ -16,7 +16,7 @@ class Message
     /**
      * @var int
      */
-    protected $code;
+    protected $code = 0;
     /**
      * @var string
      */
@@ -29,7 +29,7 @@ class Message
     /**
      * @var string
      */
-    protected $body;
+    protected $body = '';
     /**
      * @var array
      */
@@ -68,9 +68,9 @@ class Message
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function body(): ?string
+    public function body(): string
     {
         return $this->body;
     }
@@ -159,9 +159,9 @@ class Message
     }
 
     /**
-     * @return int|null
+     * @return null
      */
-    public function code(): ?int
+    public function code(): int
     {
         return $this->code;
     }
@@ -281,6 +281,6 @@ class Message
      */
     public function __toString(): string
     {
-        return $this->body ?? '';
+        return $this->body;
     }
 }

@@ -31,7 +31,7 @@ class Remote
     /**
      * @var float
      */
-    private $start;
+    private $start = 0.0;
 
     /**
      * Creatues the Remote instance, only sets configurations

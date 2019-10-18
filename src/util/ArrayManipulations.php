@@ -83,10 +83,10 @@ class ArrayManipulations
      * @param array $data The array to update
      * @param string $delimiter defaults to `.`
      */
-    public static function setToArrayByKey(string $key, $value, array &$data, string $delimiter = '.')
+    public static function setToArrayByKey(string $key, $value, array &$data, string $delimiter = '.'): void
     {
         $keys = explode($delimiter, $key);
-        return self::setArrayValueByKeys($keys, $value, $data);
+        self::setArrayValueByKeys($keys, $value, $data);
     }
 
     /**
@@ -96,7 +96,7 @@ class ArrayManipulations
      * @param mixed $value
      * @param mixed $data passed by reference
      */
-    public static function setArrayValueByKeys(array $keys, $value, &$data)
+    public static function setArrayValueByKeys(array $keys, $value, &$data): void
     {
         $key = array_shift($keys);
         if (empty($keys)) {

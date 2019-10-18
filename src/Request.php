@@ -12,13 +12,19 @@ use alkemann\h2l\util\Http;
  */
 class Request extends Message
 {
+    /**
+     * @var null|interfaces\Route
+     */
+    protected $route = null;
+    /**
+     * @var null|interfaces\Session
+     */
     protected $session = null;
     protected $parameters = [];
     protected $request = [];
     protected $server = [];
     protected $get = [];
     protected $post = [];
-    protected $route = null;
     protected $content_type = ''; // Type of the REQUEST BODY, not response
     protected $accept_type = Http::CONTENT_HTML;
     protected $page_vars = [];
