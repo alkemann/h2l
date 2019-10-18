@@ -131,6 +131,9 @@ class Http
 
     /**
      * Convert a content type, i.e. "appliction/json", to a file ending, i.e. json"
+     *
+     * @param string $type
+     * @return string
      */
     public static function fileEndingFromType(string $type): string
     {

@@ -76,7 +76,7 @@ class Message
     }
 
     /**
-     * @return null|string|array|\SimpleXMLElement body converted from raw format
+     * @return null|string|array|\SimpleXMLElement|\DOMDocument body converted from raw format
      */
     public function content()
     {
