@@ -187,7 +187,7 @@ class Page extends Response
     /**
      * @param string $view
      * @return string
-     * @throws alkemann\exceptions\ConfigMissing if neither content nor template paths are found
+     * @throws ConfigMissing if neither content nor template paths are found
      */
     private function getContentFile(string $view): string
     {
@@ -231,7 +231,7 @@ class Page extends Response
      * @TODO BUG, method should be private
      * @param string $view
      * @return string
-     * @throws alkemann\exceptions\InvalidUrl if no view file found
+     * @throws InvalidUrl if no view file found
      */
     public function view(string $view): string
     {

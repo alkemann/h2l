@@ -45,7 +45,7 @@ class Session implements interfaces\Session
      * `$key` may be a 'dot.notation.string' to access ['dot']['notation']['string']
      *
      * @param string $key
-     * @param $value
+     * @param mixed $value
      */
     public function set(string $key, $value): void
     {

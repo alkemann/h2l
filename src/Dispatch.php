@@ -160,7 +160,7 @@ class Dispatch
     /**
      * Add a closure to wrap the Route callback in to be called during Request::response
      *
-     * @param callable|callable[] ...$cbs
+     * @param callable[] ...$cbs
      */
     public function registerMiddle(callable ...$cbs): void
     {

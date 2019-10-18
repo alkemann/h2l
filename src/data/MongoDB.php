@@ -57,7 +57,7 @@ class MongoDB implements Source
     /**
      * @param string $collection
      * @return Collection
-     * @throws alkemann\h2l\exceptions\ConnectionError un unable to connect
+     * @throws ConnectionError un unable to connect
      */
     private function collection(string $collection): Collection
     {
@@ -182,10 +182,10 @@ class MongoDB implements Source
      * @param array $options
      * @return null|ObjectId
      */
-    public function insert(string $collection, array $data, array $options = []): ?ObjectId
+    public function insert(string $collection_name, array $data, array $options = []): ?ObjectId
     {
-        $collection = $this->collection($collection);
-        $result = $collection->insertOne($data, $options);
+        $collection_name = $this->collection($collection_name);
+        $result = $collection_name->insertOne($data, $options);
         if ($result->isAcknowledged() === false) {
             // Throw exception or error?
             return null;
@@ -204,10 +204,10 @@ class MongoDB implements Source
      * @param array $options
      * @return int
      */
-    public function delete(string $collection, array $conditions, array $options = []): int
+    public function delete(string $collection_name, array $conditions, array $options = []): int
     {
-        $collection = $this->collection($collection);
-        $result = $collection->deleteMany($conditions, $options);
+        $collection_name = $this->collection($collection_name);
+        $result = $collection_name->deleteMany($conditions, $options);
         if ($result->isAcknowledged() === false) {
             // Throw exception or error?
             return 0;

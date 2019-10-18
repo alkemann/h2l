@@ -96,7 +96,7 @@ class Error extends Response
                 ];
             $data = $this->data + ['code' => $this->code];
             /**
-             * @var $page Page
+             * @var Page $page
              */
             $page = new $page_class($data, $page_config);
             $page->isValid();

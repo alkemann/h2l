@@ -331,7 +331,7 @@ class Request extends Message
      * Method includes usage of the `exit` php command
      *
      * @codeCoverageIgnore
-     * @param $url
+     * @param string $url
      */
     public function redirect($url)
     {

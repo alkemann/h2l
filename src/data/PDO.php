@@ -101,7 +101,7 @@ class PDO implements Source
      * @param array $conditions
      * @param array $options
      * @return null|array
-     * @throws Error on finding more than 1 match
+     * @throws \Error on finding more than 1 match
      */
     public function one(string $table, array $conditions, array $options = []): ?array
     {

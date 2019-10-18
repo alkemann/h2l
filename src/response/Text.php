@@ -40,7 +40,7 @@ class Text extends Response
     }
 
     /**
-     * @param string $blue
+     * @param string $glue
      * @param array|\Generator $arr
      * @return string
      */

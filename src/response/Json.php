@@ -49,7 +49,7 @@ class Json extends Response
     /**
      * @param mixed $content something that can be Json Enccoded
      * @return string
-     * @throws JsonException on encode errors
+     * @throws \JsonException on encode errors
      */
     private function encodeAndContainData($content): string
     {
