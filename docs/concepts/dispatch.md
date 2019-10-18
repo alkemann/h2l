@@ -36,7 +36,7 @@ Route directly (preseumably having used a different Router):
 $dispatch = new Dispatch($_REQUEST, $_SERVER, $_GET, $_POST);
 $dispatch->setRoute($route_that_is_manually_defined);
 $response = $dispatch->response();
-echo $response; // Since Resposne's toString calls render
+echo $response; // Since Response's toString calls render
 ```
 
 Of course a better way to use a custom Router is to implement the Router
