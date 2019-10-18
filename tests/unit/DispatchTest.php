@@ -3,8 +3,9 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, response\Error, response\Json, Route, Router, util\Chain, util\Http
+    Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, response\Error, response\Json, Route, Router
 };
+use alkemann\h2l\util\{Chain, Http, Container};
 use alkemann\h2l\interfaces\Session as SessionInterface;
 use alkemann\h2l\interfaces\Route as RouteInterface;
 
@@ -136,7 +137,7 @@ class DispatchTests extends \PHPUnit\Framework\TestCase
             return new Error();
         }, ['place' => 'Oslo']);
         $dispatch = $this->getMockBuilder(Dispatch::class)
-            ->disableOriginalConstructor()
+            // ->disableOriginalConstructor()
             ->setMockClassName('Request')// Mock class name
             ->setMethods(['method'])// mocked methods
             ->getMock();
@@ -269,5 +270,16 @@ class DispatchTests extends \PHPUnit\Framework\TestCase
         $this->assertEquals('fallback123', $r->url());
         $this->assertEquals('content123', $r(new Request)->render());
         Environment::setEnvironment(Environment::TEST);
+    }
+
+    public function testInjectContainer()
+    {
+        $container = new Container();
+        $container->singleton('session', function($c) { return new stdClass(); });
+        $container->request = function($c) { return new Request; };
+
+        $dispatch = new Dispatch;
+        $dispatch->setRoute(new Route('/', function($r) {}));
+        $this->assertTrue(true); // TODO test the injection?
     }
 }

@@ -88,7 +88,7 @@ class Router implements interfaces\Router
     public static function getFallback(): ?interfaces\Route
     {
         if (isset(self::$fallback)) {
-            return new Route('FALLBACK', self::$fallback);
+            return static::createRoute('FALLBACK', self::$fallback);
         }
         return null;
     }
@@ -109,7 +109,7 @@ class Router implements interfaces\Router
 
         if (isset(self::$routes[$method])) {
             if (isset(self::$routes[$method][$url])) {
-                return new Route($url, self::$routes[$method][$url]);
+                return static::createRoute($url, self::$routes[$method][$url]);
             }
 
             // TODO cache of previous matched dynamic routes
@@ -137,7 +137,7 @@ class Router implements interfaces\Router
                 \ARRAY_FILTER_USE_KEY
             );
 
-            return new Route($url, $cb, $parameters);
+            return static::createRoute($url, $cb, $parameters);
         }
 
         return null;
@@ -155,7 +155,7 @@ class Router implements interfaces\Router
             $url = '/' . $url;
         }
         $url = self::$aliases[$url] ?? $url;
-        return new Route(
+        return static::createRoute(
             $url,
             function (Request $request): ?Response {
                 $page = response\Page::fromRequest($request);
@@ -163,5 +163,11 @@ class Router implements interfaces\Router
                 return $page->isValid() ? $page : null;
             }
         );
+    }
+
+    protected static function createRoute(string $url, callable $callback, ?array $params = []): interfaces\Route
+    {
+        // @TODO use an injectable Route factory
+        return new Route($url, $callback, $params);
     }
 }
