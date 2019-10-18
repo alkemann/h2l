@@ -5,7 +5,7 @@ namespace alkemann\h2l\data;
 use alkemann\h2l\exceptions\ConnectionError;
 use alkemann\h2l\interfaces\Source;
 use alkemann\h2l\Log;
-use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
 use MongoDB\Collection;
 use MongoDB\Driver\Exception\RuntimeException;
@@ -16,7 +16,7 @@ use MongoDB\Model\BSONDocument;
  *
  * @package alkemann\h2l\data
  */
-class MongoDb implements Source
+class MongoDB implements Source
 {
     public static $operators = [
         '$all',
@@ -81,11 +81,11 @@ class MongoDb implements Source
 
     /**
      * @param string $id
-     * @return ObjectID
+     * @return ObjectId
      */
-    public static function id(string $id): ObjectID
+    public static function id(string $id): ObjectId
     {
-        return new ObjectID($id);
+        return new ObjectId($id);
     }
 
     /**
@@ -122,7 +122,7 @@ class MongoDb implements Source
     private function idReplaceConditions(array $conditions): array
     {
         if (array_key_exists('id', $conditions)) {
-            $id = new ObjectID($conditions['id']);
+            $id = new ObjectId($conditions['id']);
             unset($conditions['id']);
             $conditions['_id'] = $id;
         }
@@ -180,9 +180,9 @@ class MongoDb implements Source
      * @param string $collection_name
      * @param array $data
      * @param array $options
-     * @return null|ObjectID
+     * @return null|ObjectId
      */
-    public function insert(string $collection, array $data, array $options = []): ?ObjectID
+    public function insert(string $collection, array $data, array $options = []): ?ObjectId
     {
         $collection = $this->collection($collection);
         $result = $collection->insertOne($data, $options);
@@ -195,7 +195,7 @@ class MongoDb implements Source
             return null;
         }
         $id = $result->getInsertedId();
-        return $id instanceof ObjectID ? $id : null;
+        return $id instanceof ObjectId ? $id : null;
     }
 
     /**
