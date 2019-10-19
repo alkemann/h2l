@@ -13,73 +13,19 @@ use alkemann\h2l\util\{Chain, Container};
  */
 class Dispatch
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $middlewares = [];
 
-    /**
-     * @var interfaces\Session
-     */
-    private $session;
-
-    /**
-     * @var Request
-     */
+    /** @var Request */
     protected $request;
 
     /**
-     * @var Container
-     */
-    protected $container;
-
-    /**
-     * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
+     * Set up the dispatch by creating the request
      *
-     * Response type can be set from HTTP_ACCEPT header
-     * Call setRoute or setRouteFromRouter to set a route
-     *
-     * @param array $request $_REQUEST
-     * @param array $server $_SERVER
-     * @param array $get $_GET
-     * @param array $post $_POST
-     * @param null|interfaces\Session $session if null, a default Session with $_SESSION will be created
      * @param Container $container A container that can create Request and Session objects
      */
-    public function __construct(
-        array $request = [],
-        array $server = [],
-        array $get = [],
-        array $post = [],
-        interfaces\Session $session = null, // TODO remove this and only use container
-        Container $container = null
-    ) {
-        unset($get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
-
-        $this->container  = $container ?? new Container();
-
-        if (isset($this->container->session) == false) {
-            $this->container->singleton('session', function($f) { return new Session(); });
-        }
-
-        if (is_null($session)) {
-            $session = $this->container->session();
-        }
-
-        if (isset($this->container->request) == false) {
-            $this->container->request = function($f) { return new Request(); };
-        }
-
-        $this->request = ($this->container->request())
-            ->withRequestParams($request)
-            ->withServerParams($server)
-            ->withGetData($get)
-            ->withPostData($post)
-            ->withSession($session)
-
-            // @TODO Always do this? Can we know from $_SERVER or $_REQUEST ?
-            ->withBody(file_get_contents('php://input'));
-        ;
+    public function __construct(Container $container) {
+        $this->request = $container->request();
     }
 
     /**

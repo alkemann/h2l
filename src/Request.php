@@ -71,6 +71,8 @@ class Request extends Message
     /**
      * Recreate the `Request` with specified request parameters
      *
+     * @TODO move `url`
+     *
      * @param array $request_params
      * @return Request
      */
