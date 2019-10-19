@@ -19,11 +19,6 @@ class Dispatch
     private $middlewares = [];
 
     /**
-     * @var interfaces\Session
-     */
-    private $session;
-
-    /**
      * @var Request
      */
     protected $request;
