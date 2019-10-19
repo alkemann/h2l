@@ -91,7 +91,6 @@ final class Container
      */
     private function _call_or_return(string $name, ?array $args = null): object
     {
-
         if (isset($this->_constructors[$name]) == false) {
             throw new \Exception("No constructor set for {$name}!");
         }
