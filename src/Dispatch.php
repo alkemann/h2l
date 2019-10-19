@@ -4,7 +4,8 @@ namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\InvalidUrl;
 use alkemann\h2l\exceptions\NoRouteSetError;
-use alkemann\h2l\util\{Chain, Container};
+use alkemann\h2l\util\Chain;
+use alkemann\h2l\util\Container;
 
 /**
  * Class Request
@@ -59,7 +60,9 @@ class Dispatch
         $this->container  = $container ?? new Container();
 
         if (isset($this->container->session) == false) {
-            $this->container->singleton('session', function($f) { return new Session(); });
+            $this->container->singleton('session', function ($f) {
+                return new Session();
+            });
         }
 
         if (is_null($session)) {
@@ -67,7 +70,9 @@ class Dispatch
         }
 
         if (isset($this->container->request) == false) {
-            $this->container->request = function($f) { return new Request(); };
+            $this->container->request = function ($f) {
+                return new Request();
+            };
         }
 
         $this->request = ($this->container->request())
