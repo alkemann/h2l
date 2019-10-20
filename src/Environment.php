@@ -150,7 +150,6 @@ final class Environment
             foreach (array_keys(self::$settings) as $env) {
                 static::put($config_name, $value, $env);
             }
-            static::put($config_name, $value, static::current());
             return;
         }
         if (!array_key_exists($environment, self::$settings)) {
