@@ -77,7 +77,12 @@ class Router implements interfaces\Router
      */
     public static function fallback(callable $callable): void
     {
-        self::$fallback = $callable;
+        if ($callable instanceof Closure) {
+            $closure = $callable;
+        } else {
+            $closure = Closure::fromCallable($callable);
+        }
+        self::$fallback = $closure;
     }
 
     /**
