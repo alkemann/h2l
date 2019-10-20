@@ -174,7 +174,7 @@ class Router implements interfaces\Router
         );
     }
 
-    protected static function createRoute(string $url, callable $callback, ?array $params = []): interfaces\Route
+    protected static function createRoute(string $url, callable $callback, array $params = []): interfaces\Route
     {
         // @TODO use an injectable Route factory
         return new Route($url, $callback, $params);
