@@ -9,7 +9,9 @@ Welcome to H2L a micro framework for PHP 7.1+
  - [A CMS of static pages](guides/static_pages.md)
 
 ## Concepts:
+ - [Page](concepts/page.md)
  - [Dispatch](concepts/dispatch.md)
+ - [Middleware](concepts/middleware.md)
  - [Routing](concepts/route.md)
  - [Page](concepts/page.md)
  - [Template](concepts/template.md)

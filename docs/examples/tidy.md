@@ -1,35 +1,35 @@
 # Example: Use Tidy to ensure proper XHTML response
 
-While it is possible to create a dedicated Reponse implementation, a simple middleware that overrides the
-created response, renders it to string, then parses and cleans it with Tidy before recreating a Response
-that gets the same message, with new "tidy" body and sending it out.
+While it is possible to create a dedicated Reponse implementation, a simple
+middleware that overrides the created response, renders it to string, then
+parses and cleans it with Tidy before recreating a Response that gets the
+same message, with new "tidy" body and sending it out.
 
 ## Example:
 
 ```php
+use alkemann\h2l\{ Environment, Request, Response, util\Chain, Message, Http };
 
-Environment::addMiddle(function(Request $r, Chain $c): ?Response
-{
-	return new class($c->next($r, $c)) extends Response {
-	    public function __construct(Response $response) {
-	        $tidy = new tidy();
-	        $tidy->parseString($response->render(), ['indent' => true, 'clean' => true], 'utf8');
-	        $tidy->cleanRepair();
-	        $this->message = $response->message()->withBody("$tidy");
-	    }
-	    public function render(): string {
-	        $this->setHeaders();
-	        return $this->message->body();
-	    }
-	};
-});
+// Tidy up the rendered HTML using `tidy`
+$tidy_middle = function(Request $request, Chain $chain): Response {
+    /** @var Response $response */
+    $response = $chain->next($request, $chain);
+    if ($response->contentType() == Http::CONTENT_HTML) {
+        /** @var Message $message */
+        $message = $response->message();
+        $tidy = new tidy();
+        $tidy->parseString(
+            $message->body(),
+            ['indent' => true, 'clean' => true],
+            'utf8'
+        );
+        $tidy->cleanRepair();
+        $response = $response->withMessage($message->withBody("$tidy"));
+    }
+    return $response;
+};
+
+Environment::addMiddle($tidy_middle, Environment::ALL);
 ```
 
-Ofcourse this example assumes all responses are to be HTML, so checks on that  could be done, for example:
-```php
-$result = $c->next($r, $c);
-if ($result instanceof alkemann\response\Html) { 
-	// create tidy
-```
-
-Note Middleware should be last in middle queue for most reliable result. 
+Note Middleware should be last in middle chain for most reliable result.
