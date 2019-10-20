@@ -20,7 +20,7 @@ class PDO implements Source
     protected $config = [];
 
     /**
-     * @var _PDO
+     * @var null|_PDO
      */
     protected $db = null;
 
@@ -45,7 +45,7 @@ class PDO implements Source
     }
 
     /**
-     * @return object \PDO
+     * @return _PDO
      */
     private function handler(): object
     {

@@ -22,12 +22,15 @@ class CurlFailure extends \Exception
     /**
      * @param array $context
      */
-    public function setContext(array $context)
+    public function setContext(array $context): void
     {
         $this->context = $context;
     }
 
-    // @TODO Use constants?
+    /**
+     * @TODO Use constants?
+     * @var array<int, string>
+     */
     public static $code_to_constant_name = [
         1 => "CURLE_UNSUPPORTED_PROTOCOL",
         2 => "CURLE_FAILED_INIT",

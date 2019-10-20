@@ -20,13 +20,21 @@ class Request extends Message
      * @var null|interfaces\Session
      */
     protected $session = null;
+    /** @var array */
     protected $parameters = [];
+    /** @var array */
     protected $request = [];
+    /** @var array */
     protected $server = [];
+    /** @var array */
     protected $get = [];
+    /** @var array */
     protected $post = [];
+    /** @var string */
     protected $content_type = ''; // Type of the REQUEST BODY, not response
+    /** @var string */
     protected $accept_type = Http::CONTENT_HTML;
+    /** @var array */
     protected $page_vars = [];
 
     /**
@@ -339,7 +347,7 @@ class Request extends Message
      * @codeCoverageIgnore
      * @param string $url
      */
-    public function redirect($url)
+    public function redirect($url): void
     {
         // @TODO add support for reverse route match
         header("Location: " . $url);

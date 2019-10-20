@@ -30,7 +30,7 @@ class Error extends Response
      */
     protected $data = [];
     /**
-     * @var Request
+     * @var null|Request
      */
     protected $request = null;
     /**
@@ -71,7 +71,7 @@ class Error extends Response
     /**
      * Returns the `Request` of this response
      *
-     * @return Request
+     * @return null|Request
      */
     public function request(): ?Request
     {

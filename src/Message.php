@@ -159,7 +159,7 @@ class Message
     }
 
     /**
-     * @return null
+     * @return int
      */
     public function code(): int
     {

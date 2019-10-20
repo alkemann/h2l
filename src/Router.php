@@ -18,15 +18,15 @@ class Router implements interfaces\Router
      */
     public static $DELIMITER = '|';
     /**
-     * @var array
+     * @var array<string, string>
      */
     private static $aliases = [];
     /**
-     * @var array
+     * @var array<string, array<string, Closure>>
      */
     private static $routes = [];
     /**
-     * @var callable|null
+     * @var null|Closure
      */
     private static $fallback = null;
 
@@ -131,6 +131,10 @@ class Router implements interfaces\Router
 
             $parameters = array_filter(
                 $matches,
+                /**
+                 * @param string|int $v
+                 * @return bool
+                 */
                 function ($v) {
                     return !is_int($v);
                 },

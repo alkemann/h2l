@@ -16,7 +16,7 @@ final class Environment
     public const PROD = "PROD";
 
     /**
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
     private static $settings = [
         Environment::LOCAL => [
@@ -34,7 +34,7 @@ final class Environment
     ];
 
     /**
-     * @var array
+     * @var array<string, array<callable>>
      */
     private static $middlewares = [
         Environment::LOCAL => [],

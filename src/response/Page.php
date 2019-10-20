@@ -130,7 +130,7 @@ class Page extends Response
     /**
      * Returns the `Request` of this response
      *
-     * @return Request
+     * @return null|Request
      */
     public function request(): ?Request
     {
@@ -151,14 +151,14 @@ class Page extends Response
         ob_start();
         try {
             if ($headfile && file_exists($headfile)) {
-                (function ($sldkfjlksejflskjflskdjflskdfj) {
+                (function (string $sldkfjlksejflskjflskdjflskdfj) {
                     extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
                 })($headfile);
             }
 
             if ($neckfile && file_exists($neckfile)) {
-                (function ($lidsinqjhsdfytqkwjkasjdksadsdg) {
+                (function (string $lidsinqjhsdfytqkwjkasjdksadsdg) {
                     extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
                 })($neckfile);
@@ -212,7 +212,7 @@ class Page extends Response
         if ($footfile && file_exists($footfile)) {
             ob_start();
             try {
-                (function ($ldkfoskdfosjicyvutwehkshfskjdf) {
+                (function (string $ldkfoskdfosjicyvutwehkshfskjdf) {
                     extract($this->data);
                     include $ldkfoskdfosjicyvutwehkshfskjdf;
                 })($footfile);
@@ -239,7 +239,7 @@ class Page extends Response
         ob_start();
         try {
             // or another way to hide the file variable?
-            (function ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
+            (function (string $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
                 extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })($file);
