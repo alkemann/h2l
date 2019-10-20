@@ -145,6 +145,16 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($route instanceof \alkemann\h2l\interfaces\Route);
         $this->assertEquals("test123", $route(new Request)->render());
     }
+    public function testFallbackCallable()
+    {
+        $test_fallback = new class() {
+            function fb(): \alkemann\h2l\Response { return new \alkemann\h2l\response\Text("test123"); }
+        };
+        Router::fallback([$test_fallback, 'fb']);
+        $route = Router::getFallback();
+        $this->assertTrue($route instanceof \alkemann\h2l\interfaces\Route);
+        $this->assertEquals("test123", $route(new Request)->render());
+    }
 
     public function testRoutesAndSlash()
     {
