@@ -177,7 +177,7 @@ class Remote
             $options[CURLOPT_HTTPHEADER] = [];
         }
         $body = $request->body();
-        if ($body !== null) {
+        if (empty($body) === false) {
             $options[CURLOPT_POSTFIELDS] = $body;
         }
 
@@ -193,7 +193,7 @@ class Remote
         ];
         foreach ($headers_to_set_to_blank_if_not_set as $name) {
             if ($request->header($name) === null) {
-                $conf[CURLOPT_HTTPHEADER][] = "{$name}:";
+                $options[CURLOPT_HTTPHEADER][] = "{$name}:";
             }
         }
 
@@ -209,14 +209,14 @@ class Remote
     {
         try {
             $content = curl_exec($this->curl_handler);
-            if ($content === false) {
+            if ($content === false || is_string($content) === false) {
                 throw new CurlFailure(curl_error($this->curl_handler), curl_errno($this->curl_handler));
             }
             return $content;
         } catch (\Exception $e) {
             Log::error("CURL exception : " . get_class($e) . " : " . $e->getMessage());
 
-            $curl_failure = new CurlFailure($e->getMessage(), $e->getCode(), $e);
+            $curl_failure = new CurlFailure($e->getMessage(), (int) $e->getCode(), $e);
             $latency = microtime(true) - $this->start;
             $info = curl_getinfo($this->curl_handler);
             $curl_failure->setContext(compact('request', 'latency', 'info'));
