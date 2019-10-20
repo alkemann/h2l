@@ -279,13 +279,13 @@ class Page extends Response
     }
 
     /**
-     * @param null|string $url
+     * @param string $url
      * @return string
      */
-    private function templateFromUrl(?string $url = null): string
+    private function templateFromUrl(string $url): string
     {
-        $parts = \explode('/', $url);
-        $last = \array_slice($parts, -1, 1, true);
+        $parts = explode('/', $url);
+        $last = array_slice($parts, -1, 1, true);
         unset($parts[key($last)]);
         $view = current($last);
         $period = strrpos($view, '.');
