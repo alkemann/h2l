@@ -139,6 +139,13 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($s, $result);
     }
 
+    public function testNoSessionException()
+    {
+        $request = new Request();
+        $this->expectException(\Exception::class);
+        $request->session('thing');
+    }
+
     public function testDefaultServerParamsXML()
     {
         $request = (new Request)

@@ -71,9 +71,10 @@ class Request extends Message
         if ($path && $path[0] != '/') {
             $path = '/' . $path;
         }
-        return
-            ($this->getServerParam('REQUEST_SCHEME') ?? 'http') . '://' .
-            $this->getServerParam('HTTP_HOST') . $path;
+
+        $scheme = $this->getServerParam('REQUEST_SCHEME') ?? 'http';
+        $domain = $this->getServerParam('HTTP_HOST') ?? 'localhost';
+        return $scheme . '://' . $domain . $path;
     }
 
     /**
@@ -332,6 +333,9 @@ class Request extends Message
      */
     public function session(?string $key = null)
     {
+        if (is_null($this->session)) {
+            throw new \Exception("No Session object in Request");
+        }
         if (is_null($key)) {
             $this->session->startIfNotStarted();
             return $this->session;
