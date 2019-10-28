@@ -6,6 +6,7 @@ use alkemann\h2l\Connections;
 use alkemann\h2l\exceptions;
 use alkemann\h2l\exceptions\ConfigMissing;
 use alkemann\h2l\interfaces\Source;
+use Generator;
 
 /**
  * Class Model
@@ -57,7 +58,10 @@ trait Model
 
     /**
      * @TODO throw exception instead of returning null of insert failed?
-     * @return null|static
+     * @param int|string $id
+     * @param array<string, mixed> $conditions
+     * @param array<string, mixed> $options
+     * @return null|object
      */
     public static function get($id, array $conditions = [], array $options = []): ?object
     {
@@ -76,9 +80,12 @@ trait Model
     /**
      * Find all records matching $conditions, returns a generator
      *
+     * @param array<string, mixed> $conditions
+     * @param array<string, mixed> $options
+     * @return Generator
      * @throws ConfigMissing
      */
-    public static function find(array $conditions = [], array $options = []): \Generator
+    public static function find(array $conditions = [], array $options = []): Generator
     {
         $conditions = self::filterByFields($conditions);
         $with = array_key_exists('with', $options) ? (array)$options['with'] : false;
@@ -106,11 +113,18 @@ trait Model
      */
     abstract public function with(string ...$relation_names): object;
     abstract public function reset(): void;
+    /**
+     * @param array|null $data
+     * @return array
+     */
     abstract public function data(array $data = null): array;
 
     /**
      * Find all records matching `$conditions`, returns an array with key being the pk value
      *
+     * @param array<string, mixed> $conditions
+     * @param array<string, mixed> $options
+     * @return array
      * @throws ConfigMissing
      */
     public static function findAsArray(array $conditions = [], array $options = []): array
@@ -119,11 +133,18 @@ trait Model
         return iterator_to_array($generator);
     }
 
+    /**
+     * @return array|null
+     */
     public static function fields(): ?array
     {
         return isset(static::$fields) ? static::$fields : null;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return array
+     */
     private static function filterByFields(array $data): array
     {
         $fields = static::fields();
@@ -140,6 +161,9 @@ trait Model
     }
 
     /**
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $options
+     * @return bool
      * @throws ConfigMissing
      */
     public function save(array $data = [], array $options = []): bool
@@ -172,6 +196,8 @@ trait Model
     }
 
     /**
+     * @param array<string, mixed> $options
+     * @return bool
      * @throws exceptions\ConfigMissing
      */
     public function delete(array $options = []): bool
