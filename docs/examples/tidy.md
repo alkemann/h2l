@@ -24,6 +24,7 @@ $tidy_middle = function(Request $request, Chain $chain): Response {
             'utf8'
         );
         $tidy->cleanRepair();
+        // Both Response and Message are immutable, this creates new ones
         $response = $response->withMessage($message->withBody("$tidy"));
     }
     return $response;
@@ -32,4 +33,5 @@ $tidy_middle = function(Request $request, Chain $chain): Response {
 Environment::addMiddle($tidy_middle, Environment::ALL);
 ```
 
-Note Middleware should be last in middle chain for most reliable result.
+Note this should be last in the middle chain for most reliable result. No
+point in tidying up only to have a later middleware alter it again.
