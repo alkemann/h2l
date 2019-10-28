@@ -89,6 +89,8 @@ class Message
                 $doc = new \DOMDocument();
                 $doc->loadHTML($this->body);
                 return $doc;
+            case Http::CONTENT_FORM:
+                // @TODO some php method that converts form to array?
             case null:
             default:
                 return $this->body;
