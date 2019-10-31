@@ -1,8 +1,8 @@
 - link: /h2l/
   name: Home
-- link: /h2l/structure.html
-  name: Structure
 - link: /h2l/guides
   name: Guides
 - link: /h2l/concepts
   name: Concepts
+- link: /h2l/structure.html
+  name: Structure and Classes
