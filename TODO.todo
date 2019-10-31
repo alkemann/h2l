@@ -3,30 +3,21 @@
 Features:
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
- ☐ XML response render
 
 Cache:
  ☐ Join templates
 
 Documentation:
- ☐ Templates
  ☐ Layouts
- ☐ Dynamic Routes
- ☐ Response interface & Page, Result and Error
- ☐ Config
+ ☐ Response interface, Result and Error
  ☐ Request interface
  ☐ Logger
  ☐ Model/Entity & Connections
  ☐ Example app & Skeletons
  ☐ Environments
  ☐ Session
- ☐ Middleware
  ☐ Remote
  ☐ Message
- ☐ Dispatch
-
-Skeletons:
- ✔ Add a Heroku skeleton
 
 Tests:
  ☐ Integration test for the default Session $_SESSION wrapper?
@@ -36,6 +27,12 @@ Packaging:
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Page @done (19-10-31 12:20) @project(Documentation)
+ ✘ XML response render @cancelled (19-10-31 12:19) @project(Features)
+ ✔ Templates @done (19-10-31 12:19) @project(Documentation)
+ ✔ Dynamic Routes @done (19-10-31 12:18) @project(Documentation)
+ ✔ Dispatch @done (19-10-31 12:18) @project(Documentation)
+ ✔ Middleware @done (19-10-31 12:17) @project(Documentation)
  ✔ Session @done (17-08-11 17:25) @project(Features)
  ✔ Implement dependency injection for Request class @done (17-08-11 17:24) @project(Session)
  ✔ Refactored to PHP7 @done (17-08-08 16:44) @project(Debug)
