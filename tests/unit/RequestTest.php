@@ -208,4 +208,115 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($request1 === $request2);
         $this->assertEquals($vars, $request2->pageVars());
     }
+
+    public function testParamUrlFirst()
+    {
+        $shared = ['city' => 'London', 'id' => 5];
+        $r = (new Request())
+            ->withGetData(
+                ['id' => 15, 'getit' => 'yay'] + $shared)
+            ->withPostData(
+                ['id' => 25, 'postit' => 'cheers'] + $shared)
+            ->withUrlParams(
+                ['id' => 35, 'urlit' => 'rock'] + $shared)
+            ->withBody(json_encode(
+                ['id' => 45, 'jsonit' => 'awesome'] + $shared))
+            ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"'])
+            // ->withContentType(Http::CONTENT_JSON)
+        ;
+
+        // They all have city the same, so this one is 100% safe ;)
+        $this->assertEquals('London', $r->param('city'));
+        // Grab the individual values unique to each type
+        $this->assertEquals('yay', $r->param('getit'));
+        $this->assertEquals('cheers', $r->param('postit'));
+        $this->assertEquals('rock', $r->param('urlit'));
+        $this->assertEquals('awesome', $r->param('jsonit'));
+        // Urlparams takes presedence
+        $this->assertEquals(35, $r->param('id'));
+    }
+
+    public function testParamGetSecond()
+    {
+        $shared = ['city' => 'London', 'id' => 5];
+        $r = (new Request())
+            ->withGetData(
+                ['id' => 15, 'getit' => 'yay'] + $shared)
+            ->withPostData(
+                ['id' => 25, 'postit' => 'cheers'] + $shared)
+            ->withUrlParams(['urlit' => 'rock'])
+            ->withBody(json_encode(
+                ['id' => 45, 'jsonit' => 'awesome'] + $shared))
+            ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"'])
+        ;
+        $this->assertEquals(
+            ['city' => 'London', 'id' => 15, 'getit' => 'yay'],
+            $r->getGetData()
+        );
+        $this->assertEquals('yay', $r->param('getit'));
+        $this->assertEquals(15, $r->param('id'));
+    }
+
+    public function testParamPostThird()
+    {
+        $shared = ['city' => 'London', 'id' => 5];
+        $r = (new Request())
+            ->withGetData(['getit' => 'yay'])
+            ->withPostData(
+                ['id' => 25, 'postit' => 'cheers'] + $shared)
+            ->withUrlParams(['urlit' => 'rock'])
+            ->withBody(json_encode(
+                ['id' => 45, 'jsonit' => 'awesome'] + $shared))
+            ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"'])
+        ;
+        $this->assertEquals(
+            ['city' => 'London', 'id' => 25, 'postit' => 'cheers'],
+            $r->getPostData()
+        );
+        $this->assertEquals('cheers', $r->param('postit'));
+        $this->assertEquals(25, $r->param('id'));
+    }
+
+
+    public function testParamBodyFourth()
+    {
+        $shared = ['city' => 'London', 'id' => 5];
+        $json = json_encode(['id' => 45, 'jsonit' => 'awesome'] + $shared);
+        $r = (new Request())
+            ->withGetData(['getit' => 'yay'])
+            ->withPostData(['postit' => 'cheers'])
+            ->withUrlParams(['urlit' => 'rock'])
+            ->withBody($json)
+            ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"'])
+        ;
+        $this->assertEquals($json, $r->body());
+        $this->assertEquals('awesome', $r->param('jsonit'));
+        $this->assertEquals(45, $r->param('id'));
+    }
+
+    public function testContent()
+    {
+        $data = ['id' => 45, 'city' => 'London'];
+        $r = (new Request())
+            ->withPostData($data)
+            ->withHeaders(['Content-Type' => 'application/x-www-form-urlencoded; Charset="utf-8"'])
+        ;
+        $this->assertEquals(Http::CONTENT_FORM, $r->contentType());
+        $this->assertEquals($data, $r->content());
+    }
+
+    public function testParamFromBodyWhenJsonBody()
+    {
+        $r = (new Request())
+            ->withBody(json_encode(
+                ['id' => 45, 'jsonit' => 'awesome', 'city' => 'London']))
+            ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"'])
+        ;
+        $this->assertEquals('awesome', $r->param('jsonit'));
+        $this->assertEquals(
+            ['city' => 'London', 'id' => 45, 'jsonit' => 'awesome'],
+            $r->getPostData()
+        );
+        $this->assertEquals(45, $r->param('id'));
+    }
 }
