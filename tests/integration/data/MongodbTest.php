@@ -59,7 +59,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $m = new Mongo(self::$config);
         $id = $m->insert('tests', ['name' => 'john', 'age' => 38]);
         $this->assertTrue($id instanceof ObjectID);
-        $result = $m->one('tests', ['id' => $id]);
+        $result = $m->one('tests', ['id' => (string) $id]);
         $this->assertTrue($result != false);
         $expected = [
             'id' => "$id",
@@ -84,7 +84,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $result = $m->delete('tests', ['name' => 'john']);
         $this->assertEquals(1, $result);
 
-        $result = $m->find('tests', ['id' => $id]);
+        $result = $m->find('tests', ['id' => (string) $id]);
         $this->assertEquals(0, sizeof(iterator_to_array($result)));
     }
 }
