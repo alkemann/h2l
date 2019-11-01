@@ -117,7 +117,7 @@ class MongoDB implements Source
         if ($result === null) {
             return null;
         }
-        return $result instanceof BSONDocument ? $this->out($result) : $result;
+        return $result instanceof BSONDocument ? $this->out($result) : (array) $result;
     }
 
     /**

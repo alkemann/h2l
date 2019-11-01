@@ -1,0 +1,10 @@
+
+
+parameters:
+    ignoreErrors:
+        -
+            message: '#Else branch is unreachable because previous condition is always true.#'
+            path: src/Log.php
+        -
+            message: '#expects array, array<int, string>|false given#'
+            path: src/util/ArrayManipulations.php

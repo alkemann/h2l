@@ -75,7 +75,7 @@ class Log
         }
         */
         array_unshift($args, $method);
-        call_user_func_array(['alkemann\h2l\Log', 'log'], $args);
+        call_user_func_array(['alkemann\h2l\Log', 'log'], array_values($args));
     }
 
     /**

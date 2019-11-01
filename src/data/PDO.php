@@ -37,7 +37,11 @@ class PDO implements Source
 
         if (count($config) === 1 && array_key_exists('url', $config)) {
             $config = parse_url($config['url']);
-            $config['db'] = ltrim($config['path'], '/');
+            if (is_array($config)) {
+                $config['db'] = ltrim($config['path'] ?? '', '/');
+            } else {
+                $config = [];
+            }
         }
 
         $defaults = [
@@ -98,7 +102,7 @@ class PDO implements Source
     {
         Log::debug("PDO:QUERY [$query]");
         $result = $this->handler()->query($query);
-        return $result->fetchAll(_PDO::FETCH_ASSOC);
+        return $result ? $result->fetchAll(_PDO::FETCH_ASSOC) : false;
     }
 
     /**
@@ -111,7 +115,9 @@ class PDO implements Source
     public function one(string $table, array $conditions, array $options = []): ?array
     {
         $result = $this->find($table, $conditions, $options);
-        $result = iterator_to_array($result);
+        if ($result instanceof \Traversable) {
+            $result = iterator_to_array($result);
+        }
         $hits = sizeof($result);
         if ($hits === 0) {
             return null;
