@@ -24,7 +24,7 @@
     "require-dev": {
         "mongodb/mongodb": "^1.1",
         "phpunit/phpunit": "^7.5.14",
-        "phpstan/phpstan-shim": "^0.11"
+        "phpstan/phpstan-shim": "^0.11.19"
     },
     "bin": ["bin/skeleton", "bin/testh2l"],
     "autoload": {
