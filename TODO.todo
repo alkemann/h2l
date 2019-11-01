@@ -19,12 +19,9 @@ Documentation:
  ☐ Message
 
 Bugs:
- ☐ callable/Closure consistency (Route and Log handlers)
- ☐ unreachable code in Log
 
 Tests:
  ☐ Integration test for the default Session $_SESSION wrapper?
- ☐ Increase PHPStan to max level
  ☐ Run PSalm in Travis
 
 Packaging:
@@ -32,6 +29,9 @@ Packaging:
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ unreachable code in Log @done (19-11-01 14:58) @project(Bugs)
+ ✔ callable/Closure consistency (Route and Log handlers) @done (19-11-01 14:58) @project(Bugs)
+ ✔ Increase PHPStan to max level @done (19-11-01 14:58) @project(Tests)
  ✔ Logger @done (19-10-31 13:18) @project(Documentation)
  ✔ Page @done (19-10-31 12:20) @project(Documentation)
  ✘ XML response render @cancelled (19-10-31 12:19) @project(Features)

@@ -40,7 +40,10 @@ class PDO implements Source
             if (is_array($config)) {
                 $config['db'] = ltrim($config['path'] ?? '', '/');
             } else {
+                // @codeCoverageIgnoreStart
+                // parse_url always returns an array
                 $config = [];
+                // @codeCoverageIgnoreEnd
             }
         }
 
