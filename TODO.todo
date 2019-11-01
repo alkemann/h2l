@@ -18,6 +18,10 @@ Documentation:
  ☐ Remote
  ☐ Message
 
+Bugs:
+ ☐ callable/Closure consistency (Route and Log handlers)
+ ☐ unreachable code in Log
+
 Tests:
  ☐ Integration test for the default Session $_SESSION wrapper?
 
