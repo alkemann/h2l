@@ -14,7 +14,9 @@ before_script:
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'h2l_tests'];" > tests/config/pdo_mysql_connection.php
   - echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'test'];" > tests/config/mongo_connection.php
   - echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'','db'=>'travis_ci_test'];" > tests/config/pdo_pgsql_connection.php
-  - composer install
+  - composer install --dev
+  - ls -la bin
+  - ls -la vendor/bind
 script:
   - vendor/bin/phpstan.phar analyse -l 3 -c phpstan.neon src --no-interaction --no-progress
   - bin/runtests --coverage-clover tests/clover.xml
