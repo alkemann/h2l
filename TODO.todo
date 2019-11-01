@@ -24,6 +24,8 @@ Bugs:
 
 Tests:
  ☐ Integration test for the default Session $_SESSION wrapper?
+ ☐ Increase PHPStan to max level
+ ☐ Run PSalm in Travis
 
 Packaging:
  ☐ Add CHANGES (To be used only after 1.0)
