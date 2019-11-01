@@ -3,7 +3,6 @@
 namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\InvalidCallback;
-use Closure;
 
 /**
  * Class Route
@@ -17,7 +16,7 @@ class Route implements interfaces\Route
      */
     private $url;
     /**
-     * @var Closure
+     * @var callable
      */
     private $callback;
     /**
@@ -29,10 +28,10 @@ class Route implements interfaces\Route
      * Route constructor.
      *
      * @param string $url
-     * @param Closure $cb
+     * @param callable $cb
      * @param array $parameters
      */
-    public function __construct(string $url, Closure $cb, array $parameters = [])
+    public function __construct(string $url, callable $cb, array $parameters = [])
     {
         $this->url = $url;
         $this->callback = $cb;

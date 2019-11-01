@@ -34,18 +34,18 @@ class Connections
      * A close Closure may also be supplied for connection that requires/supports closing
      *
      * @param string $name name of of connection
-     * @param Closure $open an anonymous function that takes no arguments and returns an open connection
-     * @param Closure|null $close an optional anonymous function that takes the connection as arguments and closes it
+     * @param callable $open an anonymous function that takes no arguments and returns an open connection
+     * @param callable|null $close an optional anonymous function that takes the connection as arguments and closes it
      * @throws InvalidArgumentException if connection $name already exists
      */
-    public static function add(string $name, Closure $open, ?Closure $close = null): void
+    public static function add(string $name, callable $open, ?callable $close = null): void
     {
         if (isset(self::$open[$name])) {
             throw new InvalidArgumentException("Connection $name already exists");
         }
-        self::$open[$name] = $open;
+        self::$open[$name] = ($open instanceof Closure) ? $open : Closure::fromCallable($open);
         if ($close) {
-            self::$close[$name] = $close;
+            self::$close[$name] = ($close instanceof Closure) ? $close : Closure::fromCallable($close);
         }
         self::$connections[$name] = false;
     }

@@ -3,8 +3,10 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{
-    Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, response\Error, response\Json, Route, Router, util\Chain, util\Http
+    Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, Route, Router
 };
+use alkemann\h2l\util\{ Chain, Http };
+use alkemann\h2l\response\{ Error, Json, Text };
 use alkemann\h2l\interfaces\Session as SessionInterface;
 use alkemann\h2l\interfaces\Route as RouteInterface;
 
@@ -210,6 +212,28 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $events);
 
         $this->assertTrue($result instanceof Error, "Response is : [" . get_class($result) . "]");
+    }
+
+    public function testCallableMiddle()
+    {
+        $route = new Route('testMiddleWare', function (Request $r): ?Response {
+            return new Json(['place' => 'Oslo']);
+        }, ['place' => 'Oslo']);
+
+        $dispatch = new Dispatch;
+        $dispatch->setRoute($route);
+        $dispatch->registerMiddle([$this, 'inTheMiddle']);
+
+        $result = $dispatch->response();
+
+        $this->assertTrue($result instanceof Text);
+        $expected = 'Override!';
+        $this->assertEquals($expected, $result->render());
+    }
+
+    public function inTheMiddle(Request $request, Chain $chain): Response
+    {
+        return new Text("Override!", 500);
     }
 
     public function testSetFromRouterWithNoMatch()
