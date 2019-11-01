@@ -16,6 +16,7 @@ before_script:
   - echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'','db'=>'travis_ci_test'];" > tests/config/pdo_pgsql_connection.php
   - composer install
 script:
+  - vendor/bin/phpstan.phar analyse -l 3 -c phpstan.neon src --no-interaction --no-progress
   - bin/runtests
   - php bin/coverage tests/clover.xml 95
 after_success:
