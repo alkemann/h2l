@@ -24,8 +24,13 @@ class PDO implements Source
      */
     protected $db = null;
 
+    /** @var string */
     private $pdo_class = _PDO::class;
 
+    /**
+     * @param array $config
+     * @param string $pdo_class
+     */
     public function __construct(array $config = [], string $pdo_class = _PDO::class)
     {
         $this->pdo_class = $pdo_class;

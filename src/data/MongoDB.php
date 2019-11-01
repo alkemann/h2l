@@ -18,6 +18,9 @@ use MongoDB\Model\BSONDocument;
  */
 class MongoDB implements Source
 {
+    /**
+     * @var string[]
+     */
     public static $operators = [
         '$all',
         '$gt',
@@ -38,7 +41,9 @@ class MongoDB implements Source
         '$size'
     ];
 
+    /** @var array<string, mixed> */
     protected $config = [];
+    /** @var Client */
     protected $client = null;
 
     /**
@@ -93,7 +98,7 @@ class MongoDB implements Source
      * @param array $params
      * @throws \Exception if called as not implemented
      */
-    public function query($query, array $params = [])
+    public function query($query, array $params = []): void
     {
         throw new \Exception("Query method is not implemented for MongDB");
     }
