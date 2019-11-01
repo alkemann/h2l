@@ -19,7 +19,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         return new Route(
             $request->url(),
             function (Request $r): ?Response {
-                $page = response\Page::fromRequest($r);
+                $page = Page::fromRequest($r);
                 if ($page->isValid()) {
                     return $page;
                 }

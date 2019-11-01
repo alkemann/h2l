@@ -15,6 +15,7 @@ class Father
     static $connection = 'EntityRelationshipTest';
     static $table = 'fathers';
     static $fields = ['id', 'name', 'job'];
+    static $pk = 'id';
     static $relations = [
         'children' => [
             Son::class => 'father_id'

@@ -1,10 +1,10 @@
 <?php
 
-namespace unit\data;
+namespace alkemann\h2l\tests\unit\data;
 
 use alkemann\h2l\data\MongoDB;
 use MongoDB\{
-    BSON\ObjectID, Collection, DeleteResult, InsertOneResult, Model\BSONDocument, UpdateResult
+    BSON\ObjectId, Collection, DeleteResult, InsertOneResult, Model\BSONDocument, UpdateResult
 };
 
 class MongodbTest extends \PHPUnit\Framework\TestCase
@@ -13,7 +13,8 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     public static function setUpBeforeClass()
     {
         if (extension_loaded('mongodb') === false) {
-            return self::markTestSkipped("MongoDB driver not installed");
+            self::markTestSkipped("MongoDB driver not installed");
+            return;
         }
         static::$ref_client = new \ReflectionProperty('alkemann\h2l\data\MongoDB', 'client');
         static::$ref_client->setAccessible(true);
@@ -22,7 +23,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     public function testIdMaker()
     {
         $id = MongoDB::id('597dfade74050a000678d7b2');
-        $this->assertTrue($id instanceof ObjectID);
+        $this->assertTrue($id instanceof ObjectId);
     }
 
     public function testConstruct()
@@ -96,12 +97,12 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     {
         $cursor = function() {
             yield new BSONDocument([
-                '_id' => new ObjectID('597dfade74050a000678d7b2'),
+                '_id' => new ObjectId('597dfade74050a000678d7b2'),
                 'name' => 'John',
                 'status' => 'NEW'
             ]);
             yield new BSONDocument([
-                '_id' => new ObjectID('597dfade74050a000678d111'),
+                '_id' => new ObjectId('597dfade74050a000678d111'),
                 'name' => 'Alec',
                 'status' => 'NEW'
             ]);
@@ -146,7 +147,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
             ->method('isAcknowledged')->willReturn(true);
         $mongo_result->expects($this->once())
             ->method('getInsertedId')
-            ->willReturn(new ObjectID('597dfade74050a000678d222'));
+            ->willReturn(new ObjectId('597dfade74050a000678d222'));
         $mongo_result->expects($this->once())
             ->method('getInsertedCount')
             ->willReturn(1);

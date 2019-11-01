@@ -14,10 +14,15 @@ class ModelTest extends \PHPUnit\Framework\TestCase
     {
         $p = new class {
             use Model;
-            public function __construct(array $data = []){}
+            public static $pk = 'pid';
+            public static $table = 'people';
+            public static $fields = ['pid', 'name'];
+            public static $connection = 'default';
+            private $data = [];
+            public function __construct(array $data = []){ $this->data = $data; }
             public function with(string ...$relation_names) {}
             public function reset(): void {}
-            public function data(array $data = null): array {}
+            public function data(array $data = null): array { return $this->data + $data; }
         };
         $this->assertTrue(method_exists($p, 'exists'));
     }
@@ -28,6 +33,10 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
         $p = new class {
             use Model;
+            public static $pk = 'pid';
+            public static $table = 'people';
+            public static $fields = ['pid', 'name'];
+            public static $connection = 'default';
             public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}
             public function reset(): void {}
@@ -49,6 +58,9 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
         $p = new class {
             use Model;
+            public static $pk = 'pid';
+            public static $fields = ['pid', 'name'];
+            protected $data = [];
             static $connection = 'ModelTest testMissingTableConfig';
             public function __construct(array $data = []){}
             public function with(string ...$relation_names) {}

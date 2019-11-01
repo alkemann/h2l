@@ -3,6 +3,7 @@
 namespace alkemann\h2l\tests\unit\util;
 
 use alkemann\h2l\util\ArrayManipulations;
+use InvalidArgumentException;
 
 class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
 {
@@ -144,5 +145,19 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         ArrayManipulations::setToArrayByKey('four.four_one.four_one_one', 420, $data);
         $expected['four'] = ['four_one' => ['four_one_one' => 420]];
         $this->assertEquals($expected, $data);
+    }
+
+    public function testEmptyKeyStringGet()
+    {
+        $data = ['one' => ['two' => ['three' => 12]]];
+        $this->expectException(InvalidArgumentException::class);
+        $result = ArrayManipulations::getFromArrayByKey('.', $data, '');
+    }
+
+    public function testEmptyKeyStringSet()
+    {
+        $data = ['one' => ['two' => ['three' => 12]]];
+        $this->expectException(InvalidArgumentException::class);
+        ArrayManipulations::setToArrayByKey('.', 77, $data, '');
     }
 }

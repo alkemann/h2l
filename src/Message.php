@@ -203,9 +203,9 @@ class Message
 
     /**
      * @param string $body
-     * @return Message
+     * @return static
      */
-    public function withBody(string $body): Message
+    public function withBody(string $body): object
     {
         $new = clone $this;
         $new->body = $body;

@@ -7,8 +7,6 @@ use alkemann\h2l\exceptions\NoRouteSetError;
 use alkemann\h2l\util\Chain;
 
 /**
- * Class Request
- *
  * @package alkemann\h2l
  */
 class Dispatch
@@ -48,16 +46,21 @@ class Dispatch
             $session = new Session();
         }
 
-        $this->request = (new Request())
+        $request = (new Request())
             ->withRequestParams($request)
             ->withServerParams($server)
             ->withGetData($get)
             ->withPostData($post)
             ->withSession($session)
-
-            // @TODO Always do this? Can we know from $_SERVER or $_REQUEST ?
-            ->withBody(file_get_contents('php://input'));
         ;
+
+        $body = file_get_contents('php://input');
+        if (is_string($body)) {
+            // @TODO Always do this? Can we know from $_SERVER or $_REQUEST ?
+            $request = $request->withBody($body);
+        }
+
+        $this->request = $request;
     }
 
     /**
@@ -112,7 +115,7 @@ class Dispatch
      */
     public function setRoute(interfaces\Route $route): void
     {
-        if (!$this->request) {
+        if ($this->request === null) {
             $this->request = new Request();
         }
         $this->request = $this->request->withRoute($route);

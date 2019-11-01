@@ -1,10 +1,10 @@
 <?php
 
-namespace integration\data;
+namespace alkemann\h2l\tests\integration\data;
 
 use alkemann\h2l\data\MongoDB as Mongo;
 use alkemann\h2l\exceptions\ConnectionError;
-use MongoDB\BSON\ObjectID;
+use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
 
 class MongodbTest extends \PHPUnit\Framework\TestCase
@@ -15,11 +15,13 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     public static function setUpBeforeClass()
     {
         if (extension_loaded('mongodb') === false) {
-            return self::markTestSkipped("MongoDB driver not installed");
+            self::markTestSkipped("MongoDB driver not installed");
+            return;
         }
         $f = dirname(dirname(__DIR__)) . '/config/mongo_connection.php';
         if (file_exists($f) == false) {
-            return self::markTestSkipped("Missing [ {$f} ] config file");
+            self::markTestSkipped("Missing [ {$f} ] config file");
+            return;
         }
         self::$config = include($f);
 
@@ -32,7 +34,8 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
             $mc = new Client("mongodb://{$host}:{$port}");
             $mc->dropDatabase('test');
         } catch (\MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
-            return self::markTestSkipped("Connection configured, but connection failed!");
+            self::markTestSkipped("Connection configured, but connection failed!");
+            return;
         }
     }
 

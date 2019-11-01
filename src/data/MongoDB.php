@@ -137,8 +137,10 @@ class MongoDB implements Source
     private function out(BSONDocument $document): array
     {
         $a = $document->getArrayCopy();
-        $a['id'] = "{$document->_id}";
-        unset($a['_id']);
+        if (isset($document->_id)) {
+            $a['id'] = "{$document->_id}";
+            unset($a['_id']);
+        }
         return $a;
     }
 

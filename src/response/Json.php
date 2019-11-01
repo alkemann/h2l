@@ -60,10 +60,11 @@ class Json extends Response
             $content = iterator_to_array($content);
         }
         $container = $this->config['container'] ? ['data' => $content] : $content;
-        return json_encode(
+        $json = json_encode(
             $container,
             $this->config['encode_options'],
             $this->config['encode_depth']
         );
+        return is_string($json) ? $json : '';
     }
 }

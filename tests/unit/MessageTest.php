@@ -90,6 +90,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $data = ['name' => 'John', 'dead' => false];
         $person = new class($data) {
             use Entity;
+            public static $relations = [];
             public static function fields():array { return ['name', 'dead']; }
         };
         $class = get_class($person);

@@ -83,11 +83,12 @@ class Remote
         $headers['Content-Type'] = 'application/json; charset=utf-8';
         $headers['Accept'] = 'application/json';
         $data_string = json_encode($data);
-        $headers['Content-Length'] = strlen($data_string);
+        $json = is_string($data_string) ? $data_string : "";
+        $headers['Content-Length'] = strlen($json);
         $request = (new Message())
             ->withUrl($url)
             ->withMethod($method)
-            ->withBody($data_string)
+            ->withBody($json)
             ->withHeaders($headers);
         return $this->http($request);
     }

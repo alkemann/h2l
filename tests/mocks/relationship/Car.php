@@ -10,4 +10,7 @@ class Car
     static $connection = 'EntityRelationshipTest';
     static $table = 'cars';
     static $fields = ['id', 'owner_id', 'brand'];
+    static $relations = [];
+    static $pk = 'id';
+
 }

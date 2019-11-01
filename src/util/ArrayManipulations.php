@@ -3,6 +3,7 @@
 namespace alkemann\h2l\util;
 
 use OutOfBoundsException;
+use InvalidArgumentException;
 
 /**
  * Class Util
@@ -26,9 +27,13 @@ class ArrayManipulations
      * @param array $data
      * @param string $delimiter
      * @return mixed|null
+     * @throws InvalidArgumentException if $delimiter is empty string
      */
     public static function getFromArrayByKey(string $key, array $data, string $delimiter = '.')
     {
+        if ($delimiter === '') {
+            throw new InvalidArgumentException("Delimiter can't be empty string");
+        }
         $keys = explode($delimiter, $key);
         try {
             return self::getArrayValueByKeys($keys, $data);
@@ -82,9 +87,13 @@ class ArrayManipulations
      * @param mixed $value the value to assign
      * @param array $data The array to update
      * @param string $delimiter defaults to `.`
+     * @throws InvalidArgumentException if $delimiter is empty string
      */
     public static function setToArrayByKey(string $key, $value, array &$data, string $delimiter = '.'): void
     {
+        if ($delimiter === '') {
+            throw new InvalidArgumentException("Delimiter can't be empty string");
+        }
         $keys = explode($delimiter, $key);
         self::setArrayValueByKeys($keys, $value, $data);
     }

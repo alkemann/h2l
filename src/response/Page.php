@@ -167,7 +167,7 @@ class Page extends Response
             $ret = ob_get_contents();
             ob_end_clean();
         }
-        return $ret;
+        return is_string($ret) ? $ret : '';
     }
 
     /**
@@ -220,7 +220,7 @@ class Page extends Response
                 $ret = ob_get_contents();
                 ob_end_clean();
             }
-            return $ret;
+            return is_string($ret) ? $ret : '';
         } else {
             return '';
         }
@@ -247,7 +247,7 @@ class Page extends Response
             $ret = ob_get_contents();
             ob_end_clean();
         }
-        return $ret;
+        return is_string($ret) ? $ret : '';
     }
 
     /**

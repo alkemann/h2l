@@ -10,6 +10,7 @@ class Son
     static $connection = 'EntityRelationshipTest';
     static $table = 'sons';
     static $fields = ['id', 'father_id', 'name', 'age'];
+    static $pk = 'id';
     static $relations = [
         'father' => [
             'class' => Father::class,
