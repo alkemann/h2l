@@ -31,25 +31,39 @@
         <InternalClass errorLevel="info" />
 
         <MissingClosureReturnType errorLevel="info" />
-        <MissingReturnType errorLevel="info" />
+
+        <MissingReturnType errorLevel="info">
+            <errorLevel type="suppress">
+              <file name="src/interfaces/Source.php" />
+            </errorLevel>
+        </MissingReturnType>
+
         <MissingPropertyType errorLevel="info" />
         <InvalidDocblock errorLevel="info" />
         <MisplacedRequiredParam errorLevel="info" />
 
         <PropertyNotSetInConstructor errorLevel="info" />
         <MissingConstructor errorLevel="info" />
-        <MissingClosureParamType errorLevel="info" />
+        <MissingClosureParamType errorLevel="info">
+            <errorLevel type="suppress">
+              <file name="src/data/PDO.php" />
+            </errorLevel>
+        </MissingClosureParamType>
         <MissingParamType errorLevel="info" />
 
         <RedundantCondition errorLevel="info" />
 
-        <DocblockTypeContradiction errorLevel="info" />
+        <DocblockTypeContradiction errorLevel="suppress" />
         <RedundantConditionGivenDocblockType errorLevel="info" />
 
-        <UnresolvableInclude errorLevel="info" />
+        <UnresolvableInclude errorLevel="info">
+            <errorLevel type="suppress">
+              <file name="src/response/Page.php" />
+            </errorLevel>
+        </UnresolvableInclude>
 
         <RawObjectIteration errorLevel="info" />
 
-        <InvalidStringClass errorLevel="info" />
+        <InvalidStringClass errorLevel="suppress" />
     </issueHandlers>
 </psalm>

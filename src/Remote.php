@@ -25,6 +25,7 @@ class Remote
      */
     private $curl_options = [];
     /**
+     * @psalm-suppress PropertyNotSetInConstructor
      * @var resource
      */
     private $curl_handler;
