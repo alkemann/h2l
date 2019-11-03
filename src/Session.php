@@ -33,7 +33,7 @@ class Session implements interfaces\Session
         if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
         }
-        if (strpos($key, '.') !== false) {
+        if (strpos($key, '.') !== false && $_SESSION != null) {
             return ArrayManipulations::getFromArrayByKey($key, $_SESSION);
         }
         return null;
@@ -49,12 +49,11 @@ class Session implements interfaces\Session
      */
     public function set(string $key, $value): void
     {
-        if ($this->active() === false) {
-            session_start();
-        }
+        $this->startIfNotStarted();
         if (strpos($key, '.') === false) {
             $_SESSION[$key] = $value;
         } else {
+            /** @psalm-suppress NullReference */
             ArrayManipulations::setToArrayByKey($key, $value, $_SESSION);
         }
     }

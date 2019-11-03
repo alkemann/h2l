@@ -43,7 +43,7 @@ class MongoDB implements Source
 
     /** @var array<string, mixed> */
     protected $config = [];
-    /** @var Client */
+    /** @var null|Client */
     protected $client = null;
 
     /**

@@ -57,6 +57,9 @@ class PDO implements Source
     }
 
     /**
+     * @psalm-suppress MoreSpecificReturnType
+     * @psalm-suppress PropertyTypeCoercion
+     * @psalm-suppress LessSpecificReturnStatement
      * @return _PDO
      */
     private function handler(): object
@@ -150,8 +153,9 @@ class PDO implements Source
         $stmt = $dbh->prepare($query);
         foreach ($conditions as $key => $value) {
             if (is_array($value)) {
-                foreach ($value as $index => $v) {
-                    $i = $index + 1;
+                $index = 0;
+                foreach ($value as $v) {
+                    $i = 1 + $index++;
                     $stmt->bindValue(":c_{$key}_{$i}", $v);
                 }
             } else {
@@ -183,8 +187,9 @@ class PDO implements Source
         $fun = function ($o, $v) use ($conditions) {
             if (is_array($conditions[$v])) {
                 $qa = [];
-                foreach ($conditions[$v] as $key => $value) {
-                    $i = $key + 1;
+                $index = 0;
+                foreach ($conditions[$v] as $value) {
+                    $i = 1 + $index++;
                     $qa[] = ":c_{$v}_{$i}";
                 }
                 $qs = join(', ', $qa);
