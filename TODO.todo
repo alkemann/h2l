@@ -3,6 +3,7 @@
 Features:
  ☐ Canonical meta tag (at least for removing the /webroot/ url part)
  ☐ Wrap layout parts into one template that echos view in it
+ ☐ SQLite / SQLite3 support for data/PDO
 
 Cache:
  ☐ Join templates
