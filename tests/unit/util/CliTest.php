@@ -73,6 +73,31 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
+
+    public function testGetConvertedOptionsMultiFlags()
+    {
+
+        $cli = new class() extends Cli {
+            public function __construct() {}
+            protected $echo = false;
+            protected function getOpt(string $s, array $l): array {
+                return ['v' => [false, false, false]];
+            }
+            protected function getGlobalArgV(): array {
+                return ['./bin/runsomething.php', '-vvv', 'testing'];
+            }
+        };
+
+        $reflected_class = new ReflectionClass(Cli::class);
+        $ref_method_gco = $reflected_class->getMethod('getConvertedOptions');
+        $ref_method_gco->setAccessible(true);
+
+        $expected = ['./bin/runsomething.php', 'testing', ['verbose' => 3]];
+        $arguments = ['v' => 'verbose'];
+        $result = $ref_method_gco->invoke($cli, $arguments);
+        $this->assertEquals($expected, $result);
+    }
+
     public function testOut()
     {
         $mock = $this->getMockBuilder(Cli::class)

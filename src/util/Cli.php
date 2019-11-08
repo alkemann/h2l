@@ -33,11 +33,7 @@ abstract class Cli
      */
     public function __construct(array $map)
     {
-        [$self, $command, $args] = $this->getConvertedOptions($map);
-        // var_dump(compact('self', 'command', 'args'));
-        $this->self = $self;
-        $this->command = $command;
-        $this->args = $args;
+        [$this->self, $this->command, $this->args] = $this->getConvertedOptions($map);
     }
 
     /**
@@ -90,7 +86,7 @@ abstract class Cli
         // Non present values get false value
         foreach (array_values($long_options) as $long) {
             $long = trim($long, ':');
-            if (array_key_exists($long, $args) == false) {
+            if (array_key_exists($long, $args) === false) {
                 $args[$long] = false;
             }
         }
@@ -119,13 +115,13 @@ abstract class Cli
         $flags = join(', ', array_keys(array_filter($this->args, function ($val): bool {
             return $val === true;
         })));
-        if (empty($flags) == false) {
+        if (empty($flags) === false) {
             $this->out("Flags: [ {$flags} ]");
         }
         $options = urldecode(http_build_query(array_filter($this->args, function ($val): bool {
             return is_bool($val) === false;
         }), '', ", "));
-        if (empty($options) == false) {
+        if (empty($options) === false) {
             $this->out("Options: [ {$options} ]");
         }
         $this->out("");
