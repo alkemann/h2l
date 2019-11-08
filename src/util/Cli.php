@@ -50,9 +50,13 @@ abstract class Cli
         $argv = $this->getGlobalArgV();
 
         // Grab arguments from `$argv` using native `getopt`
-        $int_filter = function($k): bool { return is_int($k); };
+        $int_filter = function ($k): bool {
+            return is_int($k);
+        };
         $just_longs = array_filter($options_map, $int_filter, ARRAY_FILTER_USE_KEY);
-        $string_filter = function($k): bool { return is_string($k); };
+        $string_filter = function ($k): bool {
+            return is_string($k);
+        };
         $options_map = array_filter($options_map, $string_filter, ARRAY_FILTER_USE_KEY);
         $short_options = join('', array_keys($options_map));
         $long_options = array_merge(array_values($options_map), $just_longs);
@@ -76,8 +80,11 @@ abstract class Cli
         // Flip no-value option present to a true value
         // A no-value option that is present multiple times converted to a number
         foreach ($args as $key => $value) {
-            if ($value === false) $args[$key] = true;
-            elseif (is_array($value)) $args[$key] = count($args[$key]);
+            if ($value === false) {
+                $args[$key] = true;
+            } elseif (is_array($value)) {
+                $args[$key] = count($args[$key]);
+            }
         }
 
         // Non present values get false value
@@ -97,10 +104,11 @@ abstract class Cli
      */
     protected function out(string $s): void
     {
-        if ($this->echo)
+        if ($this->echo) {
             echo $s . PHP_EOL;
-        else
+        } else {
             $this->out .= $s . PHP_EOL;
+        }
     }
 
     /**
@@ -108,14 +116,18 @@ abstract class Cli
     protected function input(): void
     {
         $this->out("Running Command: [ {$this->command} ] from [ {$this->self} ]");
-        $flags = join(', ', array_keys(array_filter($this->args, function($val): bool {
+        $flags = join(', ', array_keys(array_filter($this->args, function ($val): bool {
             return $val === true;
         })));
-        if (empty($flags) == false) $this->out("Flags: [ {$flags} ]");
-        $options = urldecode(http_build_query(array_filter($this->args, function($val): bool {
+        if (empty($flags) == false) {
+            $this->out("Flags: [ {$flags} ]");
+        }
+        $options = urldecode(http_build_query(array_filter($this->args, function ($val): bool {
             return is_bool($val) === false;
         }), '', ", "));
-        if (empty($options) == false) $this->out("Options: [ {$options} ]");
+        if (empty($options) == false) {
+            $this->out("Options: [ {$options} ]");
+        }
         $this->out("");
     }
 
@@ -133,7 +145,8 @@ abstract class Cli
      */
     public function run(bool $echo = false): self
     {
-        $this->echo = $echo; $this->out = '';
+        $this->echo = $echo;
+        $this->out = '';
         $this->out(static::NAME . " " . static::VERSION);
         $this->out("");
 
@@ -141,7 +154,9 @@ abstract class Cli
         if (method_exists($this, $command_method) === false) {
             throw new \Exception("Command {$this->command} does not exist");
         }
-        if ($this->verbose()) $this->input();
+        if ($this->verbose()) {
+            $this->input();
+        }
         $this->$command_method();
         return $this;
     }
@@ -218,7 +233,7 @@ abstract class Cli
      */
     protected function progressBar(int $counter, int $total): void
     {
-        $length = (int) ( ($counter/$total) * 100 );
+        $length = (int) (($counter/$total) * 100);
         $active = ($counter === $total) ? '' : '>';
         $loadbar = sprintf(
             "\r[%-100s] %d%% (%s/%s)",
