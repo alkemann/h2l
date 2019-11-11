@@ -91,7 +91,7 @@ final class Container
      */
     private function _call_or_return(string $name, ?array $args = null): object
     {
-        if (isset($this->_constructors[$name]) == false) {
+        if (isset($this->_constructors[$name]) === false) {
             throw new \Exception("No constructor set for {$name}!");
         }
         if ($this->_is_singleton[$name] && isset($this->_singletons[$name])) {

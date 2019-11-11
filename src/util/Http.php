@@ -160,7 +160,7 @@ class Http
     public static function contentTypeFromFileEnding(string $ending): string
     {
         $type = array_search($ending, static::$contentTypeToFileEnding);
-        return $type == false ? 'text/html' : (string) $type;
+        return $type === false ? 'text/html' : (string) $type;
     }
 
     /**
