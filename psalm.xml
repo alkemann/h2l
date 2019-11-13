@@ -54,7 +54,11 @@
         <RedundantCondition errorLevel="info" />
 
         <DocblockTypeContradiction errorLevel="suppress" />
-        <RedundantConditionGivenDocblockType errorLevel="info" />
+        <RedundantConditionGivenDocblockType errorLevel="info">
+            <errorLevel type="suppress">
+                <file name="src/Log.php" />
+            </errorLevel>
+        </RedundantConditionGivenDocblockType>
 
         <UnresolvableInclude errorLevel="info">
             <errorLevel type="suppress">
