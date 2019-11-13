@@ -8,6 +8,30 @@ use alkemann\h2l\{
 
 class RemoteTest extends \PHPUnit\Framework\TestCase
 {
+
+    private static $disconnected = false;
+
+    public static function setUpBeforeClass()
+    {
+        if (self::$disconnected || self::is_disconnected()) {
+            self::markTestSkipped("No internet connection, Remote Integration test skipped");
+        }
+    }
+
+
+    private static function is_disconnected(): bool
+    {
+        $connected = @fsockopen("www.example.com", 80);
+        if ($connected){
+            self::$disconnected = false;
+            fclose($connected);
+        } else {
+            self::$disconnected = true;
+        }
+        return self::$disconnected;
+
+    }
+
     public function testGetRequest()
     {
         $request = (new Message)

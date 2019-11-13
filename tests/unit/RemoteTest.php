@@ -27,14 +27,14 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
             'Accept' => '*/*'
         ];
         $header = <<<HEADER
-HTTP/1.1 302 FOUND
-Served-By: example.com
+            HTTP/1.1 302 FOUND
+            Served-By: example.com
 
-HTTP/1.1 200 OK
-Content-Type: application/json; charset=utf-8
-Accept: */*
+            HTTP/1.1 200 OK
+            Content-Type: application/json; charset=utf-8
+            Accept: */*
 
-HEADER;
+            HEADER;
 
         $result = $ref_method->invoke(new Remote, $header);
         $this->assertEquals($expected, $result);
