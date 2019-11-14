@@ -65,8 +65,8 @@ class LogTest extends \PHPUnit\Framework\TestCase
         Log::log('warning', 'explosion');
 
         $expected = [
-            ['level' => 'info', 'msg' => 'win', 'c' => []], 
-            ['level' => 'error', 'msg' => 'See {:id}', 'c' => ['id' => 12]], 
+            ['level' => 'info', 'msg' => 'win', 'c' => []],
+            ['level' => 'error', 'msg' => 'See {:id}', 'c' => ['id' => 12]],
             ['level' => 'warning', 'msg' => 'explosion', 'c' => []]
         ];
         $this->assertEquals($expected, $out);
@@ -77,14 +77,7 @@ class LogTest extends \PHPUnit\Framework\TestCase
         $mock = new class // implements \Psr\Log\LoggerInterface
         {
             public $out = [];
-
-            public function __call($name, $arguments)
-            {
-                $arguments += ["", []];
-                $this->log($name, $arguments[0], $arguments[1]);
-            }
-
-            public function log($level, $msg = "", $c = [])
+            public function log(string $level, string $msg = "", array $c = [])
             {
                 $this->out[] = compact('level', 'msg', 'c');
             }
@@ -96,8 +89,8 @@ class LogTest extends \PHPUnit\Framework\TestCase
         Log::log('warning', 'explosion');
 
         $expected = [
-            ['level' => 'info', 'msg' => 'win', 'c' => []], 
-            ['level' => 'error', 'msg' => 'See {:id}', 'c' => ['id' => 12]], 
+            ['level' => 'info', 'msg' => 'win', 'c' => []],
+            ['level' => 'error', 'msg' => 'See {:id}', 'c' => ['id' => 12]],
             ['level' => 'warning', 'msg' => 'explosion', 'c' => []]
         ];
         $this->assertEquals($expected, $mock->out);

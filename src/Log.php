@@ -91,7 +91,7 @@ class Log
             if (is_callable($handler)) { // avoid this?
                 $handler($level, $message, $context);
             } else {
-                $handler->$level($message, $context);
+                $handler->log($level, $message, $context);
             }
         }
     }
