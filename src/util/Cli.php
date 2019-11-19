@@ -45,7 +45,6 @@ abstract class Cli
     {
         $argv = $this->getGlobalArgV();
 
-        // Grab arguments from `$argv` using native `getopt`
         $int_filter = function ($k): bool {
             return is_int($k);
         };
@@ -137,7 +136,8 @@ abstract class Cli
 
     /**
      * @param bool $echo
-     * @return self
+     * @return Cli
+     * @throws \Exception for unknown commands
      */
     public function run(bool $echo = false): self
     {
