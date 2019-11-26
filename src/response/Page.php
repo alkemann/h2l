@@ -255,6 +255,42 @@ class Page extends Response
     }
 
     /**
+     * Render a parts file to include in view for reusing parts
+     *
+     * @param string $name name of part file to include, doesnt include path or file ending
+     * @return string
+     * @throws ConfigMissing if `parts_path` is not configured
+     */
+    public function part(string $name): string
+    {
+        $parts_path = Environment::get('parts_path');
+        if (!$parts_path) {
+            $content_path = Environment::get('content_path');
+            if ($content_path) {
+                $parts_path = $content_path . ".." . DIRECTORY_SEPARATOR . "parts" . DIRECTORY_SEPARATOR;
+            } else {
+                throw new ConfigMissing("Missing `parts_path` (or `content_path`) configuration!");
+            }
+        }
+        $ending = Http::fileEndingFromType($this->content_type);
+
+        $parts_file = $parts_path . "{$name}.{$ending}.php";
+
+        ob_start();
+        try {
+            $popsemdsdfosjicyvsoaowkdawd = $parts_file;
+            (function () use ($popsemdsdfosjicyvsoaowkdawd) {
+                extract($this->data);
+                include $popsemdsdfosjicyvsoaowkdawd;
+            })();
+        } finally {
+            $ret = ob_get_contents();
+            ob_end_clean();
+        }
+        return is_string($ret) ? $ret : '';
+    }
+
+    /**
      * Set header type, render the view, then optionally render layouts and wrap the template
      *
      * @return string fully rendered string, ready to be echo'ed
