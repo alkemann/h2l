@@ -178,9 +178,9 @@ class PageTest extends \PHPUnit\Framework\TestCase
     public function testMissingLayoutConfigs()
     {
         $conf = Environment::grab(Environment::TEST);
-        Environment::setEnvironment('testMissingContentPathConfigs');
+        Environment::setEnvironment('testMissingLayoutPathConfigs');
         unset($conf['layout_path']);
-        Environment::set($conf, 'testMissingContentPathConfigs');
+        Environment::set($conf, 'testMissingLayoutPathConfigs');
         $r = (new Request)->withUrl('place');
         $this->assertNull(Router::match($r->url()));
         $h = function() {};
@@ -188,5 +188,19 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $expected = "<h1>Win!</h1>";
         $result = $page->render();
         $this->assertEquals($expected, $result);
+    }
+
+    public function testMissingPartsPathConfigs()
+    {
+        $conf = Environment::grab(Environment::TEST);
+        Environment::setEnvironment('testMissingPartsPathConfigs');
+        unset($conf['parts_path']);
+        Environment::set($conf, 'testMissingPartsPathConfigs');
+        $r = (new Request)->withUrl('activity');
+
+        $this->expectException(ConfigMissing::class);
+        $h = function() {};
+        $page = Page::fromRequest($r, ['header_func' => $h]);
+        $page->render();
     }
 }

@@ -265,12 +265,7 @@ class Page extends Response
     {
         $parts_path = Environment::get('parts_path');
         if (!$parts_path) {
-            $content_path = Environment::get('content_path');
-            if ($content_path) {
-                $parts_path = $content_path . ".." . DIRECTORY_SEPARATOR . "parts" . DIRECTORY_SEPARATOR;
-            } else {
-                throw new ConfigMissing("Missing `parts_path` (or `content_path`) configuration!");
-            }
+            throw new ConfigMissing("Missing `parts_path` configuration!");
         }
         $ending = Http::fileEndingFromType($this->content_type);
 

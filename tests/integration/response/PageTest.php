@@ -49,6 +49,23 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testUsingPartsFile()
+    {
+        $request = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['acceptType', 'contentType', 'route', 'method', 'url'])
+            ->getMock();
+        $request->expects($this->once())->method('acceptType')->willReturn('text/html');
+        $request->expects($this->once())->method('route')->willReturn(
+            new Route('activity', function() {})
+        );
+        $page = Page::fromRequest($request, static::$config);
+
+        $expected = '<html><body><div><h1>Activity</h1><h2>Pause</h2><p>Be right back!</p><p>Terminator</p></div></body></html>';
+        $result = $page->render();
+        $this->assertEquals($expected, $result);
+    }
+
     public function testMissingViewFile()
     {
         $request = $this->getMockBuilder(Request::class)

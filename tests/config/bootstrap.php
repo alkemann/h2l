@@ -9,6 +9,7 @@ $base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR
 Environment::set([
     'debug' => false,
     'content_path' => $base . 'content' . DIRECTORY_SEPARATOR . 'pages' . DIRECTORY_SEPARATOR,
+    'parts_path' => $base . 'content' . DIRECTORY_SEPARATOR . 'parts' . DIRECTORY_SEPARATOR,
     'layout_path'  => $base . 'layouts' . DIRECTORY_SEPARATOR
 ], Environment::TEST);
 

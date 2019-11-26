@@ -1,0 +1,1 @@
+<h2>Pause</h2><p>Be right back!</p>
