@@ -151,17 +151,19 @@ class Page extends Response
         ob_start();
         try {
             if ($headfile && file_exists($headfile)) {
-                (function (string $sldkfjlksejflskjflskdjflskdfj) {
+                $sldkfjlksejflskjflskdjflskdfj = $headfile;
+                (function () use ($sldkfjlksejflskjflskdjflskdfj) {
                     extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
-                })($headfile);
+                })();
             }
 
             if ($neckfile && file_exists($neckfile)) {
-                (function (string $lidsinqjhsdfytqkwjkasjdksadsdg) {
+                $lidsinqjhsdfytqkwjkasjdksadsdg = $neckfile;
+                (function () use ($lidsinqjhsdfytqkwjkasjdksadsdg) {
                     extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
-                })($neckfile);
+                })();
             }
         } finally {
             $ret = ob_get_contents();
@@ -212,10 +214,11 @@ class Page extends Response
         if ($footfile && file_exists($footfile)) {
             ob_start();
             try {
-                (function (string $ldkfoskdfosjicyvutwehkshfskjdf) {
+                $ldkfoskdfosjicyvutwehkshfskjdf = $footfile;
+                (function () use ($ldkfoskdfosjicyvutwehkshfskjdf) {
                     extract($this->data);
                     include $ldkfoskdfosjicyvutwehkshfskjdf;
-                })($footfile);
+                })();
             } finally {
                 $ret = ob_get_contents();
                 ob_end_clean();
@@ -239,10 +242,11 @@ class Page extends Response
         ob_start();
         try {
             // or another way to hide the file variable?
-            (function (string $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
+            $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd = $file;
+            (function () use ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
                 extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
-            })($file);
+            })();
         } finally {
             $ret = ob_get_contents();
             ob_end_clean();
