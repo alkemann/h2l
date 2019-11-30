@@ -13,14 +13,14 @@ trait Entity
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Cache of loaded relationships
      *
      * @var array
      */
-    protected $relationships = [];
+    protected array $relationships = [];
 
     /**
      * Entity constructor.

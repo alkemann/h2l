@@ -21,7 +21,7 @@ class MongoDB implements Source
     /**
      * @var string[]
      */
-    public static $operators = [
+    public static array $operators = [
         '$all',
         '$gt',
         '$gte',
@@ -42,7 +42,7 @@ class MongoDB implements Source
     ];
 
     /** @var array<string, mixed> */
-    protected $config = [];
+    protected array $config = [];
     /** @var null|Client */
     protected $client = null;
 

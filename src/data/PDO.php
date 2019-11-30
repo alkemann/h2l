@@ -17,7 +17,7 @@ class PDO implements Source
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var null|_PDO
@@ -25,7 +25,7 @@ class PDO implements Source
     protected $db = null;
 
     /** @var string */
-    private $pdo_class = _PDO::class;
+    private string $pdo_class = _PDO::class;
 
     /**
      * @param array $config

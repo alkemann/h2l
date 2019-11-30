@@ -19,11 +19,11 @@ class Remote
     /**
      * @var array<string, mixed>
      */
-    private $config = [];
+    private array $config = [];
     /**
      * @var array<int, mixed>
      */
-    private $curl_options = [];
+    private array $curl_options = [];
     /**
      * @psalm-suppress PropertyNotSetInConstructor
      * @var resource
@@ -32,7 +32,7 @@ class Remote
     /**
      * @var float
      */
-    private $start = 0.0;
+    private float $start = 0.0;
 
     /**
      * Creatues the Remote instance, only sets configurations

@@ -14,7 +14,7 @@ class Route implements interfaces\Route
     /**
      * @var string
      */
-    private $url;
+    private string $url;
     /**
      * @var callable
      */
@@ -22,7 +22,7 @@ class Route implements interfaces\Route
     /**
      * @var array<string, mixed>
      */
-    private $parameters;
+    private array $parameters;
 
     /**
      * Route constructor.

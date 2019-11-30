@@ -53,8 +53,11 @@ class CliTest extends \PHPUnit\Framework\TestCase
     {
 
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
+            protected array $args = [];
+            protected bool $echo = false;
             public function __construct() {}
-            protected $echo = false;
             protected function getOpt(string $s, array $l): array {
                 return ['tall' => '12', 'v' => false];
             }
@@ -78,8 +81,11 @@ class CliTest extends \PHPUnit\Framework\TestCase
     {
 
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
+            protected array $args = [];
+            protected bool $echo = false;
             public function __construct() {}
-            protected $echo = false;
             protected function getOpt(string $s, array $l): array {
                 return ['v' => [false, false, false]];
             }
@@ -123,8 +129,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testArg(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
+            protected array $args = ['winning' => true, 'tall' => 12];
             public function __construct() {}
-            protected $args = ['winning' => true, 'tall' => 12];
         };
         $this->assertEquals(12, $cli->arg('tall'));
         $this->assertEquals(true, $cli->arg('winning'));
@@ -134,8 +142,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testVerbose(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = ['verbose' => true];
+            protected array $args = ['verbose' => true];
         };
         $this->assertEquals(true, $cli->arg('verbose'));
         $this->assertEquals(true, $cli->verbose());
@@ -145,8 +155,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testNotVerbose(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = [];
+            protected array $args = [];
         };
         $this->assertEquals(false, $cli->verbose());
     }
@@ -154,8 +166,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testVerboseNoThanks(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = ['verbose' => false];
+            protected array $args = ['verbose' => false];
         };
         $this->assertEquals(false, $cli->verbose());
     }
@@ -163,8 +177,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testVerboseHigherLevel(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = ['verbose' => 3];
+            protected array $args = ['verbose' => 3];
         };
         $this->assertEquals(3, $cli->arg('verbose'));
         $this->assertEquals(true, $cli->verbose());
@@ -176,8 +192,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testQuiet(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = ['quiet' => true];
+            protected array $args = ['quiet' => true];
         };
         $this->assertEquals(true, $cli->arg('quiet'));
         $this->assertEquals(true, $cli->quiet());
@@ -186,8 +204,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testNoQuiet(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = [];
+            protected array $args = [];
         };
         $this->assertEquals(false, $cli->quiet());
     }
@@ -195,8 +215,10 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testQuietHigherLevel(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
             public function __construct() {}
-            protected $args = ['quiet' => 3];
+            protected array $args = ['quiet' => 3];
         };
         $this->assertEquals(3, $cli->arg('quiet'));
         $this->assertEquals(true, $cli->quiet());
@@ -205,8 +227,11 @@ class CliTest extends \PHPUnit\Framework\TestCase
     public function testRender(): void
     {
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
+            protected array $args = [];
             public function __construct() {}
-            protected $out = "Win\nAnd Go!\n";
+            protected string $out = "Win\nAnd Go!\n";
         };
         $expected = "Win\nAnd Go!\n";
         $result = $cli->render();
@@ -217,11 +242,11 @@ class CliTest extends \PHPUnit\Framework\TestCase
     {
         $cli = new class() extends Cli {
             public function __construct() {}
-            protected $echo = false;
-            protected $out = "";
-            protected $self = "./bin/h2cli";
-            protected $command = 'act';
-            protected $args = ['verbose' => true, 'work' => '7000', 'tall' => 100];
+            protected bool $echo = false;
+            protected string $out = "";
+            protected string $self = "./bin/h2cli";
+            protected string $command = 'act';
+            protected array $args = ['verbose' => true, 'work' => '7000', 'tall' => 100];
         };
 
         $reflected_class = new ReflectionClass(Cli::class);
@@ -248,6 +273,9 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Exception::class);
 
         $cli = new class() extends Cli {
+            protected string $self = 'test';
+            protected string $command = 'test';
+            protected array $args = [];
             public function __construct() {}
         };
 
@@ -261,11 +289,11 @@ class CliTest extends \PHPUnit\Framework\TestCase
             public const NAME = "RunIt";
             public const VERSION = "v1.3.37";
             public function __construct() {}
-            protected $echo = false;
-            protected $out = "";
-            protected $self = "./bin/h2cli";
-            protected $command = 'act';
-            protected $args = ['verbose' => true, 'work' => '7000', 'tall' => 100];
+            protected bool $echo = false;
+            protected string $out = "";
+            protected string $self = "./bin/h2cli";
+            protected string $command = 'act';
+            protected array $args = ['verbose' => true, 'work' => '7000', 'tall' => 100];
             public function command_act() { $this->out("ACTED"); }
         };
 
