@@ -18,7 +18,7 @@ final class Environment
     /**
      * @var array<string, array<string, mixed>>
      */
-    private static $settings = [
+    private static array $settings = [
         Environment::LOCAL => [
             'debug' => true,
         ],
@@ -36,7 +36,7 @@ final class Environment
     /**
      * @var array<string, array<callable>>
      */
-    private static $middlewares = [
+    private static array $middlewares = [
         Environment::LOCAL => [],
         Environment::DEV => [],
         Environment::TEST => [],
@@ -47,7 +47,7 @@ final class Environment
      * Defaults to DEV
      * @var string
      */
-    private static $current_env = Environment::DEV;
+    private static string $current_env = Environment::DEV;
 
     /**
      * Changes current environment to provided name

@@ -15,27 +15,27 @@ class Request extends Message
     /**
      * @var null|interfaces\Route
      */
-    protected $route = null;
+    protected ?interfaces\Route $route = null;
     /**
      * @var null|interfaces\Session
      */
-    protected $session = null;
-    /** @var array<string, mixed> */
-    protected $parameters = [];
-    /** @var array<string, mixed> */
-    protected $request = [];
-    /** @var array<string, mixed> */
-    protected $server = [];
-    /** @var array<string, mixed> */
-    protected $get = [];
-    /** @var array<string, mixed> */
-    protected $post = [];
+    protected ?interfaces\Session $session = null;
+    /** @var array */
+    protected array $parameters = [];
+    /** @var array */
+    protected array $request = [];
+    /** @var array */
+    protected array $server = [];
+    /** @var array */
+    protected array $get = [];
+    /** @var array */
+    protected array $post = [];
     /** @var string */
-    protected $content_type = ''; // Type of the REQUEST BODY, not response
+    protected string $content_type = ''; // Type of the REQUEST BODY, not response
     /** @var string */
-    protected $accept_type = Http::CONTENT_HTML;
-    /** @var array<string, mixed> */
-    protected $page_vars = [];
+    protected string $accept_type = Http::CONTENT_HTML;
+    /** @var array */
+    protected array $page_vars = [];
 
     /**
      * Get request parameters from url as url params, get queries or post, in that order

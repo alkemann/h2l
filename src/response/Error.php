@@ -20,19 +20,23 @@ class Error extends Response
     /**
      * @var string
      */
-    protected $content_type = 'text/html';
+    protected string $content_type = 'text/html';
     /**
      * @var int
      */
-    protected $code = 500;
+    protected int $code = 500;
     /**
      * @var array<mixed>
      */
-    protected $data = [];
+    protected array $data = [];
     /**
      * @var null|Request
      */
-    protected $request = null;
+    protected ?Request $request = null;
+    /**
+     * @var array
+     */
+    protected array $config = [];
 
     /**
      * Constructor

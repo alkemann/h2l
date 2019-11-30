@@ -16,17 +16,17 @@ abstract class Cli
     public const VERSION = "v0.1";
 
     /** @var string */
-    protected $self;
+    protected string $self;
     /** @var string */
-    protected $command;
+    protected string $command;
     /** @var array<string, mixed> */
-    protected $args;
+    protected array $args;
     /** @var bool */
-    protected $echo = true;
+    protected bool $echo = true;
     /** @var string */
-    protected $out = '';
+    protected string $out = '';
     /** @var int */
-    private $last_index = 0;
+    private int $last_index = 0;
 
     /**
      * @param array<string, string> $map

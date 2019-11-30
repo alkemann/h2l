@@ -30,6 +30,11 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         return self::$ref_request->getValue($dispatch);
     }
 
+    private static function setRequestOnDispatch(Dispatch $dispatch, Request $request): void
+    {
+        self::$ref_request->setValue($dispatch, $request);
+    }
+
     public function testGetHtml(): void
     {
         $this->assertEquals(Environment::TEST, Environment::current());
@@ -142,6 +147,8 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
             ->setMockClassName('Request')// Mock class name
             ->setMethods(['method'])// mocked methods
             ->getMock();
+
+        static::setRequestOnDispatch($dispatch, new Request());
 
         $dispatch->setRoute($route);
         $request = self::getRequestFromDispatch($dispatch);
