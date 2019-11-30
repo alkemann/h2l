@@ -15,7 +15,7 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
      */
     private static $handler_method;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (extension_loaded('pdo_mysql') === false) {
             self::markTestSkipped("PHP extension 'pdo_mysql' not installed");
@@ -41,7 +41,7 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testConnectFail()
+    public function testConnectFail(): void
     {
         $this->expectException(ConnectionError::class);
 
@@ -50,14 +50,14 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(_PDO::class, $h);
     }
 
-    public function testConnectSuccess()
+    public function testConnectSuccess(): void
     {
         $m = new PDO(self::$config);
         $h = static::$handler_method->invoke($m);
         $this->assertInstanceOf(_PDO::class, $h);
     }
 
-    public function testUsage()
+    public function testUsage(): void
     {
         $m = new PDO(self::$config);
         $id = $m->insert('tests', ['name' => 'john', 'age' => 38]);

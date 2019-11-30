@@ -7,7 +7,7 @@ use alkemann\h2l\{Response, response\Html};
 class HtmlTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $r = new Html('Hello there');
         $this->assertInstanceOf(Response::class, $r);
@@ -17,7 +17,7 @@ class HtmlTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testConstructorNoContent()
+    public function testConstructorNoContent(): void
     {
         $r = new Html();
         $this->assertInstanceOf(Html::class, $r);
@@ -26,7 +26,7 @@ class HtmlTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $r = new Html('Hello there', 200, ['header_func' => function($h) {}]);
 
@@ -34,7 +34,7 @@ class HtmlTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Hello there', $result);
     }
 
-    public function testRenderOfObject()
+    public function testRenderOfObject(): void
     {
         $obj = new class() { function __toString() { return '<html><body>This is object</body></html>'; } };
         $r = new Html($obj, 200, ['header_func' => function($h) {}]);
@@ -43,7 +43,7 @@ class HtmlTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('<html><body>This is object</body></html>', $result);
     }
 
-    public function testTemplated()
+    public function testTemplated(): void
     {
         $template = "<html><head><title>{:name}</title></head><body><p>{:name} {:street}</p></body></html>";
         $data = [

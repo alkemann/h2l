@@ -8,7 +8,7 @@ use alkemann\h2l\{
 
 class MessageTest extends \PHPUnit\Framework\TestCase
 {
-    public function testRequest()
+    public function testRequest(): void
     {
         $message = (new Message)
             ->withUrl('http://example.com')
@@ -24,7 +24,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('utf-8', $message->charset());
     }
 
-    public function testResponse()
+    public function testResponse(): void
     {
         $message = (new Message)
             ->withCode(200)
@@ -42,7 +42,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['latency' => 0.2], $message->meta());
     }
 
-    public function testContentTypeAndCharset()
+    public function testContentTypeAndCharset(): void
     {
         $message = (new Message)
             ->withHeaders(['Content-Type' => 'application/json; Charset="utf-8"']);
@@ -52,7 +52,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('utf-8', $message->charset());
     }
 
-    public function testContentConversion()
+    public function testContentConversion(): void
     {
         $data = ['name' => 'John', 'dead' => false];
         $message = (new Message)
@@ -85,7 +85,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Win!', $result->getElementById('the-body')->nodeValue);
     }
 
-    public function testAs()
+    public function testAs(): void
     {
         $data = ['name' => 'John', 'dead' => false];
         $person = new class($data) {
@@ -105,7 +105,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $result->dead);
     }
 
-    public function testJsonError()
+    public function testJsonError(): void
     {
         $message = (new Message)
             ->withBody(' { "this": wont work } ')

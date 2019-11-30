@@ -10,7 +10,7 @@ use alkemann\h2l\tests\mocks\model\Person;
 class ModelTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testUse()
+    public function testUse(): void
     {
         $p = new class {
             use Model;
@@ -27,7 +27,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(method_exists($p, 'exists'));
     }
 
-    public function testMissingConnectionConfig()
+    public function testMissingConnectionConfig(): void
     {
         $this->expectException(ConfigMissing::class);
         $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
@@ -45,7 +45,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $p->save(['something' => 'here']);
     }
 
-    public function testMissingTableConfig()
+    public function testMissingTableConfig(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -74,7 +74,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $p->save(['something' => 'here']);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -97,7 +97,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($result->exists());
     }
 
-    public function testGetNotFound()
+    public function testGetNotFound(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -117,13 +117,13 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($result);
     }
 
-    public function testGetWithConditionsException()
+    public function testGetWithConditionsException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $p = Person::get(null, ['name' => 'John']);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -153,7 +153,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             $this->assertTrue($person->exists());
     }
 
-    public function testFindWithArray()
+    public function testFindWithArray(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -181,14 +181,14 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['pid' => 56, 'name' => 'John'], $second->data());
     }
 
-    public function testCreated()
+    public function testCreated(): void
     {
         $p = new Person(['name' => 'Alec']);
         $this->assertFalse($p->exists());
         $this->assertNull($p->pid);
     }
 
-    public function testSaveNew()
+    public function testSaveNew(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -216,7 +216,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Abe', $p->data['name']);
     }
 
-    public function testSaveInsertFail()
+    public function testSaveInsertFail(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->disableOriginalConstructor()
@@ -235,7 +235,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($result);
     }
 
-    public function testSaveUpdate()
+    public function testSaveUpdate(): void
     {
         $con = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -260,7 +260,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
 
         $con = $this->getMockBuilder(Source::class)

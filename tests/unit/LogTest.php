@@ -10,19 +10,19 @@ class LogTest extends \PHPUnit\Framework\TestCase
     private static $ref_log;
     private static $ref_handlers;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$ref_log = new \ReflectionClass('alkemann\h2l\Log');
         static::$ref_handlers = static::$ref_log->getProperty('handlers');
         static::$ref_handlers->setAccessible(true);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         static::$ref_handlers->setValue([]);
     }
 
-    public function testSettingHandler()
+    public function testSettingHandler(): void
     {
         $cb = function($level, $msg, $context) {};
         Log::handler('test', $cb);
@@ -30,7 +30,7 @@ class LogTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['test' => $cb], $result);
     }
 
-    public function testNoHandler()
+    public function testNoHandler(): void
     {
         $result = static::$ref_handlers->getValue();
         $this->assertEquals([], $result);
@@ -39,7 +39,7 @@ class LogTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testCheckHandlerValidityObject()
+    public function testCheckHandlerValidityObject(): void
     {
         Log::handler('not a logg interfaces', new \stdClass());
     }
@@ -47,12 +47,12 @@ class LogTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testCheckHandlerValidityNotCallale()
+    public function testCheckHandlerValidityNotCallale(): void
     {
         Log::handler('not a closure', 'oopsIdidNotMakeThis');
     }
 
-    public function testClosureHandler()
+    public function testClosureHandler(): void
     {
         $out = [];
         $cb = function($level, $msg, $c) use (&$out) {
@@ -72,7 +72,7 @@ class LogTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $out);
     }
 
-    public function testObjectHandler()
+    public function testObjectHandler(): void
     {
         $mock = new class // implements \Psr\Log\LoggerInterface
         {

@@ -8,7 +8,7 @@ use alkemann\h2l\{
 
 class PageTest extends \PHPUnit\Framework\TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         Environment::setEnvironment(Environment::TEST);
@@ -27,7 +27,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         /**
          * @var $request Request
@@ -58,7 +58,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Http::CONTENT_HTML, $page->contentType());
     }
 
-    public function testJsonFormat()
+    public function testJsonFormat(): void
     {
         /**
          * @var $request Request
@@ -77,7 +77,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('application/json', $page->contentType());
     }
 
-    public function testTextFormat()
+    public function testTextFormat(): void
     {
         /**
          * @var $request Request
@@ -96,7 +96,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('text/plain', $page->contentType());
     }
 
-    public function testJsonUrlpart()
+    public function testJsonUrlpart(): void
     {
         /**
          * @var $request Request
@@ -115,7 +115,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('application/json', $page->contentType());
     }
 
-    public function testBadFormatUsesHtml()
+    public function testBadFormatUsesHtml(): void
     {
         $conf = [];
         /**
@@ -135,7 +135,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('text/html', $page->contentType());
     }
 
-    public function testSetData()
+    public function testSetData(): void
     {
         $request = new Request;
         $request = $request->withRoute($this->createPageRoute($request));
@@ -150,7 +150,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testDataFromRequestPageVars()
+    public function testDataFromRequestPageVars(): void
     {
         $request = (new Request())->withPageVars(['place' => 'Norway', 'city' => 'Oslo', 'height' => 12]);
         $request = $request->withRoute($this->createPageRoute($request));
@@ -163,7 +163,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testMissingContentPathConfigs()
+    public function testMissingContentPathConfigs(): void
     {
         $this->expectException(ConfigMissing::class);
         Environment::setEnvironment('testMissingContentPathConfigs');
@@ -175,7 +175,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         Environment::setEnvironment(Environment::TEST);
     }
 
-    public function testMissingLayoutConfigs()
+    public function testMissingLayoutConfigs(): void
     {
         $conf = Environment::grab(Environment::TEST);
         Environment::setEnvironment('testMissingLayoutPathConfigs');
@@ -190,7 +190,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testMissingPartsPathConfigs()
+    public function testMissingPartsPathConfigs(): void
     {
         $conf = Environment::grab(Environment::TEST);
         Environment::setEnvironment('testMissingPartsPathConfigs');

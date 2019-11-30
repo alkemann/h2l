@@ -7,14 +7,14 @@ use alkemann\h2l\{Response, response\Text};
 class TextTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $r = new Text('Hello there');
         $this->assertInstanceOf(Response::class, $r);
         $this->assertInstanceOf(Text::class, $r);
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $r = new Text('Hello there', 200, ['header_func' => function($h) {}]);
 
@@ -22,7 +22,7 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Hello there', $result);
     }
 
-    public function testRenderOfArray()
+    public function testRenderOfArray(): void
     {
         $r = new Text(['Hello there', 'My name is Slim'], 200, ['header_func' => function($h) {}]);
 
@@ -30,7 +30,7 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("Hello there\nMy name is Slim", $result);
     }
 
-    public function testRenderOfObject()
+    public function testRenderOfObject(): void
     {
         $obj = new class() { function __toString() { return 'This is object'; } };
         $r = new Text($obj, 200, ['header_func' => function($h) {}]);
@@ -39,7 +39,7 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("This is object", $result);
     }
 
-    public function testContentIsGenerator()
+    public function testContentIsGenerator(): void
     {
         $headers = [];
         $data = $this->mock_gen();
@@ -63,7 +63,7 @@ class TextTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testDeepArraysError()
+    public function testDeepArraysError(): void
     {
         $headers = [];
         $r = new Text(['one', ['two', ['three', 'four']], 'five'], 200, [
@@ -74,7 +74,7 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testErrorResponse()
+    public function testErrorResponse(): void
     {
         $headers = [];
         $r = new Text(null, 400, [
@@ -91,7 +91,7 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $headers);
     }
 
-    public function testErrorResponseWithMessage()
+    public function testErrorResponseWithMessage(): void
     {
         $headers = [];
         $r = new Text("Server Fault", 500, [

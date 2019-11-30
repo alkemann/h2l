@@ -19,11 +19,11 @@
         "alkemann/debug": "Convenient var_dump replaces for debug and development, require-dev only"
     },
     "require": {
-        "php": "^7.3.0"
+        "php": "^7.3.0",
+        "phpunit/phpunit": "^8.4"
     },
     "require-dev": {
         "mongodb/mongodb": "^1.1",
-        "phpunit/phpunit": "^7.5.14",
         "phpstan/phpstan-shim": "^0.11.19"
     },
     "bin": ["bin/skeleton", "bin/testh2l"],

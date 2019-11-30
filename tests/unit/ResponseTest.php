@@ -10,7 +10,7 @@ use alkemann\h2l\util\Http;
 class ResponseTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $r = new class extends Response {
             public function render():string { return "HEY"; }
@@ -19,7 +19,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("HEY", $r->render());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $r = new class extends Response {
             public function render():string { return "HEY"; }
@@ -28,7 +28,7 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("HEY", $r);
     }
 
-    public function testContentType()
+    public function testContentType(): void
     {
         $headers = [];
         $h = function($s) use (&$headers) { $headers[] = $s; };

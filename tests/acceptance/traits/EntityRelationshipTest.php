@@ -10,7 +10,7 @@ use alkemann\h2l\tests\mocks\relationship\{
 
 class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 {
-    public function testBelongsTo()
+    public function testBelongsTo(): void
     {
         $db = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -37,7 +37,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHasMany()
+    public function testHasMany(): void
     {
         $db = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -66,7 +66,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHasOne()
+    public function testHasOne(): void
     {
         $db = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -89,7 +89,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGetWith()
+    public function testGetWith(): void
     {
         $db = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])
@@ -126,7 +126,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindWith()
+    public function testFindWith(): void
     {
         $db = $this->getMockBuilder(Source::class)
             ->setMethods(['__construct','one','query','find','update','insert','delete'])

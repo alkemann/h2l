@@ -8,13 +8,13 @@ use alkemann\h2l\{
 
 class ErrorTest extends \PHPUnit\Framework\TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         Environment::setEnvironment(Environment::TEST);
     }
 
-    public function testConstructAndHeaderInjection()
+    public function testConstructAndHeaderInjection(): void
     {
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
@@ -29,7 +29,7 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("text/html", $e->contentType());
     }
 
-    public function testConstructWithRequest()
+    public function testConstructWithRequest(): void
     {
         $header = [];
         $header_func = function($h) use (&$header) {$header[] = $h; };
@@ -47,7 +47,7 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("application/json", $e->contentType());
     }
 
-    public function test404()
+    public function test404(): void
     {
         Environment::put('debug', false);
         $header = [];
@@ -60,7 +60,7 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $header);
     }
 
-    public function test404WithErrorPageWithMessage()
+    public function test404WithErrorPageWithMessage(): void
     {
         Environment::put('debug', false);
         $header = [];
@@ -73,7 +73,7 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $header);
     }
 
-    public function test404WithDebug()
+    public function test404WithDebug(): void
     {
         Environment::set([
             'debug' => true,
@@ -106,13 +106,13 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException Error
      */
-    public function testHeaderException()
+    public function testHeaderException(): void
     {
         $e = new Error([], ['header_func' => 99]);
         $e->render();
     }
 
-    public function testErrorFromRequest()
+    public function testErrorFromRequest(): void
     {
         $request = (new Request)
             ->withServerParams(['HTTP_ACCEPT' => 'application/json;q=0.9']);

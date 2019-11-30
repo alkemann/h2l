@@ -8,7 +8,7 @@ use ReflectionClass;
 class CliTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testConstruction()
+    public function testConstruction(): void
     {
         $mock = $this->getMockBuilder(Cli::class)
             ->disableOriginalConstructor()
@@ -49,7 +49,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGetConvertedOptions()
+    public function testGetConvertedOptions(): void
     {
 
         $cli = new class() extends Cli {
@@ -74,7 +74,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testGetConvertedOptionsMultiFlags()
+    public function testGetConvertedOptionsMultiFlags(): void
     {
 
         $cli = new class() extends Cli {
@@ -98,7 +98,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testOut()
+    public function testOut(): void
     {
         $mock = $this->getMockBuilder(Cli::class)
             ->disableOriginalConstructor()
@@ -120,7 +120,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testArg()
+    public function testArg(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -131,7 +131,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(null, $cli->arg('something'));
     }
 
-    public function testVerbose()
+    public function testVerbose(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -142,7 +142,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $cli->verbose(2));
     }
 
-    public function testNotVerbose()
+    public function testNotVerbose(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -151,7 +151,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $cli->verbose());
     }
 
-    public function testVerboseNoThanks()
+    public function testVerboseNoThanks(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -160,7 +160,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $cli->verbose());
     }
 
-    public function testVerboseHigherLevel()
+    public function testVerboseHigherLevel(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -173,7 +173,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $cli->verbose(4));
     }
 
-    public function testQuiet()
+    public function testQuiet(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -183,7 +183,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(true, $cli->quiet());
     }
 
-    public function testNoQuiet()
+    public function testNoQuiet(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -192,7 +192,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $cli->quiet());
     }
 
-    public function testQuietHigherLevel()
+    public function testQuietHigherLevel(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -202,7 +202,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(true, $cli->quiet());
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -213,7 +213,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testInput()
+    public function testInput(): void
     {
         $cli = new class() extends Cli {
             public function __construct() {}
@@ -243,7 +243,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testRunMissingCommand()
+    public function testRunMissingCommand(): void
     {
         $this->expectException(\Exception::class);
 
@@ -255,7 +255,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    public function testRun()
+    public function testRun(): void
     {
         $cli = new class() extends Cli {
             public const NAME = "RunIt";

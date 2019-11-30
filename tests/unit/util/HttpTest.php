@@ -6,7 +6,7 @@ use alkemann\h2l\util\Http;
 
 class HttpTest extends \PHPUnit\Framework\TestCase
 {
-    public function testHeaderExtractAndConvert()
+    public function testHeaderExtractAndConvert(): void
     {
         $in = [
             'USER' => 'www-data',
@@ -43,13 +43,13 @@ class HttpTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHttpCodeToMessage()
+    public function testHttpCodeToMessage(): void
     {
         $this->assertEquals('Unknown', Http::httpCodeToMessage(45345));
         $this->assertEquals('Accepted', Http::httpCodeToMessage(202));
     }
 
-    public function testFileEndingTypes()
+    public function testFileEndingTypes(): void
     {
         $this->assertEquals('json', Http::fileEndingFromType(Http::CONTENT_JSON));
         $this->assertEquals('xml', Http::fileEndingFromType(Http::CONTENT_XML));

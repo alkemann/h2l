@@ -8,7 +8,7 @@ use alkemann\h2l\{
 
 class RequestTest extends \PHPUnit\Framework\TestCase
 {
-    public function testConstructBlank()
+    public function testConstructBlank(): void
     {
         $ref_class = new \ReflectionClass(Request::class);
         $expected_defaults = [
@@ -44,7 +44,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_defaults, $result);
     }
 
-    public function testConstructPattern()
+    public function testConstructPattern(): void
     {
         /**
          * @var $route Route
@@ -115,7 +115,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Http::POST, $r2->method());
     }
 
-    public function testSession()
+    public function testSession(): void
     {
         $s = $this->getMockBuilder(SessionInterface::class)
             ->setMethods(['set', 'get', 'startIfNotStarted'])
@@ -139,14 +139,14 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($s, $result);
     }
 
-    public function testNoSessionException()
+    public function testNoSessionException(): void
     {
         $request = new Request();
         $this->expectException(\Exception::class);
         $request->session('thing');
     }
 
-    public function testDefaultServerParamsXML()
+    public function testDefaultServerParamsXML(): void
     {
         $request = (new Request)
             ->withServerParams([
@@ -154,7 +154,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
             ]);
         $this->assertEquals(Http::CONTENT_HTML, $request->acceptType());
     }
-    public function testAlternativeServerParamsXML()
+    public function testAlternativeServerParamsXML(): void
     {
         $request = (new Request)
             ->withServerParams([
@@ -165,7 +165,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Http::CONTENT_XML, $request->contentType());
     }
 
-    public function testServerParam()
+    public function testServerParam(): void
     {
         $request = (new Request)
             ->withServerParams([
@@ -175,7 +175,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($request->getServerParam('THING'));
     }
 
-    public function testFullUrl()
+    public function testFullUrl(): void
     {
         $request = (new Request)
             ->withRequestParams(['url' => '/places/oslo'])
@@ -198,7 +198,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('https://example.com:8080/winning', $request->fullUrl('winning'));
     }
 
-    public function testPageVars()
+    public function testPageVars(): void
     {
         $request1 = new Request;
         $this->assertEquals([], $request1->pageVars());
@@ -209,7 +209,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($vars, $request2->pageVars());
     }
 
-    public function testParamUrlFirst()
+    public function testParamUrlFirst(): void
     {
         $shared = ['city' => 'London', 'id' => 5];
         $r = (new Request())
@@ -236,7 +236,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(35, $r->param('id'));
     }
 
-    public function testParamGetSecond()
+    public function testParamGetSecond(): void
     {
         $shared = ['city' => 'London', 'id' => 5];
         $r = (new Request())
@@ -257,7 +257,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(15, $r->param('id'));
     }
 
-    public function testParamPostThird()
+    public function testParamPostThird(): void
     {
         $shared = ['city' => 'London', 'id' => 5];
         $r = (new Request())
@@ -278,7 +278,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testParamBodyFourth()
+    public function testParamBodyFourth(): void
     {
         $shared = ['city' => 'London', 'id' => 5];
         $json = json_encode(['id' => 45, 'jsonit' => 'awesome'] + $shared);
@@ -294,7 +294,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(45, $r->param('id'));
     }
 
-    public function testContent()
+    public function testContent(): void
     {
         $data = ['id' => 45, 'city' => 'London'];
         $r = (new Request())
@@ -305,7 +305,7 @@ class RequestTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($data, $r->content());
     }
 
-    public function testParamFromBodyWhenJsonBody()
+    public function testParamFromBodyWhenJsonBody(): void
     {
         $r = (new Request())
             ->withBody(json_encode(

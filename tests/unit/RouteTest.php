@@ -10,7 +10,7 @@ use alkemann\h2l\Route;
 class RouteTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testRoute()
+    public function testRoute(): void
     {
         $e = new Error(['message' => 'No place'], ['code' => 404]);
         $cb = function(Request $r) use ($e) { return $e; };
@@ -23,7 +23,7 @@ class RouteTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($e, $result);
     }
 
-    public function testBadRoute()
+    public function testBadRoute(): void
     {
         $this->expectException(\Error::class);
         $cb = function(Request $r): int {

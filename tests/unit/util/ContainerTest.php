@@ -7,21 +7,21 @@ use alkemann\h2l\tests\mocks\container\{Person, Husband, Wife};
 
 class ContainerTest extends \PHPUnit\Framework\TestCase
 {
-    public function testUndefinedConstructorGet()
+    public function testUndefinedConstructorGet(): void
     {
         $this->expectException(\Exception::class);
         $c = new Container();
         $o = $c->user;
     }
 
-    public function testUndefinedConstructorMethod()
+    public function testUndefinedConstructorMethod(): void
     {
         $this->expectException(\Exception::class);
         $c = new Container();
         $o = $c->user();
     }
 
-    public function testSimpleConstructor()
+    public function testSimpleConstructor(): void
     {
         $c = new Container();
         $o = $c->person = function($c) { return new Person(); };
@@ -34,7 +34,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($person, $person2);
     }
 
-    public function testChained()
+    public function testChained(): void
     {
         $c = new Container();
         $c->wife = function($c) { return new Wife; };
@@ -45,7 +45,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($man->wife instanceof Wife);
     }
 
-    public function testWithConstrutorArgs()
+    public function testWithConstrutorArgs(): void
     {
         $c = new Container();
         $c->person = function(Container $c, string $name): Person {
@@ -57,7 +57,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("John", $person->name);
     }
 
-    public function testCallable()
+    public function testCallable(): void
     {
         $sub_Container = new class() { public function create() { return new Person(); } };
         $c = new Container();
@@ -67,7 +67,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($person instanceof Person);
     }
 
-    public function testIsset()
+    public function testIsset(): void
     {
         $c = new Container();
         $c->wife = function($c) { return new Wife; };
@@ -78,7 +78,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(isset($c->world));
     }
 
-    public function testSingleton()
+    public function testSingleton(): void
     {
         $c = new Container();
         $c->pupil = function() { return new Person(uniqid()); };
@@ -99,7 +99,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($pupil1->name == $pupil2->name);
     }
 
-    public function testSingletonCallableSets()
+    public function testSingletonCallableSets(): void
     {
         $c = new Container();
         $c->singleton('teacher', function() { return new Person(uniqid()); });
@@ -110,7 +110,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($c->teacher, $teacher1);
     }
 
-    public function testCallableSingleton()
+    public function testCallableSingleton(): void
     {
         $sub_Container = new class() { public function create() { return new Person(); } };
         $c = new Container();

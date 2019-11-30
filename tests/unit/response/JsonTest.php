@@ -7,14 +7,14 @@ use alkemann\h2l\{Response, response\Json};
 class JsonTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $r = new Json(['id' => 12, 'title' => 'Hello there']);
         $this->assertInstanceOf(Response::class, $r);
         $this->assertInstanceOf(Json::class, $r);
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $data = ['id' => 12, 'title' => 'Hello there'];
         $r = new Json(['id' => 12, 'title' => 'Hello there'], 200, ['header_func' => function($h) {}]);
@@ -24,7 +24,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testContentIsGenerator()
+    public function testContentIsGenerator(): void
     {
         $headers = [];
         $data = $this->mock_gen();
@@ -47,7 +47,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testErrorResponse()
+    public function testErrorResponse(): void
     {
         $headers = [];
         $r = new Json(null, 400, [
@@ -64,7 +64,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $headers);
     }
 
-    public function testErrorResponseWithMessage()
+    public function testErrorResponseWithMessage(): void
     {
         $headers = [];
         $r = new Json(null, 500, [
@@ -81,7 +81,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $headers);
     }
 
-    public function testNoContainer()
+    public function testNoContainer(): void
     {
         $options = [
             'container' => false,
@@ -94,7 +94,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testSetEncodeOptions()
+    public function testSetEncodeOptions(): void
     {
         $options = [
             'container' => false,
@@ -119,7 +119,7 @@ class JsonTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testJsonException()
+    public function testJsonException(): void
     {
         $options = ['header_func' => function($h) {}];
         $this->expectException(\JsonException::class);

@@ -12,7 +12,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     private static $config = [];
     private static $collection_handler;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (extension_loaded('mongodb') === false) {
             self::markTestSkipped("MongoDB driver not installed");
@@ -39,7 +39,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testConnectionFail()
+    public function testConnectionFail(): void
     {
         $this->expectException(ConnectionError::class);
         $m = new Mongo(['host' => 'nope']);
@@ -47,14 +47,14 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($col instanceof \MongoDB\Collection);
     }
 
-    public function testConnectSuccess()
+    public function testConnectSuccess(): void
     {
         $m = new Mongo(self::$config);
         $h = static::$collection_handler->invoke($m, 'tests');
         $this->assertInstanceOf(\MongoDB\Collection::class, $h);
     }
 
-    public function testUsage()
+    public function testUsage(): void
     {
         $m = new Mongo(self::$config);
         $id = $m->insert('tests', ['name' => 'john', 'age' => 38]);

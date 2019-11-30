@@ -8,7 +8,7 @@ use alkemann\h2l\{
 
 class RemoteTest extends \PHPUnit\Framework\TestCase
 {
-    public function testExtractHeaders()
+    public function testExtractHeaders(): void
     {
         $ref_method = new \ReflectionMethod(Remote::class, 'extractHeaders');
         $ref_method->setAccessible(true);
@@ -40,7 +40,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $remote = $this->getMockBuilder(Remote::class)
             ->setMethods(['http'])
@@ -57,7 +57,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Message::class, $result);
     }
 
-    public function testPostJson()
+    public function testPostJson(): void
     {
         $data = ['John' => 'Smart', 'age' => 12];
         $json = json_encode($data);
@@ -81,7 +81,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Message::class, $result);
     }
 
-    public function testPostForm()
+    public function testPostForm(): void
     {
         $data = ['John' => 'Smart', 'age' => 12];
         $string = http_build_query($data);
@@ -104,7 +104,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Message::class, $result);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $remote = $this->getMockBuilder(Remote::class)
             ->setMethods(['http'])
