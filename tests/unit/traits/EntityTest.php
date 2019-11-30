@@ -12,13 +12,13 @@ class MockEntity implements \JsonSerializable { use Entity; public static functi
 class EntityTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testUse()
+    public function testUse(): void
     {
         $e = new class { use Entity; public static function fields():?array {return null; } };
         $this->assertTrue(method_exists($e, 'data'));
     }
 
-    public function testData()
+    public function testData(): void
     {
         $e = new class { use Entity; public static function fields():?array {return null; } };
         $e->data(['id' => 1, 'title' => "tittel"]);
@@ -40,7 +40,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(json_encode($data), $e2->to('json'));
     }
 
-    public function testException()
+    public function testException(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $e = new class { use Entity; public static function fields():?array {return null; } };
@@ -49,7 +49,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $e->to('XML');
     }
 
-    public function testJson()
+    public function testJson(): void
     {
         $data = ['id' => 1, 'title' => "tittel"];
         $e = new MockEntity($data);
@@ -58,7 +58,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testUnknownRelationClass()
+    public function testUnknownRelationClass(): void
     {
         $this->expectException(\Exception::class);
         $ref_class = new \ReflectionClass(Entity::class);
@@ -67,21 +67,21 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $ref_method->invoke($e);
     }
 
-    public function testUnknownRelationName()
+    public function testUnknownRelationName(): void
     {
         $this->expectException(\Error::class);
         $e = new class(['id' => 1, 'name' => 'John']) { use Entity; static $relations = []; public static function fields():?array {return null; } };
         $e->mothers();
     }
 
-    public function testNoRelationsMagicMethod()
+    public function testNoRelationsMagicMethod(): void
     {
         $this->expectException(\Error::class);
         $e = new class(['id' => 1, 'name' => 'John']) { use Entity; public static function fields():?array {return null; }  };
         $e->mothers();
     }
 
-    public function testNoRelations()
+    public function testNoRelations(): void
     {
         $this->expectException(\Error::class);
         $e = new class(['id' => 1, 'name' => 'John']) {
@@ -93,7 +93,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $e->describeRelationship('mothers');
     }
 
-    public function testUnknownRelationType()
+    public function testUnknownRelationType(): void
     {
         $this->expectException(\Exception::class);
         $e = new class(['id' => 1, 'name' => 'John']) {
@@ -108,7 +108,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $e->cars();
     }
 
-    public function testAutomaticRelationValues()
+    public function testAutomaticRelationValues(): void
     {
         $e = new class(['id' => 1, 'name' => 'John']) {
             use Entity;
@@ -145,7 +145,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testReset()
+    public function testReset(): void
     {
         $father = new Father(['id' => 1, 'name' => 'John']);
 
@@ -168,7 +168,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($thrown, "Father didnt try to look in DB for his sons");
     }
 
-    public function testEntityStruct()
+    public function testEntityStruct(): void
     {
         $data = ['name' => 'John', 'dead' => false];
         $person = new class($data) {

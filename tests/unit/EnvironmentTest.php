@@ -14,23 +14,23 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
 {
     private static $test_env = null;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$test_env = Environment::grab(Environment::ALL);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         Environment::setEnvironment(Environment::DEV);
         Environment::set(static::$test_env, Environment::ALL);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Environment::set(static::$test_env);
     }
 
-    public function testEnv()
+    public function testEnv(): void
     {
         $expected = Environment::DEV;
         $result = Environment::current();
@@ -42,7 +42,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testCustomEnvironment()
+    public function testCustomEnvironment(): void
     {
         $env = uniqid();
         Environment::setEnvironment($env);
@@ -50,7 +50,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($env, $result);
     }
 
-    public function testPutAndGet()
+    public function testPutAndGet(): void
     {
         $env = uniqid();
         Environment::setEnvironment($env);
@@ -63,7 +63,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(123, Environment::get('winning', false));
     }
 
-    public function testDefaultValueWhenNotSet()
+    public function testDefaultValueWhenNotSet(): void
     {
         $expected = true;
         $result = Environment::get('debug', true);
@@ -74,7 +74,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testSetAddAndGrab()
+    public function testSetAddAndGrab(): void
     {
         $env = uniqid();
         Environment::setEnvironment($env);
@@ -90,7 +90,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['d' => 1, 'a' => 2], Environment::grab());
     }
 
-    public function testAddAll()
+    public function testAddAll(): void
     {
         Environment::add(['thang' => 'thong'], Environment::ALL);
         $expected = static::$test_env;
@@ -101,7 +101,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testGrabAll()
+    public function testGrabAll(): void
     {
         Environment::put('other', 'fun');
         $expected = static::$test_env;
@@ -110,7 +110,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testPutAll()
+    public function testPutAll(): void
     {
         $key = uniqid();
         Environment::put($key, 68, Environment::ALL);
@@ -121,7 +121,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(68, Environment::get($key, 12));
     }
 
-    public function testMiddleWareStorage()
+    public function testMiddleWareStorage(): void
     {
         $this->assertEquals([], Environment::middlewares());
         Environment::setEnvironment(Environment::PROD);

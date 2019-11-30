@@ -12,7 +12,7 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
     private static $ref_open;
     private static $ref_close;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$ref_class = new \ReflectionClass('alkemann\h2l\Connections');
         static::$ref_connections = static::$ref_class->getProperty('connections');
@@ -23,14 +23,14 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
         static::$ref_close->setAccessible(true);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         static::$ref_connections->setValue([]);
         static::$ref_open->setValue([]);
         static::$ref_close->setValue([]);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         Connections::add('test1', function() {});
 
@@ -40,20 +40,20 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testExceptionOnDuplicate()
+    public function testExceptionOnDuplicate(): void
     {
         Connections::add('test1', function() {});
         Connections::add('test1', function() {});
     }
 
-    public function testGetOnMissing()
+    public function testGetOnMissing(): void
     {
         $this->expectException(ConfigMissing::class);
         $this->expectExceptionCode(ConfigMissing::MISSING_CONNECTION);
         $result = Connections::get('i did not make this');
     }
 
-    public function testGetWithConnect()
+    public function testGetWithConnect(): void
     {
         $status = false; // not connected at start
         $open = function() use (&$status) {
@@ -93,7 +93,7 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testExceptionOnCloseForNotExist()
+    public function testExceptionOnCloseForNotExist(): void
     {
         Connections::close('tested');
     }
@@ -101,7 +101,7 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
     /**
      * @expectedException Exception
      */
-    public function testExceptionOnCloseForAlreadyClosed()
+    public function testExceptionOnCloseForAlreadyClosed(): void
     {
         static::$ref_connections->setValue(['tested' => false]);
         static::$ref_open->setValue(['tested' => function() {}]);
@@ -109,7 +109,7 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
         Connections::close('tested');
     }
 
-    public function testOkToCallCloseWithoutCloseConfigured()
+    public function testOkToCallCloseWithoutCloseConfigured(): void
     {
         static::$ref_connections->setValue(['tested' => true]);
         static::$ref_open->setValue(['tested' => function() {}]);

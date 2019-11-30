@@ -10,7 +10,7 @@ use MongoDB\{
 class MongodbTest extends \PHPUnit\Framework\TestCase
 {
     static $ref_client;
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (extension_loaded('mongodb') === false) {
             self::markTestSkipped("MongoDB driver not installed");
@@ -20,13 +20,13 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         static::$ref_client->setAccessible(true);
     }
 
-    public function testIdMaker()
+    public function testIdMaker(): void
     {
         $id = MongoDB::id('597dfade74050a000678d7b2');
         $this->assertTrue($id instanceof ObjectId);
     }
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         $mongo = new MongoDB();
 
@@ -47,7 +47,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($set, $config2);
     }
 
-    private function mocky(Collection $collection, array $config = [])
+    private function mocky(Collection $collection, array $config = []): MongoDB
     {
         $mongo = new MongoDB($config);
         $client = new class($collection){
@@ -59,7 +59,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         return $mongo;
     }
 
-    public function testOne()
+    public function testOne(): void
     {
         $collection = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
@@ -79,7 +79,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testOneNotFound()
+    public function testOneNotFound(): void
     {
         $collection = $this->getMockBuilder(Collection::class)
             ->disableOriginalConstructor()
@@ -93,7 +93,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($mongo->one('samling', ['name' => 'James']));
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $cursor = function() {
             yield new BSONDocument([
@@ -137,7 +137,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testInsertOne()
+    public function testInsertOne(): void
     {
         $mongo_result = $this->getMockBuilder(InsertOneResult::class)
             ->disableOriginalConstructor()
@@ -166,7 +166,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testInsertOneNotAcknowledged()
+    public function testInsertOneNotAcknowledged(): void
     {
         $mongo_result = $this->getMockBuilder(InsertOneResult::class)
             ->disableOriginalConstructor()
@@ -190,7 +190,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testInsertFailed()
+    public function testInsertFailed(): void
     {
         $mongo_result = $this->getMockBuilder(InsertOneResult::class)
             ->disableOriginalConstructor()
@@ -216,7 +216,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $mongo_result = $this->getMockBuilder(UpdateResult::class)
             ->disableOriginalConstructor()
@@ -242,7 +242,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testUpdateNotAcknowledged()
+    public function testUpdateNotAcknowledged(): void
     {
         $mongo_result = $this->getMockBuilder(UpdateResult::class)
             ->disableOriginalConstructor()
@@ -265,7 +265,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $mongo_result = $this->getMockBuilder(DeleteResult::class)
             ->disableOriginalConstructor()
@@ -291,7 +291,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testDeleteUnacknowledged()
+    public function testDeleteUnacknowledged(): void
     {
         $mongo_result = $this->getMockBuilder(DeleteResult::class)
             ->disableOriginalConstructor()
@@ -314,7 +314,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testQueryException()
+    public function testQueryException(): void
     {
         $this->expectException(\Exception::class);
         $mongo = new MongoDB();

@@ -7,7 +7,7 @@ use alkemann\h2l\tests\mocks\mysql\Statement as MockStatement;
 
 class PDOTest extends \PHPUnit\Framework\TestCase
 {
-    public function testConfigFromUrl()
+    public function testConfigFromUrl(): void
     {
         $url = 'mysql://user:pass@localhost/dbname?sslmode=true&win=1';
         $config = ['url' => $url];
@@ -29,7 +29,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testHandlerWithQueryParamOptions()
+    public function testHandlerWithQueryParamOptions(): void
     {
         $pdo_mock = new class()
         {
@@ -60,7 +60,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result->config);
     }
 
-    public function testHandlerWithQueryParamOptionsNoQuery()
+    public function testHandlerWithQueryParamOptionsNoQuery(): void
     {
         $pdo_mock = new class()
         {
@@ -95,7 +95,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
      * Constructor can't be mocked?
      *
 
-    public function testConnectionError()
+    public function testConnectionError(): void
     {
 
         $handler = $this->getMockBuilder(\PDO::class)
@@ -112,7 +112,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
 
     */
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $handler = $this->getMockBuilder(\PDO::class)
             ->disableOriginalConstructor()
@@ -132,7 +132,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore', 'status' => 1], ['id' => 15, 'title' => 'Space', 'status' => 1]];
@@ -157,7 +157,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindWithOrder()
+    public function testFindWithOrder(): void
     {
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 15, 'title' => 'Space', 'status' => 1], ['id' => 12, 'title' => 'Gore', 'status' => 1]];
@@ -174,7 +174,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindWithInArray()
+    public function testFindWithInArray(): void
     {
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore', 'status' => 1], ['id' => 15, 'title' => 'Space', 'status' => 1]];
@@ -190,7 +190,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindWithMultipleConditions()
+    public function testFindWithMultipleConditions(): void
     {
         $pdo = new PDO;
         $ref_method = new \ReflectionMethod(PDO::class, 'where');
@@ -200,7 +200,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindWithArrayConditions()
+    public function testFindWithArrayConditions(): void
     {
         $pdo = new PDO;
         $ref_method = new \ReflectionMethod(PDO::class, 'where');
@@ -210,7 +210,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindNoResults()
+    public function testFindNoResults(): void
     {
         $ec = function() { return false; };
         $mi = new MockStatement($ec, []);
@@ -223,7 +223,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], iterator_to_array($result));
     }
 
-    private function createInstanceWithMockedHandler(string $expected_query, MockStatement $ms)
+    private function createInstanceWithMockedHandler(string $expected_query, MockStatement $ms): PDO
     {
         $handler = $this->getMockBuilder(PDO::class)
             ->setMethods(['prepare', 'lastInsertId']) // mocked methods
@@ -242,14 +242,14 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         return $m;
     }
 
-    public function testEmptyUpdate()
+    public function testEmptyUpdate(): void
     {
         $m = new PDO;
         $this->assertEquals(0, $m->update('tab', [], ['status' => 'NEW']));
         $this->assertEquals(0, $m->update('tab', ['id' => 1], []));
     }
 
-    public function testOne()
+    public function testOne(): void
     {
         $ec = function($v) { return sizeof($v) === 0; };
         $r  = [['id' => 12, 'title' => 'Gore']];
@@ -261,7 +261,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testOneNotFound()
+    public function testOneNotFound(): void
     {
         $m = $this->getMockBuilder(PDO::class)
             ->setMethods(['find'])
@@ -273,7 +273,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($m->one('things', ['id' => 99]));
     }
 
-    public function testOneFoundMany()
+    public function testOneFoundMany(): void
     {
         $this->expectException(\Error::class);
 
@@ -289,7 +289,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($m->one('things', ['id' => 99]));
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $eq = "UPDATE things SET status = :d_status, place = :d_place WHERE id = :c_id ;";
         $ec = function() { return true; };
@@ -300,7 +300,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testInsert()
+    public function testInsert(): void
     {
         $eq = "INSERT INTO things (task, status) VALUES (:d_task, :d_status);";
         $ec = function() { return true; };
@@ -319,7 +319,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $eq = "DELETE FROM things WHERE id = :c_id ;";
         $ec = function() { return true; };
@@ -330,7 +330,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testEmptyDelete()
+    public function testEmptyDelete(): void
     {
         $m = new PDO;
         $this->assertEquals(0, $m->delete('tab', []));

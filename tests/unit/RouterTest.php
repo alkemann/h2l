@@ -10,13 +10,13 @@ use alkemann\h2l\{
 class RouterTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testEmptyRoute()
+    public function testEmptyRoute(): void
     {
         $result = Router::match('/things');
         $this->assertNull($result);
     }
 
-    public function testRouteWithCallables()
+    public function testRouteWithCallables(): void
     {
         $ref_prop = new \ReflectionProperty(Route::class, 'callback');
         $ref_prop->setAccessible(true);
@@ -43,7 +43,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(\Closure::fromCallable("{$cname}::stats"), $result);
     }
 
-    public function testAlias()
+    public function testAlias(): void
     {
         Router::alias('/', 'home.html');
         Router::alias('alias/noslash', 'real/noslash');
@@ -63,7 +63,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/real/noslash', $result['/alias/noslash']);
     }
 
-    public function testDynamicRoutes()
+    public function testDynamicRoutes(): void
     {
         $cb = function() { $a=1; };
         Router::add('|^api/tasks$|', $cb, Http::GET);
@@ -76,7 +76,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($result);
     }
 
-    public function testNamedParams()
+    public function testNamedParams(): void
     {
         $id = null;
         $name = null;
@@ -109,7 +109,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('{"data":{"id":12,"name":"tasks"}}', $response->render());
     }
 
-    public function testDirectMatchedRoute()
+    public function testDirectMatchedRoute(): void
     {
         $cb = function(Request $r) { return ""; };
         Router::add('/api/people', $cb, Http::GET);
@@ -127,7 +127,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/api/cars', "$route");
     }
 
-    public function testMatch()
+    public function testMatch(): void
     {
         $cb = function(Request $r) { return ""; };
          Router::add('|/dynamic/(?<id>\d+)|', $cb, Http::GET);
@@ -137,7 +137,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/dynamic/123', "$route");
     }
 
-    public function testFallback()
+    public function testFallback(): void
     {
         $this->assertNull(Router::getFallback());
         Router::fallback(function() { return new \alkemann\h2l\response\Text("test123"); });
@@ -145,7 +145,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($route instanceof \alkemann\h2l\interfaces\Route);
         $this->assertEquals("test123", $route(new Request)->render());
     }
-    public function testFallbackCallable()
+    public function testFallbackCallable(): void
     {
         $test_fallback = new class() {
             function fb(): \alkemann\h2l\Response { return new \alkemann\h2l\response\Text("test123"); }
@@ -156,7 +156,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("test123", $route(new Request)->render());
     }
 
-    public function testRoutesAndSlash()
+    public function testRoutesAndSlash(): void
     {
         $f = function($r) { return $r; };
         Router::add('noslash', $f);

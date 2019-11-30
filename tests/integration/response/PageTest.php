@@ -10,7 +10,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
 {
     private static $config = [];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         Environment::setEnvironment(Environment::TEST);
@@ -19,7 +19,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testRenderingSimple()
+    public function testRenderingSimple(): void
     {
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
@@ -49,7 +49,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testUsingPartsFile()
+    public function testUsingPartsFile(): void
     {
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
@@ -66,7 +66,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testMissingViewFile()
+    public function testMissingViewFile(): void
     {
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()

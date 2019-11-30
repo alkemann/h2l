@@ -8,7 +8,7 @@ use InvalidArgumentException;
 class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testGetArrayValueByKeys()
+    public function testGetArrayValueByKeys(): void
     {
         $data = [
             'one' => [
@@ -31,14 +31,14 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(73, ArrayManipulations::getArrayValueByKeys(['three','three_one'], $data));
     }
 
-    public function testExceptionWhenNotSet()
+    public function testExceptionWhenNotSet(): void
     {
         $this->expectException(\OutOfBoundsException::class);
         $data = [];
         ArrayManipulations::getArrayValueByKeys(['one', 'two'], $data);
     }
 
-    public function testGetFromArrayByKey()
+    public function testGetFromArrayByKey(): void
     {
         $data = [
             'one' => [
@@ -62,7 +62,7 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(56, ArrayManipulations::getFromArrayByKey('one | one_two | one_two_one', $data, ' | '));
     }
 
-    public function testNullWhenNotSet()
+    public function testNullWhenNotSet(): void
     {
         $data = [
             'one' => [
@@ -75,7 +75,7 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         $this->assertNull(ArrayManipulations::getFromArrayByKey('one.one_two.one_two_two', $data));
     }
 
-    public function testOutOfBoundsException()
+    public function testOutOfBoundsException(): void
     {
         $data = [];
         $thrown = false;
@@ -93,7 +93,7 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testSetByArray()
+    public function testSetByArray(): void
     {
         $data = $expected = [
             'one' => [
@@ -120,7 +120,7 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $data);
     }
 
-    public function testSetByKey()
+    public function testSetByKey(): void
     {
         $data = $expected = [
             'one' => [
@@ -147,14 +147,14 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $data);
     }
 
-    public function testEmptyKeyStringGet()
+    public function testEmptyKeyStringGet(): void
     {
         $data = ['one' => ['two' => ['three' => 12]]];
         $this->expectException(InvalidArgumentException::class);
         $result = ArrayManipulations::getFromArrayByKey('.', $data, '');
     }
 
-    public function testEmptyKeyStringSet()
+    public function testEmptyKeyStringSet(): void
     {
         $data = ['one' => ['two' => ['three' => 12]]];
         $this->expectException(InvalidArgumentException::class);

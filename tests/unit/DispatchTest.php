@@ -17,7 +17,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
      */
     private static $ref_request;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         Environment::setEnvironment(Environment::TEST);
@@ -30,7 +30,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         return self::$ref_request->getValue($dispatch);
     }
 
-    public function testGetHtml()
+    public function testGetHtml(): void
     {
         $this->assertEquals(Environment::TEST, Environment::current());
         $dispatch = new Dispatch(
@@ -65,7 +65,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Response::class, $result);
     }
 
-    public function testHeaders()
+    public function testHeaders(): void
     {
         $dispatch = new Dispatch(
             [ // $_REQUEST
@@ -92,7 +92,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('asdf123', $r->header('Api-Key'));
     }
 
-    public function testPostJson()
+    public function testPostJson(): void
     {
         $dispatch = new Dispatch(
             [ // $_REQUEST
@@ -132,7 +132,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testParameters()
+    public function testParameters(): void
     {
         $route = new Route('thing', function () {
             return new Error();
@@ -149,13 +149,13 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertNull($request->param('paris'));
     }
 
-    public function testNoRouteResponse()
+    public function testNoRouteResponse(): void
     {
         $request = new Dispatch;
         $this->assertNull($request->response());
     }
 
-    public function testResponse()
+    public function testResponse(): void
     {
         $request = new Dispatch;
         $cb = function (Request $r): ?Response {
@@ -167,7 +167,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(Json::class, $result);
     }
 
-    public function testSetRouteFromRouter()
+    public function testSetRouteFromRouter(): void
     {
         $response = new Json('hey');
         $cb = function (Request $r) use ($response): ?Response {
@@ -181,7 +181,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($response, $result);
     }
 
-    public function testMiddleWare()
+    public function testMiddleWare(): void
     {
         $events = [];
 
@@ -214,7 +214,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($result instanceof Error, "Response is : [" . get_class($result) . "]");
     }
 
-    public function testCallableMiddle()
+    public function testCallableMiddle(): void
     {
         $route = new Route('testMiddleWare', function (Request $r): ?Response {
             return new Json(['place' => 'Oslo']);
@@ -236,7 +236,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         return new Text("Override!", 500);
     }
 
-    public function testSetFromRouterWithNoMatch()
+    public function testSetFromRouterWithNoMatch(): void
     {
         $mock_router = new class implements \alkemann\h2l\interfaces\Router
         {
@@ -267,7 +267,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         Environment::setEnvironment(Environment::TEST);
     }
 
-    public function testFallback()
+    public function testFallback(): void
     {
         Environment::setEnvironment('testFallback');
         $dispatch = new Dispatch;

@@ -11,7 +11,7 @@ use alkemann\h2l\util\Chain;
 class ChainTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testEmptyChain()
+    public function testEmptyChain(): void
     {
         $this->expectException(EmptyChainError::class);
         $chain  = new Chain;
@@ -19,7 +19,7 @@ class ChainTest extends \PHPUnit\Framework\TestCase
         $result = $chain->next($request);
     }
 
-    public function testChain()
+    public function testChain(): void
     {
         $events = [];
 

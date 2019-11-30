@@ -11,7 +11,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
 
     private static $disconnected = false;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         if (self::$disconnected || self::is_disconnected()) {
             self::markTestSkipped("No internet connection, Remote Integration test skipped");
@@ -32,7 +32,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    public function testGetRequest()
+    public function testGetRequest(): void
     {
         $request = (new Message)
             ->withUrl('http://mockbin.org/bin/cf21c2d2-bb7a-46d5-aa3c-b0d52faa25ad?foo=bar&foo=baz');
@@ -42,7 +42,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Http::GET, $response->method());
     }
 
-    public function testPostRequest()
+    public function testPostRequest(): void
     {
         $response = (new Remote)->postForm('http://mockbin.org/bin/cf21c2d2-bb7a-46d5-aa3c-b0d52faa25ad?foo=bar&foo=baz', ['name' => 'Alek']);
         $this->assertInstanceOf(Message::class, $response);
@@ -50,7 +50,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(Http::POST, $response->method());
     }
 
-    public function testCurlFailure()
+    public function testCurlFailure(): void
     {
         $request = (new Message)->withUrl('http://www.tttttttttttttttt.nothing');
         try {
