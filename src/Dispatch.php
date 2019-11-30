@@ -14,12 +14,12 @@ class Dispatch
     /**
      * @var array
      */
-    private $middlewares = [];
+    private array $middlewares = [];
 
     /**
      * @var Request
      */
-    protected $request;
+    protected Request $request;
 
     /**
      * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route

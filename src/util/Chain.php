@@ -18,7 +18,7 @@ class Chain
     /**
      * @var array
      */
-    private $chain;
+    private array $chain;
 
     /**
      * Constructor

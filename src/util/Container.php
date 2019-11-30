@@ -7,11 +7,11 @@ use Closure;
 final class Container
 {
     /** @var array<string, Closure> */
-    private $_constructors = [];
+    private array $_constructors = [];
     /** @var array<string, bool> */
-    private $_is_singleton = [];
+    private array $_is_singleton = [];
     /** @var array<string, object> */
-    private $_singletons = [];
+    private array $_singletons = [];
 
     /**
      * Set constructor callable for class creation

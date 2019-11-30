@@ -76,7 +76,7 @@ class Http
     /**
      * @var array<string, string>
      */
-    protected static $contentTypeToFileEnding = [
+    protected static array $contentTypeToFileEnding = [
         'text/html' => 'html',
         'application/json' => 'json',
         'application/xml' => 'xml',
@@ -87,7 +87,7 @@ class Http
     /**
      * @var array<int, string>
      */
-    private static $code_to_message = [
+    private static array $code_to_message = [
         // Informational 1xx
         100 => 'Continue',
         101 => 'Switching Protocols',

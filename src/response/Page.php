@@ -23,31 +23,31 @@ class Page extends Response
      *
      * @var string
      */
-    public $layout = 'default';
+    public string $layout = 'default';
     /**
      * @var null|Request
      */
-    protected $request = null;
+    protected ?Request $request = null;
     /**
      * @var array
      */
-    protected $data = [];
+    protected array $data = [];
     /**
      * @var string
      */
-    private $template = 'error.html';
+    private string $template = 'error.html';
     /**
      * @var string
      */
-    private $content_type = Http::CONTENT_HTML;
+    private string $content_type = Http::CONTENT_HTML;
     /**
      * @var int
      */
-    private $code = 200;
+    private int $code = 200;
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * Constructor

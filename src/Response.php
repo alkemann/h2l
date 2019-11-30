@@ -14,11 +14,11 @@ abstract class Response
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
     /**
      * @var Message
      */
-    protected $message;
+    protected Message $message;
 
     /**
      * Returns the HTTP Code of the response

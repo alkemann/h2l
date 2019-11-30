@@ -18,15 +18,15 @@ class Connections
     /**
      * @var array
      */
-    private static $connections = [];
+    private static array $connections = [];
     /**
      * @var array
      */
-    private static $open = [];
+    private static array $open = [];
     /**
      * @var array
      */
-    private static $close = [];
+    private static array $close = [];
 
     /**
      * Add a new connection by giving a name and a closure that is callable to open and return it

@@ -16,19 +16,19 @@ class Router implements interfaces\Router
      * Defines which character is used by regex dynamic routes
      * @var string
      */
-    public static $DELIMITER = '|';
+    public static string $DELIMITER = '|';
     /**
      * @var array<string, string>
      */
-    private static $aliases = [];
+    private static array $aliases = [];
     /**
      * @var array<string, array<string, Closure>>
      */
-    private static $routes = [];
+    private static array $routes = [];
     /**
      * @var null|Closure
      */
-    private static $fallback = null;
+    private static ?Closure $fallback = null;
 
     /**
      * Add an alias route, i.e. `/` as alias for `home.html`
