@@ -140,7 +140,7 @@ class Router implements interfaces\Router
                  * @param string|int $v
                  * @return bool
                  */
-                function ($v) {
+                static function ($v) {
                     return !is_int($v);
                 },
                 \ARRAY_FILTER_USE_KEY
@@ -166,7 +166,7 @@ class Router implements interfaces\Router
         $url = self::$aliases[$url] ?? $url;
         return static::createRoute(
             $url,
-            function (Request $request): ?Response {
+            static function (Request $request): ?Response {
                 $page = response\Page::fromRequest($request);
                 // @TODO BC breaking, but move this?
                 return $page->isValid() ? $page : null;
