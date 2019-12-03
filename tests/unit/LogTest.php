@@ -3,6 +3,7 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\Log;
+use InvalidArgumentException;
 
 class LogTest extends \PHPUnit\Framework\TestCase
 {
@@ -36,19 +37,15 @@ class LogTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $result);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testCheckHandlerValidityObject(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         Log::handler('not a logg interfaces', new \stdClass());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testCheckHandlerValidityNotCallale(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         Log::handler('not a closure', 'oopsIdidNotMakeThis');
     }
 

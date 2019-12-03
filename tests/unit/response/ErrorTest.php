@@ -103,11 +103,9 @@ class ErrorTest extends \PHPUnit\Framework\TestCase
         Environment::setEnvironment(Environment::TEST);
     }
 
-    /**
-     * @expectedException Error
-     */
     public function testHeaderException(): void
     {
+        $this->expectException(\Error::class);
         $e = new Error([], ['header_func' => 99]);
         $e->render();
     }

@@ -3,6 +3,8 @@
 namespace alkemann\h2l\tests\unit;
 
 use alkemann\h2l\{Connections, exceptions\ConfigMissing};
+use InvalidArgumentException;
+use Exception;
 
 class ConnectionsTest extends \PHPUnit\Framework\TestCase
 {
@@ -37,11 +39,9 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, static::$ref_connections->getValue()['test1']);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testExceptionOnDuplicate(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         Connections::add('test1', function() {});
         Connections::add('test1', function() {});
     }
@@ -90,19 +90,15 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, static::$ref_connections->getValue()['tested']);
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
     public function testExceptionOnCloseForNotExist(): void
     {
+        $this->expectException(InvalidArgumentException::class);
         Connections::close('tested');
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testExceptionOnCloseForAlreadyClosed(): void
     {
+        $this->expectException(Exception::class);
         static::$ref_connections->setValue(['tested' => false]);
         static::$ref_open->setValue(['tested' => function() {}]);
         static::$ref_close->setValue(['tested' => function() {}]);
