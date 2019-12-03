@@ -115,9 +115,6 @@ class Dispatch
      */
     public function setRoute(interfaces\Route $route): void
     {
-        if ($this->request === null) {
-            $this->request = new Request();
-        }
         $this->request = $this->request->withRoute($route);
     }
 
