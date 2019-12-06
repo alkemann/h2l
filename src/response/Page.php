@@ -152,7 +152,7 @@ class Page extends Response
         try {
             if ($headfile && file_exists($headfile)) {
                 $sldkfjlksejflskjflskdjflskdfj = $headfile;
-                (function () use ($sldkfjlksejflskjflskdjflskdfj) {
+                (function() use ($sldkfjlksejflskjflskdjflskdfj) {
                     extract($this->data);
                     include $sldkfjlksejflskjflskdjflskdfj;
                 })();
@@ -160,7 +160,7 @@ class Page extends Response
 
             if ($neckfile && file_exists($neckfile)) {
                 $lidsinqjhsdfytqkwjkasjdksadsdg = $neckfile;
-                (function () use ($lidsinqjhsdfytqkwjkasjdksadsdg) {
+                (function() use ($lidsinqjhsdfytqkwjkasjdksadsdg) {
                     extract($this->data);
                     include $lidsinqjhsdfytqkwjkasjdksadsdg;
                 })();
@@ -215,7 +215,7 @@ class Page extends Response
             ob_start();
             try {
                 $ldkfoskdfosjicyvutwehkshfskjdf = $footfile;
-                (function () use ($ldkfoskdfosjicyvutwehkshfskjdf) {
+                (function() use ($ldkfoskdfosjicyvutwehkshfskjdf) {
                     extract($this->data);
                     include $ldkfoskdfosjicyvutwehkshfskjdf;
                 })();
@@ -243,7 +243,7 @@ class Page extends Response
         try {
             // or another way to hide the file variable?
             $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd = $file;
-            (function () use ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
+            (function() use ($dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd) {
                 extract($this->data);
                 include $dsfjskdfjsdlkfjsdkfjsdkfjsdlkfjsd;
             })();
@@ -274,7 +274,7 @@ class Page extends Response
         ob_start();
         try {
             $popsemdsdfosjicyvsoaowkdawd = $parts_file;
-            (function () use ($popsemdsdfosjicyvsoaowkdawd) {
+            (function() use ($popsemdsdfosjicyvsoaowkdawd) {
                 extract($this->data);
                 include $popsemdsdfosjicyvsoaowkdawd;
             })();

@@ -92,7 +92,7 @@ trait Model
         unset($options['with']);
         $result = static::db()->find(static::table(), $conditions, $options);
         $pk = static::pk();
-        $gen = function () use ($result, $pk, $with) {
+        $gen = function() use ($result, $pk, $with) {
             foreach ($result as $row) {
                 $model = new static($row);
                 if ($with) {
@@ -151,7 +151,7 @@ trait Model
         if (empty($fields) === false) {
             $data = array_filter(
                 $data,
-                static function ($key) use ($fields) {
+                static function($key) use ($fields) {
                     return in_array($key, $fields);
                 },
                 ARRAY_FILTER_USE_KEY

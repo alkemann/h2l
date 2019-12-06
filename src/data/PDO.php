@@ -184,7 +184,7 @@ class PDO implements Source
         if (empty($conditions)) {
             return "";
         }
-        $fun = function ($o, $v) use ($conditions) : string {
+        $fun = function($o, $v) use ($conditions) : string {
             if (is_array($conditions[$v])) {
                 $qa = [];
                 $index = 0;
@@ -279,7 +279,7 @@ class PDO implements Source
 
     private function data(array $data): string
     {
-        $fun = function ($o, $v): string {
+        $fun = function($o, $v): string {
             return "{$o}, {$v} = :d_{$v}";
         };
         return trim((string) array_reduce(array_keys($data), $fun, ""), ", ");

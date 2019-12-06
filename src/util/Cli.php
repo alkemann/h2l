@@ -45,11 +45,11 @@ abstract class Cli
     {
         $argv = $this->getGlobalArgV();
 
-        $int_filter = function ($k): bool {
+        $int_filter = function($k): bool {
             return is_int($k);
         };
         $just_longs = array_filter($options_map, $int_filter, ARRAY_FILTER_USE_KEY);
-        $string_filter = function ($k): bool {
+        $string_filter = function($k): bool {
             return is_string($k);
         };
         $options_map = array_filter($options_map, $string_filter, ARRAY_FILTER_USE_KEY);
@@ -111,13 +111,13 @@ abstract class Cli
     protected function input(): void
     {
         $this->out("Running Command: [ {$this->command} ] from [ {$this->self} ]");
-        $flags = join(', ', array_keys(array_filter($this->args, function ($val): bool {
+        $flags = join(', ', array_keys(array_filter($this->args, function($val): bool {
             return $val === true;
         })));
         if (empty($flags) === false) {
             $this->out("Flags: [ {$flags} ]");
         }
-        $options = urldecode(http_build_query(array_filter($this->args, function ($val): bool {
+        $options = urldecode(http_build_query(array_filter($this->args, function($val): bool {
             return is_bool($val) === false;
         }), '', ", "));
         if (empty($options) === false) {
