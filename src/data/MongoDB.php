@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace alkemann\h2l\data;
 
@@ -127,7 +127,7 @@ class MongoDB implements Source
     private function idReplaceConditions(array $conditions): array
     {
         if (array_key_exists('id', $conditions)) {
-            $id = new ObjectId($conditions['id']);
+            $id = new ObjectId((string) $conditions['id']);
             unset($conditions['id']);
             $conditions['_id'] = $id;
         }

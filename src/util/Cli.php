@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace alkemann\h2l\util;
 
@@ -190,7 +190,7 @@ abstract class Cli
      */
     public function arg(string $label): ?string
     {
-        return array_key_exists($label, $this->args) ? $this->args[$label] : null;
+        return array_key_exists($label, $this->args) ? (string) $this->args[$label] : null;
     }
 
     /**
