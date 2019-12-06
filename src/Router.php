@@ -52,7 +52,7 @@ class Router implements interfaces\Router
      *
      * @param string $url Regex that is valid for preg_match, including named groups
      * @param callable $callable
-     * @param string|array $methods a single Http::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
+     * @param string|string[] $methods a single Http::<GET/POST/PUT/PATCH/DELETE> or an array of multiple
      * @internal param Closure $closure Code to run on this match
      */
     public static function add(string $url, callable $callable, $methods = [Http::GET]): void

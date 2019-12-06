@@ -43,7 +43,7 @@ abstract class Response
     /**
      * Returns the `alkemann\Message` object part of the response
      *
-     * @return Message
+     * @return null|Message
      */
     public function message(): ?Message
     {
