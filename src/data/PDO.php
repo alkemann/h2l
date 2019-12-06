@@ -279,10 +279,13 @@ class PDO implements Source
 
     private function data(array $data): string
     {
-        $fun = function($o, $v): string {
-            return "{$o}, {$v} = :d_{$v}";
-        };
-        return trim((string) array_reduce(array_keys($data), $fun, ""), ", ");
+        /**
+         * @param string $o
+         * @param mixed $v
+         * @return string
+         */
+        $f = static fn(string $o, $v): string => "{$o}, {$v} = :d_{$v}";
+        return trim((string) array_reduce(array_keys($data), $f, ""), ", ");
     }
 
     /**
