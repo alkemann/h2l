@@ -140,9 +140,7 @@ class Router implements interfaces\Router
                  * @param string|int $v
                  * @return bool
                  */
-                static function ($v) {
-                    return !is_int($v);
-                },
+                static fn($v) => !is_int($v),
                 \ARRAY_FILTER_USE_KEY
             );
 

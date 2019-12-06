@@ -44,15 +44,24 @@ abstract class Cli
     protected function getConvertedOptions(array $options_map): array
     {
         $argv = $this->getGlobalArgV();
-
-        $int_filter = function ($k): bool {
-            return is_int($k);
-        };
-        $just_longs = array_filter($options_map, $int_filter, ARRAY_FILTER_USE_KEY);
-        $string_filter = function ($k): bool {
-            return is_string($k);
-        };
-        $options_map = array_filter($options_map, $string_filter, ARRAY_FILTER_USE_KEY);
+        $just_longs = array_filter(
+            $options_map,
+            /**
+             * @param mixed $k
+             * @return bool
+             */
+            static fn($k): bool => is_int($k),
+            ARRAY_FILTER_USE_KEY
+        );
+        $options_map = array_filter(
+            $options_map,
+            /**
+             * @param mixed $k
+             * @return bool
+             */
+            static fn($k): bool => is_string($k),
+            ARRAY_FILTER_USE_KEY
+        );
         $short_options = join('', array_keys($options_map));
         $long_options = array_merge(array_values($options_map), $just_longs);
         $args = $this->getOpt($short_options, $long_options);
