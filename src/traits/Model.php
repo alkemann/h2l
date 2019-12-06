@@ -151,9 +151,7 @@ trait Model
         if (empty($fields) === false) {
             $data = array_filter(
                 $data,
-                static function($key) use ($fields) {
-                    return in_array($key, $fields);
-                },
+                static fn(string $key) => in_array($key, $fields),
                 ARRAY_FILTER_USE_KEY
             );
         }
