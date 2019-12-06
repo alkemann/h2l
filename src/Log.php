@@ -104,9 +104,8 @@ class Log
      * @codeCoverageIgnore
      * @param string $level
      * @param string $message
-     * @param array $context
      */
-    private static function std(string $level, string $message, array $context = []): void
+    private static function std(string $level, string $message): void
     {
         $level = strtoupper($level);
         $string = "{$level}: {$message}\n";
@@ -120,10 +119,9 @@ class Log
      * @codeCoverageIgnore
      * @param string $level
      * @param string $message
-     * @param array $context
      * @throws ConfigMissing
      */
-    private static function file(string $level, string $message, array $context = []): void
+    private static function file(string $level, string $message): void
     {
         $path = Environment::get('logs_path');
         if (is_null($path)) {
