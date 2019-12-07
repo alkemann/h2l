@@ -92,7 +92,7 @@ trait Model
         unset($options['with']);
         $result = static::db()->find(static::table(), $conditions, $options);
         $pk = static::pk();
-        $gen = function () use ($result, $pk, $with) {
+        $gen = function() use ($result, $pk, $with) {
             foreach ($result as $row) {
                 $model = new static($row);
                 if ($with) {

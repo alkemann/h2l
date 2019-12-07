@@ -120,13 +120,13 @@ abstract class Cli
     protected function input(): void
     {
         $this->out("Running Command: [ {$this->command} ] from [ {$this->self} ]");
-        $flags = join(', ', array_keys(array_filter($this->args, function ($val): bool {
+        $flags = join(', ', array_keys(array_filter($this->args, function($val): bool {
             return $val === true;
         })));
         if (empty($flags) === false) {
             $this->out("Flags: [ {$flags} ]");
         }
-        $options = urldecode(http_build_query(array_filter($this->args, function ($val): bool {
+        $options = urldecode(http_build_query(array_filter($this->args, function($val): bool {
             return is_bool($val) === false;
         }), '', ", "));
         if (empty($options) === false) {

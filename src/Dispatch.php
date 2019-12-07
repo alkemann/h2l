@@ -129,7 +129,7 @@ class Dispatch
     public function response(): ?Response
     {
         $cbs = $this->middlewares;
-        $call_eventual_route_at_end_of_chain = static function (Request $request, Chain $chain): ?Response {
+        $call_eventual_route_at_end_of_chain = static function(Request $request): ?Response {
             $route = $request->route();
             if (is_null($route)) {
                 if (Environment::get('debug')) {

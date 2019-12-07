@@ -184,7 +184,7 @@ class PDO implements Source
         if (empty($conditions)) {
             return "";
         }
-        $fun = function ($o, $v) use ($conditions) : string {
+        $fun = function($o, $v) use ($conditions) : string {
             if (is_array($conditions[$v])) {
                 $qa = [];
                 $index = 0;
