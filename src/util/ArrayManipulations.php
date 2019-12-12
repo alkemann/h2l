@@ -52,7 +52,7 @@ class ArrayManipulations
      *  getArrayValueByKeys(['four','five'], $data) will throw OutOfBoundsException
      * ```
      *
-     * @param  array $keys
+     * @param  array<string> $keys
      * @param  mixed $data passed by reference
      * @return mixed
      * @throws OutOfBoundsException if the key does not exist in data

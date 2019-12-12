@@ -16,7 +16,7 @@ use alkemann\h2l\util\Http;
  *
  * @package alkemann\h2l
  */
-class Page extends Response
+final class Page extends Response
 {
     /**
      * Overwrite this in view templates to set layout, i.e. `$this->layout = 'slim';`

@@ -12,7 +12,7 @@ use alkemann\h2l\util\Chain;
 class Dispatch
 {
     /**
-     * @var array
+     * @var array<callable>
      */
     private $middlewares = [];
 
@@ -27,10 +27,10 @@ class Dispatch
      * Response type can be set from HTTP_ACCEPT header
      * Call setRoute or setRouteFromRouter to set a route
      *
-     * @param array $request $_REQUEST
-     * @param array $server $_SERVER
-     * @param array $get $_GET
-     * @param array $post $_POST
+     * @param array<string, mixed> $request $_REQUEST
+     * @param array<string, mixed> $server $_SERVER
+     * @param array<string, mixed> $get $_GET
+     * @param array<string, mixed> $post $_POST
      * @param null|interfaces\Session $session if null, a default Session with $_SESSION will be created
      */
     public function __construct(
