@@ -108,6 +108,9 @@ class ArrayManipulations
     public static function setArrayValueByKeys(array $keys, $value, &$data): void
     {
         $key = array_shift($keys);
+        if (is_null($key)) {
+            throw new InvalidArgumentException("At least one key is required");
+        }
         if (empty($keys)) {
             $data[$key] = $value;
         } else {
