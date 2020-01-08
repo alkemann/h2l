@@ -23,8 +23,8 @@
     },
     "require-dev": {
         "mongodb/mongodb": "^1.1",
-        "phpstan/phpstan-shim": "^0.11.19",
-        "phpunit/phpunit": "^8.4"
+        "phpunit/phpunit": "^8.4",
+        "phpstan/phpstan": "^0.12.4"
     },
     "bin": ["bin/skeleton", "bin/testh2l"],
     "autoload": {
