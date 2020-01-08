@@ -11,3 +11,6 @@ parameters:
         -
             message: '#expects array, array<int, string>|false given#'
             path: src/util/ArrayManipulations.php
+        -
+            message: '#has no return typehint#'
+            path: src/interfaces/Source.php
