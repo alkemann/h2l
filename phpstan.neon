@@ -15,3 +15,6 @@ parameters:
         -
             message: '#has no return typehint#'
             path: src/interfaces/Source.php
+        -
+            message: '#but it might not be a callable.#'
+            path: src/util/Chain.php
