@@ -34,7 +34,7 @@ class Log
 {
     /**
      * Set handlers here, either a callable or an object that implements Psr\Log\LoggerInterface
-     * @var array
+     * @var array<mixed>
      */
     protected static $handlers = [];
 
@@ -65,7 +65,7 @@ class Log
      * Support the log levels of debug, info, notice, warning, error, critical, alert, emergency
      *
      * @param string $method
-     * @param array $args
+     * @param array<mixed> $args
      */
     public static function __callStatic(string $method, array $args = []): void
     {
@@ -83,7 +83,7 @@ class Log
      *
      * @param string $level
      * @param string $message
-     * @param array $context
+     * @param array<mixed> $context
      */
     public static function log($level, $message, array $context = []): void
     {

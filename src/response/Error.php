@@ -26,23 +26,19 @@ class Error extends Response
      */
     protected $code = 500;
     /**
-     * @var array
+     * @var array<mixed>
      */
     protected $data = [];
     /**
      * @var null|Request
      */
     protected $request = null;
-    /**
-     * @var array
-     */
-    protected $config = [];
 
     /**
      * Constructor
      *
-     * @param array $data
-     * @param array $config
+     * @param array<mixed> $data
+     * @param array<string, mixed> $config
      */
     public function __construct(array $data = [], array $config = [])
     {
