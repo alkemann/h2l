@@ -24,7 +24,7 @@ class ArrayManipulations
      * ```
      *
      * @param string $key
-     * @param array $data
+     * @param array<string, mixed> $data
      * @param string $delimiter
      * @return mixed|null
      * @throws InvalidArgumentException if $delimiter is empty string
@@ -85,7 +85,7 @@ class ArrayManipulations
      *
      * @param string $key
      * @param mixed $value the value to assign
-     * @param array $data The array to update
+     * @param array<string, mixed> $data The array to update
      * @param string $delimiter defaults to `.`
      * @throws InvalidArgumentException if $delimiter is empty string
      */
@@ -101,7 +101,7 @@ class ArrayManipulations
     /**
      * Update or Insert value in a nested array
      *
-     * @param array $keys
+     * @param array<string> $keys
      * @param mixed $value
      * @param mixed $data passed by reference
      */

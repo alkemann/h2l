@@ -8,4 +8,9 @@ parameters:
         -
             message: '#Else branch is unreachable because previous condition is always true.#'
             path: src/Log.php
-    checkMissingIterableValueType: false
+        -
+            message: '#expects array, array<int, string>|false given#'
+            path: src/util/ArrayManipulations.php
+        -
+            message: '#has no return typehint#'
+            path: src/interfaces/Source.php
