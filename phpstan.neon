@@ -4,6 +4,7 @@ parameters:
     paths:
         - src
     level: max
+    checkMissingIterableValueType: false
     ignoreErrors:
         -
             message: '#Else branch is unreachable because previous condition is always true.#'
@@ -11,3 +12,9 @@ parameters:
         -
             message: '#expects array, array<int, string>|false given#'
             path: src/util/ArrayManipulations.php
+        -
+            message: '#has no return typehint#'
+            path: src/interfaces/Source.php
+        -
+            message: '#but it might not be a callable.#'
+            path: src/util/Chain.php

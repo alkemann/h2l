@@ -31,15 +31,15 @@ class Message
      */
     protected string $body = '';
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $meta = [];
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $headers = [];
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $options = [];
     /**
@@ -76,7 +76,7 @@ class Message
     }
 
     /**
-     * @return null|string|array|\SimpleXMLElement|\DOMDocument body converted from raw format
+     * @return null|string|array<mixed>|\SimpleXMLElement|\DOMDocument body converted from raw format
      */
     public function content()
     {
@@ -137,7 +137,7 @@ class Message
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function headers(): array
     {
@@ -145,7 +145,7 @@ class Message
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function meta(): array
     {
@@ -153,7 +153,7 @@ class Message
     }
 
     /**
-     * @return array
+     * @return array<string, mixed>
      */
     public function options(): array
     {
@@ -213,7 +213,7 @@ class Message
     }
 
     /**
-     * @param array $headers
+     * @param array<string, mixed> $headers
      * @return Message
      */
     public function withHeaders(array $headers): Message
@@ -257,7 +257,7 @@ class Message
     }
 
     /**
-     * @param array $options
+     * @param array<string, mixed> $options
      * @return Message
      */
     public function withOptions(array $options): Message
@@ -268,7 +268,7 @@ class Message
     }
 
     /**
-     * @param array $meta
+     * @param array<string, mixed> $meta
      * @return Message
      */
     public function withMeta(array $meta): Message

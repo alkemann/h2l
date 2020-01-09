@@ -21,7 +21,7 @@ class RemoteTest extends \PHPUnit\Framework\TestCase
 
     private static function is_disconnected(): bool
     {
-        $connected = @fsockopen("www.example.com", 80);
+        $connected = @fsockopen("mockbin.org", 80);
         if ($connected){
             self::$disconnected = false;
             fclose($connected);

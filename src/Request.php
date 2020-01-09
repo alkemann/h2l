@@ -19,22 +19,22 @@ class Request extends Message
     /**
      * @var null|interfaces\Session
      */
-    protected ?interfaces\Session $session = null;
-    /** @var array */
+    protected $session = null;
+    /** @var array<string, mixed> */
     protected array $parameters = [];
-    /** @var array */
+    /** @var array<string, mixed> */
     protected array $request = [];
-    /** @var array */
+    /** @var array<string, mixed> */
     protected array $server = [];
-    /** @var array */
+    /** @var array<string, mixed> */
     protected array $get = [];
-    /** @var array */
+    /** @var array<string, mixed> */
     protected array $post = [];
     /** @var string */
     protected string $content_type = ''; // Type of the REQUEST BODY, not response
     /** @var string */
     protected string $accept_type = Http::CONTENT_HTML;
-    /** @var array */
+    /** @var array<string, mixed>  */
     protected array $page_vars = [];
 
     /**
@@ -90,7 +90,7 @@ class Request extends Message
     /**
      * Recreate the `Request` with specified request parameters
      *
-     * @param array $request_params
+     * @param array<string, mixed> $request_params
      * @return Request
      */
     public function withRequestParams(array $request_params): Request
@@ -105,7 +105,7 @@ class Request extends Message
     /**
      * Returns the request parameters of the request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getRequestParams(): array
     {
@@ -115,7 +115,7 @@ class Request extends Message
     /**
      * Recreates the `Request` with specified server parameters
      *
-     * @param array $server
+     * @param array<string, mixed> $server
      * @return Request
      */
     public function withServerParams(array $server): Request
@@ -176,7 +176,7 @@ class Request extends Message
     /**
      * Returns the server parameters of the request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getServerParams(): array
     {
@@ -197,7 +197,7 @@ class Request extends Message
     /**
      * Recreates the `Request` with the specified post data
      *
-     * @param array $post
+     * @param array<string, mixed> $post
      * @return Request
      */
     public function withPostData(array $post): Request
@@ -210,7 +210,7 @@ class Request extends Message
     /**
      * Returns the post data of the request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getPostData(): array
     {
@@ -220,7 +220,7 @@ class Request extends Message
     /**
      * Recreates the `Request` with the specified get (quary) data
      *
-     * @param array $get
+     * @param array<string, mixed> $get
      * @return Request
      */
     public function withGetData(array $get): Request
@@ -233,7 +233,7 @@ class Request extends Message
     /**
      * Returns the request data of the request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getGetData(): array
     {
@@ -243,7 +243,7 @@ class Request extends Message
     /**
      * Alias of `getGetData`
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function query(): array
     {
@@ -256,7 +256,7 @@ class Request extends Message
      * Url parameters are extracted with dynamic routes, aka:
      * `/api/location/(?<city>\w+)/visit` the "city" part.
      *
-     * @param array $parameters
+     * @param array<string, mixed> $parameters
      * @return Request
      */
     public function withUrlParams(array $parameters): Request
@@ -269,7 +269,7 @@ class Request extends Message
     /**
      * Returns the url parameters of the request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getUrlParams(): array
     {
@@ -316,7 +316,7 @@ class Request extends Message
     /**
      * Returns the page variables (those variables to be injected into templates) of request
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function pageVars(): array
     {
@@ -325,6 +325,8 @@ class Request extends Message
 
     /**
      * Recreates the `Request` with the given page variables
+     * @param array<string, mixed> $vars
+     * @return Request
      */
     public function withPageVars(array $vars): Request
     {
@@ -336,7 +338,7 @@ class Request extends Message
     /**
      * Overwrites Message::content to grab POST data
      *
-     * @return null|string|array|\SimpleXMLElement|\DOMDocument body converted from raw format
+     * @return null|string|array<mixed>|\SimpleXMLElement|\DOMDocument body converted from raw format
      */
     public function content()
     {

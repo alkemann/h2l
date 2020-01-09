@@ -177,8 +177,8 @@ class Http
     /**
      * Returns the request headers of a PHP Server array
      *
-     * @param array $server_array
-     * @return array
+     * @param array<string, mixed> $server_array
+     * @return array<string, mixed>
      */
     public static function getRequestHeadersFromServerArray(array $server_array): array
     {

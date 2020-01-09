@@ -24,7 +24,7 @@ class ArrayManipulations
      * ```
      *
      * @param string $key
-     * @param array $data
+     * @param array<string, mixed> $data
      * @param string $delimiter
      * @return mixed|null
      * @throws InvalidArgumentException if $delimiter is empty string
@@ -52,7 +52,7 @@ class ArrayManipulations
      *  getArrayValueByKeys(['four','five'], $data) will throw OutOfBoundsException
      * ```
      *
-     * @param  array $keys
+     * @param  array<string> $keys
      * @param  mixed $data passed by reference
      * @return mixed
      * @throws OutOfBoundsException if the key does not exist in data
@@ -85,7 +85,7 @@ class ArrayManipulations
      *
      * @param string $key
      * @param mixed $value the value to assign
-     * @param array $data The array to update
+     * @param array<string, mixed> $data The array to update
      * @param string $delimiter defaults to `.`
      * @throws InvalidArgumentException if $delimiter is empty string
      */
@@ -101,13 +101,16 @@ class ArrayManipulations
     /**
      * Update or Insert value in a nested array
      *
-     * @param array $keys
+     * @param array<string> $keys
      * @param mixed $value
      * @param mixed $data passed by reference
      */
     public static function setArrayValueByKeys(array $keys, $value, &$data): void
     {
         $key = array_shift($keys);
+        if (is_null($key)) {
+            throw new InvalidArgumentException("At least one key is required");
+        }
         if (empty($keys)) {
             $data[$key] = $value;
         } else {

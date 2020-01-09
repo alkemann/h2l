@@ -12,7 +12,17 @@ use alkemann\h2l\Response;
  */
 interface Route
 {
+    /**
+     * @return string
+     */
     public function url(): string;
+    /**
+     * @return array<string, mixed>
+     */
     public function parameters(): array;
+    /**
+     * @param Request $request
+     * @return Response|null
+     */
     public function __invoke(Request $request): ?Response;
 }
