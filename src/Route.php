@@ -20,7 +20,7 @@ class Route implements interfaces\Route
      */
     private $callback;
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $parameters;
 
@@ -29,7 +29,7 @@ class Route implements interfaces\Route
      *
      * @param string $url
      * @param callable $cb
-     * @param array $parameters
+     * @param array<string, mixed> $parameters
      */
     public function __construct(string $url, callable $cb, array $parameters = [])
     {
@@ -51,7 +51,7 @@ class Route implements interfaces\Route
     /**
      * Returns all the parameters that the route was created with
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function parameters(): array
     {

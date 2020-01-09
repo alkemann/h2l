@@ -12,7 +12,7 @@ use alkemann\h2l\util\Http;
 abstract class Response
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $config = [];
     /**

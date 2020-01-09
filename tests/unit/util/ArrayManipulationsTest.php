@@ -160,4 +160,11 @@ class ArrayManipulationsTest extends \PHPUnit\Framework\TestCase
         $this->expectException(InvalidArgumentException::class);
         ArrayManipulations::setToArrayByKey('.', 77, $data, '');
     }
+
+    public function testSetwWithNoKeys(): void
+    {
+        $data = ['one' => ['two' => ['three' => 12]]];
+        $this->expectException(InvalidArgumentException::class);
+        ArrayManipulations::setArrayValueByKeys([], 77, $data);
+    }
 }

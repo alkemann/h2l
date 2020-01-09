@@ -17,11 +17,11 @@ use alkemann\h2l\util\Http;
 class Remote
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $config = [];
     /**
-     * @var array
+     * @var array<int, mixed>
      */
     private $curl_options = [];
     /**
@@ -37,8 +37,8 @@ class Remote
     /**
      * Creatues the Remote instance, only sets configurations
      *
-     * @param array $curl_options
-     * @param array $config
+     * @param array<int, mixed> $curl_options
+     * @param array<string, mixed> $config
      */
     public function __construct(array $curl_options = [], array $config = [])
     {

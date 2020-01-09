@@ -16,14 +16,14 @@ use alkemann\h2l\Response;
 class Chain
 {
     /**
-     * @var array
+     * @var array<callable>
      */
     private $chain;
 
     /**
      * Constructor
      *
-     * @param array $chained_callable
+     * @param array<callable> $chained_callable
      */
     public function __construct(array $chained_callable = [])
     {

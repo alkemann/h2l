@@ -197,7 +197,7 @@ abstract class Cli
      * Wrapper for grabbing the global `$argv` for testing purposes
      *
      * @codeCoverageIgnore
-     * @return array
+     * @return array<string>
      */
     protected function getGlobalArgV(): array
     {
@@ -211,7 +211,7 @@ abstract class Cli
      * @codeCoverageIgnore
      * @param string $short_options
      * @param string[] $long_options
-     * @return array
+     * @return array<string, mixed>
      */
     protected function getOpt(string $short_options, array $long_options): array
     {

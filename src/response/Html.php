@@ -64,7 +64,7 @@ class Html extends Response
     /**
      * @param string|mixed $content HTML. Objects will be cast, arrays will render template
      * @param int $code HTTP code to respond with, defaults to `200`
-     * @param array $config inject config/overrides like `header_func`
+     * @param array<string, mixed> $config inject config/overrides like `header_func`
      */
     public function __construct($content = null, int $code = Http::CODE_OK, array $config = [])
     {
@@ -81,7 +81,7 @@ class Html extends Response
 
     /**
      * @param mixed $content
-     * @param array $config
+     * @param array<string, mixed> $config
      * @return string
      */
     private function convertToString($content, array $config = []): string

@@ -16,7 +16,7 @@ use alkemann\h2l\util\Http;
  *
  * @package alkemann\h2l
  */
-class Page extends Response
+final class Page extends Response
 {
     /**
      * Overwrite this in view templates to set layout, i.e. `$this->layout = 'slim';`
@@ -29,7 +29,7 @@ class Page extends Response
      */
     protected $request = null;
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     protected $data = [];
     /**
@@ -44,16 +44,12 @@ class Page extends Response
      * @var int
      */
     private $code = 200;
-    /**
-     * @var array
-     */
-    protected $config = [];
 
     /**
      * Constructor
      *
-     * @param array $data
-     * @param array $config
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $config
      */
     public function __construct($data = [], array $config = [])
     {
@@ -79,7 +75,7 @@ class Page extends Response
      * Analyze the request url to convert to a view template
      *
      * @param Request $request
-     * @param array $config
+     * @param array<string, mixed> $config
      * @return Page
      */
     public static function fromRequest(Request $request, array $config = []): Page
@@ -88,7 +84,7 @@ class Page extends Response
             'request' => $request,
             'content_type' => $request->acceptType(),
         ];
-        $page = new static($request->pageVars(), $config);
+        $page = new Page($request->pageVars(), $config);
         $route = $request->route();
         $url = $route ? $route->url() : $request->url();
         $page->template = $config['template'] ?? $page->templateFromUrl($url);
@@ -113,7 +109,7 @@ class Page extends Response
     /**
      * Provide data (variables) that are to be extracted into the view (and layout) templates
      *
-     * @param string|array $key an array of data or the name for $value
+     * @param string|array<string, mixed> $key an array of data or the name for $value
      * @param mixed $value if $key is a string, this can be the value of that var
      */
     public function setData($key, $value = null): void

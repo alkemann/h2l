@@ -92,7 +92,7 @@ final class Environment
     /**
      * Get all middlewares, mostly to be sent to Dispatch::registerMiddleware
      *
-     * @return array of callables that match the middleware interface
+     * @return array<callable> callables that match the middleware interface
      */
     public static function middlewares(): array
     {
@@ -121,7 +121,7 @@ final class Environment
      * Returns an array of all environment variables for selected env (or all)
      *
      * @param null|string $environment Name of environment to grab, or Environment::ALL
-     * @return array all configurations for selected env in deep array
+     * @return array<mixed> all configurations for selected env in deep array
      */
     public static function grab(?string $environment = null): array
     {
@@ -161,7 +161,7 @@ final class Environment
     /**
      * Array merges `$config` with current value of the specified or current environments existing configs
      *
-     * @param array $configs
+     * @param array<string, mixed> $configs
      * @param null|string $environment
      */
     public static function add(array $configs, ?string $environment = null): void
@@ -185,7 +185,7 @@ final class Environment
     /**
      * Completely replaces the set of configurations that the current or specified environment has.
      *
-     * @param array $configs
+     * @param array<string, mixed> $configs
      * @param null|string $environment
      */
     public static function set(array $configs, ?string $environment = null): void

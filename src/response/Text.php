@@ -16,7 +16,7 @@ class Text extends Response
     /**
      * @param mixed $content Content to render, arrays will be joined by newline, everything else cast to string
      * @param int $code HTTP code to respond with, defaults to `200`
-     * @param array $config inject config/overrides like `header_func`
+     * @param array<string, mixed> $config inject config/overrides like `header_func`
      */
     public function __construct($content, int $code = Http::CODE_OK, array $config = [])
     {
@@ -41,7 +41,7 @@ class Text extends Response
 
     /**
      * @param string $glue
-     * @param array|\Generator $arr
+     * @param array<mixed>|\Generator<mixed> $arr
      * @return string
      */
     protected static function implode_recur(string $glue, $arr): string

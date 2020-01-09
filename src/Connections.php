@@ -16,15 +16,15 @@ use UnderflowException;
 class Connections
 {
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private static $connections = [];
     /**
-     * @var array
+     * @var array<string, callable|Closure>
      */
     private static $open = [];
     /**
-     * @var array
+     * @var array<string, callable|Closure>
      */
     private static $close = [];
 
