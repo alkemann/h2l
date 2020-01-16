@@ -20,7 +20,7 @@ class Request extends Message
      * @var null|interfaces\Session
      */
     protected ?interfaces\Session $session = null;
-    /** @var array */
+    /** @var array<string, mixed> */
     protected array $parameters = [];
     /** @var array */
     protected array $request = [];
