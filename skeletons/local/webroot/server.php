@@ -4,6 +4,7 @@ namespace local_server;
 function put_url_in_request()
 {
     $req = $_SERVER['REQUEST_URI'];
+    list($req, ) = explode('?', $req);
     if ($req != '/' && file_exists($_SERVER['DOCUMENT_ROOT'] . $req)) {
         return false;
     }
