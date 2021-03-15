@@ -88,7 +88,7 @@ abstract class Cli
             if ($value === false) {
                 $args[$key] = true;
             } elseif (is_array($value)) {
-                $args[$key] = count($args[$key]);
+                $args[$key] = count($value);
             }
         }
 
@@ -221,11 +221,15 @@ abstract class Cli
      * @codeCoverageIgnore
      * @param string $short_options
      * @param string[] $long_options
-     * @return array<string, mixed>
+     * @return array<string, array<int, mixed>|string|false>
      */
     protected function getOpt(string $short_options, array $long_options): array
     {
-        return getopt($short_options, $long_options, $this->last_index);
+        $o = getopt($short_options, $long_options, $this->last_index);
+        if ($o === false) {
+            return [];
+        }
+        return $o;
     }
 
     /**

@@ -10,11 +10,11 @@ parameters:
             message: '#Else branch is unreachable because previous condition is always true.#'
             path: src/Log.php
         -
-            message: '#expects array, array<int, string>|false given#'
-            path: src/util/ArrayManipulations.php
-        -
             message: '#has no return typehint#'
             path: src/interfaces/Source.php
         -
-            message: '#but it might not be a callable.#'
-            path: src/util/Chain.php
+            message: '# expects string, string\|false given#'
+            path: src/response/Page.php
+        -
+            message: '#BSONDocument, array\|object given#'
+            path: src/data/MongoDB.php
