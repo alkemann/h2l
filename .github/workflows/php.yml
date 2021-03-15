@@ -20,12 +20,6 @@ jobs:
         ports:
           - 33306:3306
 
-      mongo:
-        image: mongo
-        restart: always
-        environment:
-          MONGO_INITDB_ROOT_USERNAME: hltest
-
     steps:
       - name: GitHub Actions
         uses: actions/checkout@v2
