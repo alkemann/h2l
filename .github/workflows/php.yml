@@ -20,11 +20,13 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.0'
-        tools: composer, phpstan, phpunit
         extensions: mongodb-mongodb/mongo-php-driver@v1.9
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
+
+    - name: Install MongoDB
+      run: composer require mongodb/mongodb
 
     - name: Cache Composer packages
       id: composer-cache
