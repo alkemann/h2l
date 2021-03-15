@@ -44,5 +44,9 @@ jobs:
       run: ./vendor/bin/phpstan.phar --version
     #   run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
 
+    - name: Prepare Tests:
+      run: mongo mydb_test --eval 'db.createUser({user:"travis",pwd:"test",roles:["readWrite"]});'
+      run: echo "<?php return ['host'=>'127.0.0.1','user'=>'travis','db'=>'test'];" > tests/config/mongo_connection.php
+
     - name: Run Test Suite
       run: ./bin/runtests --coverage-clover tests/clover.xml
