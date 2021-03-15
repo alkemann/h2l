@@ -20,7 +20,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             public static $connection = 'default';
             private $data = [];
             public function __construct(array $data = []){ $this->data = $data; }
-            public function with(string ...$relation_names) {}
+            public function with(string ...$relation_names): object {}
             public function reset(): void {}
             public function data(array $data = null): array { return $this->data + $data; }
         };
@@ -38,7 +38,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             public static $fields = ['pid', 'name'];
             public static $connection = 'default';
             public function __construct(array $data = []){}
-            public function with(string ...$relation_names) {}
+            public function with(string ...$relation_names): object {}
             public function reset(): void {}
             public function data(array $data = null): array {}
         };
@@ -47,10 +47,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testMissingTableConfig(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
 
         Connections::add('ModelTest testMissingTableConfig', function() use ($con) {
             return $con;
@@ -63,7 +60,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             protected $data = [];
             static $connection = 'ModelTest testMissingTableConfig';
             public function __construct(array $data = []){}
-            public function with(string ...$relation_names) {}
+            public function with(string ...$relation_names): object {}
             public function reset(): void {}
             public function data(array $data = null): array {}
         };
@@ -76,10 +73,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testGet(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('one')
             ->with('people', ['pid' => 55], [])
             ->will($this->returnValue(['pid' => 55, 'name' => 'John']));
@@ -99,10 +93,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testGetNotFound(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $conn_id = uniqid();
         Connections::add($conn_id, function() use ($con) {
             return $con;
@@ -125,10 +116,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testFind(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('find')
             ->with('people', ['name' => 'John'], [])
             ->will($this->returnValue(new \ArrayObject([
@@ -155,10 +143,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testFindWithArray(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('find')
             ->with('people', ['name' => 'John'])
             ->will($this->returnValue(new \ArrayObject([
@@ -190,10 +175,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveNew(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('insert')
             ->with('people', ['name' => 'Abe'], [])
             ->will($this->returnValue(57));
@@ -218,10 +200,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveInsertFail(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())
             ->method('insert')
             ->willReturn(false);
@@ -237,10 +216,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testSaveUpdate(): void
     {
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('update')
             ->with('people', ['pid' => 55], ['name' => 'John the New'], [])
             ->will($this->returnValue(55));
@@ -262,11 +238,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testDelete(): void
     {
-
-        $con = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
-        ;
+        $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('delete')
             ->with('people', ['pid' => 55])
             ->will($this->returnValue(true));

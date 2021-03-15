@@ -114,6 +114,8 @@ trait Model
     abstract public function with(string ...$relation_names): object;
     abstract public function reset(): void;
     /**
+     * Update data of the model, return the (updated) dataset of model
+     *
      * @param array|null $data
      * @return array
      */
