@@ -29,6 +29,8 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run test suite
-      run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
+    # - name: Run PHPStan
+    #   run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
 
+    - name: Run Test Suite
+      run: ./bin/runtests --coverage-clover tests/clover.xml
