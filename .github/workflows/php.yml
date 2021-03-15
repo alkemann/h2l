@@ -21,6 +21,7 @@ jobs:
       with:
         php-version: '8.0'
         tools: composer, phpstan, phpunit
+        extensions: mongodb-mongodb/mongo-php-driver@v1.9
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
@@ -45,4 +46,4 @@ jobs:
     # run: ./bin/runtests --coverage-clover tests/clover.xml
 
     - name: Run A Test
-      run: ./bin/runtests --filter=ModelTest
+      run: ./bin/runtests --filter=Unit
