@@ -16,7 +16,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: secret
-          MYSQL_DATABASE: hltest
+          MYSQL_DATABASE: h2l_tests
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -63,7 +63,7 @@ jobs:
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
 
       - name: Set MySQL connection
-        run: echo "<?php return ['host'=>'127.0.0.1','user'=>'root','db'=>'hltest', 'port' => '3306', 'pass' => 'secret'];" > tests/config/pdo_mysql_connection.php
+        run: echo "<?php return ['host'=>'127.0.0.1','user'=>'root','db'=>'h2l_tests', 'port' => '3306', 'pass' => 'secret'];" > tests/config/pdo_mysql_connection.php
 
       # - name: Sleep for 30 seconds
         # uses: jakejarvis/wait-action@master
