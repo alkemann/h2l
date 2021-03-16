@@ -1,0 +1,69 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql-service:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: hltest
+        ports:
+          - 33306:3306
+
+    steps:
+      - name: GitHub Actions
+        uses: actions/checkout@v2
+
+      - name: Create mongo Docker container
+        id: build_mongo_docker
+        uses: DigiPie/mongo-action@v1.0.1
+        with:
+          image-version: latest
+          port: 27017
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          extensions: mongodb-mongodb, mysql, postgresql
+
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+
+      - name: Install MongoDB
+        run: composer require mongodb/mongodb
+
+      - name: Cache Composer packages
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan.phar --version
+      #   run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
+
+      - name: Set MongoDB connection
+        run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
+
+      - name: Set MySQL connection
+        run: echo "<?php return ['host'=>'127.0.0.1','user'=>'root','db'=>'hltest', 'port' => 3306, 'pass' => 'secret'];" > tests/config/pdo_mysql_connection.php
+
+      - name: Run Test Suite
+        run: ./bin/runtests --coverage-clover tests/clover.xml

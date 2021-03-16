@@ -54,7 +54,8 @@ class MongoDB implements Source
         $defaults = [
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'default'
+            'db' => 'default',
+            'check_connections' => false,
         ];
         $this->config = $config + $defaults;
     }
@@ -66,6 +67,7 @@ class MongoDB implements Source
      */
     private function collection(string $collection): Collection
     {
+        $db = $this->config['db'];
         if ($this->client == null) {
             $host = $this->config['host'];
             $port = $this->config['port'];
@@ -74,13 +76,14 @@ class MongoDB implements Source
             unset($options['port']);
             unset($options['db']);
             try {
-                $this->client = new Client("mongodb://{$host}:{$port}", $options);
-                $this->client->listDatabases(); // @TODO skip this extra call to trigger connection error fast?
+                $this->client = new Client("mongodb://{$host}:{$port}/{$db}", $options);
+                if ($this->config['check_connections'] === true) {
+                    $this->client->selectDatabase($this->config['db'])->listCollections();
+                }
             } catch (RuntimeException $e) {
                 throw new ConnectionError("Unable to connect to {$host}:{$port} : " . $e->getMessage());
             }
         }
-        $db = $this->config['db'];
         return $this->client->selectCollection($db, $collection);
     }
 

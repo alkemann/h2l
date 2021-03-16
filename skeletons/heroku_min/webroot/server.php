@@ -8,6 +8,7 @@ function put_url_in_request()
         return false;
     }
 
+
     $_SERVER['PHP_SELF'] = '/index.php';
 
     $url = $_SERVER['REQUEST_URI'];
@@ -33,5 +34,5 @@ function put_url_in_request()
 
     $_GET['url'] = $_REQUEST['url'] = $url;
 }
-put_url_in_request();
+if (put_url_in_request() === false) return false;
 require 'index.php';

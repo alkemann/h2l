@@ -42,7 +42,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     public function testConnectionFail(): void
     {
         $this->expectException(ConnectionError::class);
-        $m = new Mongo(['host' => 'nope']);
+        $m = new Mongo(['host' => 'nope', 'check_connections' => true,]);
         $col = static::$collection_handler->invoke($m, 'tests');
         $this->assertTrue($col instanceof \MongoDB\Collection);
     }

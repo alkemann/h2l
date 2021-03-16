@@ -106,7 +106,7 @@ use alkemann\h2l\{ Environment, Request, Response, util\Chain, Log };
 
 // Log request and response
 $log_middle = function(Request $request, Chain $chain): Response {
-    Log::info("== REQUEST == URL[" . $r->url() . "] ==");
+    Log::info("== REQUEST == URL[" . $request->url() . "] ==");
     /** @var Response $response */
     $response = $chain->next($request, $chain);
     $class = get_class($response);
