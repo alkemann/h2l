@@ -72,7 +72,7 @@ jobs:
         run: mysql -h 127.0.0.1 --port 3306 -u root -psecret -e 'SHOW DATABASES;'
 
       - name: Set up Test database
-        run: mysql -u root -psecret < tests/config/travis_init_mysql.sql
+        run: mysql -h 127.0.0.1 --port 3306 -u root -psecret < tests/config/travis_init_mysql.sql
 
       - name: Run Test Suite
         run: ./bin/runtests
