@@ -5,6 +5,8 @@ namespace alkemann\h2l\data;
 use alkemann\h2l\exceptions\ConnectionError;
 use alkemann\h2l\interfaces\Source;
 use alkemann\h2l\Log;
+use Exception;
+use Generator;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -99,11 +101,11 @@ class MongoDB implements Source
     /**
      * @param mixed $query
      * @param array $params
-     * @throws \Exception if called as not implemented
+     * @throws Exception if called as not implemented
      */
     public function query($query, array $params = []): void
     {
-        throw new \Exception("Query method is not implemented for MongDB");
+        throw new Exception("Query method is not implemented for MongDB");
     }
 
     /**
@@ -139,11 +141,18 @@ class MongoDB implements Source
 
     /**
      * @TODO keep the BSON object?
-     * @param BSONDocument $document
+     * @param array|BSONDocument $document
      * @return array
      */
-    private function out(BSONDocument $document): array
+    private function out(array|BSONDocument $document): array
     {
+        if (is_array($document)) {
+            if (isset($document['_id'])) {
+                $document['id'] = $document['_id'];
+                unset($document['_id']);
+            }
+            return $document;
+        }
         $a = $document->getArrayCopy();
         if (isset($document->_id)) {
             $a['id'] = "{$document->_id}";
@@ -156,9 +165,9 @@ class MongoDB implements Source
      * @param string $collection_name
      * @param array $conditions
      * @param array $options
-     * @return \Generator
+     * @return Generator
      */
-    public function find(string $collection_name, array $conditions, array $options = []): \Generator
+    public function find(string $collection_name, array $conditions, array $options = []): Generator
     {
         $collection = $this->collection($collection_name);
         $conditions = $this->idReplaceConditions($conditions);

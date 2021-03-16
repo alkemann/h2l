@@ -10,6 +10,7 @@ use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\util\Http;
+use Exception;
 
 /**
  * Class Page
@@ -312,6 +313,7 @@ final class Page extends Response
     /**
      * @param string $url
      * @return string
+     * @throws Exception if url has not enough parts
      */
     private function templateFromUrl(string $url): string
     {
