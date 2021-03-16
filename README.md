@@ -2,7 +2,7 @@
 <h3 align="center">Get started quickly with static pages and small apis</h3>
 
 <p align="center">
-![Tests](https://github.com/github/docs/actions/workflows/tests.yml/badge.svg)
+<a href="#"><img src="https://github.com/github/docs/actions/workflows/tests.yml/badge.svg"  style="max-width:100%;" /></a>
 <a href="https://packagist.org/packages/alkemann/h2l"><img src="https://camo.githubusercontent.com/e25562f743654efa776cf5e337593191361a2786/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f6c2f616c6b656d616e6e2f68326c2e737667" alt="Packagist" data-canonical-src="https://img.shields.io/packagist/l/alkemann/h2l.svg" style="max-width:100%;"></a>
 <a href="https://github.com/alkemann/h2l/releases"><img src="https://camo.githubusercontent.com/8c35ac99b3dab86eed3da6a0c175a1f1fb4e5d31/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f7461672f616c6b656d616e6e2f68326c2e737667" alt="Tag" data-canonical-src="https://img.shields.io/github/tag/alkemann/h2l.svg" style="max-width:100%;"></a>
 <a href="http://php.net/ChangeLog-7.php"><img src="https://img.shields.io/badge/PHP%20version-7.4-brightgreen" alt="PHP" style="max-width:100%;"></a>
