@@ -37,7 +37,7 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
             $db = new _PDO("mysql:host={$host};dbname={$db}", $user, $pass);
             $db->query('SHOW TABLES;');
         } catch (\PDOException $e) {
-            self::markTestSkipped("Connection configured, but connection failed!");
+            self::markTestSkipped("Connection configured, but connection failed! " . $e->getMessage());
         }
     }
 
