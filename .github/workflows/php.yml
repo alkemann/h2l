@@ -56,8 +56,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan.phar --version
-      #   run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
+        run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
 
       - name: Set MongoDB connection
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
@@ -67,3 +66,6 @@ jobs:
 
       - name: Run Test Suite
         run: ./bin/runtests --coverage-clover tests/clover.xml
+
+      - name: Confirm Test Coverage over 95 percent
+        run: ./bin/coverage tests/clover.xml 95
