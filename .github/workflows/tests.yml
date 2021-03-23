@@ -70,14 +70,14 @@ jobs:
       - name: Set MongoDB connection
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
 
-      - name: Create Postgres test DB
-        run: psql -c 'create database h2l_tests;' -U postgres
+      - name: Set Postgres connection
+        run: echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'postgres','db'=>'postgres', 'post' => '5432'];" > tests/config/pdo_pgsql_connection.php
+
+      - name: Test Postgres connection
+        run: pg_isready -d postgres -h postgres -p 5432 -U postgres
 
       - name: Initiate Postgres DB
-        run: psql -d postgres -U postgres -a -f tests/config/tests_init_pgsql.sql
-
-      - name: Set Postgres connection
-        run: echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'postgres','db'=>'postgres'];" > tests/config/pdo_pgsql_connection.php
+        run: export PGPASSWORD='postgres'; psql -d postgres -U postgres -a -f tests/config/tests_init_pgsql.sql
 
       - name: Set MySQL connection
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'root','db'=>'h2l_tests', 'port' => '3306', 'pass' => 'secret'];" > tests/config/pdo_mysql_connection.php
