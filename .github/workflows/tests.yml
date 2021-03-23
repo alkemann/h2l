@@ -71,7 +71,7 @@ jobs:
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
 
       - name: Set Postgres connection
-        run: echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'postgres','db'=>'postgres', 'post' => '${{ job.services.postgres.ports['5432'] }}'];" > tests/config/pdo_pgsql_connection.php
+        run: echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'postgres','db'=>'postgres', 'port' => '${{ job.services.postgres.ports['5432'] }}'];" > tests/config/pdo_pgsql_connection.php
 
       - name: Test Postgres connection
         run: pg_isready -d postgres -h 127.0.0.1 -p ${{ job.services.postgres.ports['5432'] }} -U postgres
