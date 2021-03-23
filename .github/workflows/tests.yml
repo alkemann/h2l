@@ -71,7 +71,7 @@ jobs:
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
 
       - name: Create Postgres test DB
-        run: sql -c 'create database h2l_tests;' -U postgres
+        run: psql -c 'create database h2l_tests;' -U postgres
 
       - name: Initiate Postgres DB
         run: psql -d postgres -U postgres -a -f tests/config/tests_init_pgsql.sql
