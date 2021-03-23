@@ -12,9 +12,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 {
     public function testBelongsTo(): void
     {
-        $db = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
+        $db = $this->createMock(Source::class);
         $db->expects($this->exactly(2))
             ->method('one')
             ->with('fathers', ['id' => 20], [])
@@ -39,9 +37,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 
     public function testHasMany(): void
     {
-        $db = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
+        $db = $this->createMock(Source::class);
         $db->expects($this->exactly(2))
             ->method('find')
             ->with('sons', ['father_id' => 20], [])
@@ -68,9 +64,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 
     public function testHasOne(): void
     {
-        $db = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
+        $db = $this->createMock(Source::class);
         $db->expects($this->once())
             ->method('find')
             ->with('cars', ['owner_id' => 10], ['limit' => 1])
@@ -91,9 +85,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 
     public function testGetWith(): void
     {
-        $db = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
+        $db = $this->createMock(Source::class);
 
         $db->expects($this->exactly(2))
             ->method('one')
@@ -128,9 +120,7 @@ class EntityRelationshipTest extends \PHPUnit\Framework\TestCase
 
     public function testFindWith(): void
     {
-        $db = $this->getMockBuilder(Source::class)
-            ->setMethods(['__construct','one','query','find','update','insert','delete'])
-            ->getMock();
+        $db = $this->createMock(Source::class);
 
         $db->expects($this->once())
             ->method('find')

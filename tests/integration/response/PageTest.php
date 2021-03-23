@@ -21,10 +21,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
 
     public function testRenderingSimple(): void
     {
-        $request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['acceptType', 'contentType', 'route', 'method', 'url'])
-            ->getMock();
+        $request = $this->createPartialMock(Request::class, ['acceptType', 'contentType', 'route', 'method', 'url']);
 
         $request->expects($this->once())->method('acceptType')->willReturn('text/html');
         $request->expects($this->once())->method('route')->willReturn(
@@ -51,10 +48,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
 
     public function testUsingPartsFile(): void
     {
-        $request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['acceptType', 'contentType', 'route', 'method', 'url'])
-            ->getMock();
+        $request = $this->createPartialMock(Request::class, ['acceptType', 'contentType', 'route', 'method', 'url']);
         $request->expects($this->once())->method('acceptType')->willReturn('text/html');
         $request->expects($this->once())->method('route')->willReturn(
             new Route('activity', function() {})
@@ -68,10 +62,7 @@ class PageTest extends \PHPUnit\Framework\TestCase
 
     public function testMissingViewFile(): void
     {
-        $request = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['acceptType', 'contentType', 'route', 'method'])
-            ->getMock();
+        $request = $this->createPartialMock(Request::class, ['acceptType', 'contentType', 'route', 'method', 'url']);
 
         $request->expects($this->once())->method('acceptType')->willReturn('text/html');
         $request->expects($this->once())->method('route')->willReturn(
