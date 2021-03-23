@@ -20,7 +20,15 @@ jobs:
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432/tcp
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     steps:
       - name: GitHub Actions
         uses: actions/checkout@v2
@@ -36,7 +44,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
-          extensions: mongodb-mongodb, mysql, postgresql
+          extensions: mongodb-mongodb, mysql, pgsql
+          coverage: xdebug
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
@@ -61,6 +70,15 @@ jobs:
       - name: Set MongoDB connection
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
 
+      - name: Set Postgres connection
+        run: echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'postgres','db'=>'postgres', 'port' => '${{ job.services.postgres.ports['5432'] }}'];" > tests/config/pdo_pgsql_connection.php
+
+      - name: Test Postgres connection
+        run: pg_isready -d postgres -h 127.0.0.1 -p ${{ job.services.postgres.ports['5432'] }} -U postgres
+
+      - name: Initiate Postgres DB
+        run: export PGPASSWORD='postgres'; psql -h 127.0.0.1 -p ${{ job.services.postgres.ports['5432'] }} -d postgres -U postgres -a -f tests/config/tests_init_pgsql.sql
+
       - name: Set MySQL connection
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'root','db'=>'h2l_tests', 'port' => '3306', 'pass' => 'secret'];" > tests/config/pdo_mysql_connection.php
 
@@ -68,7 +86,7 @@ jobs:
         run: mysql -h 127.0.0.1 --port 3306 -u root -psecret -e 'SHOW DATABASES;'
 
       - name: Set up Test database
-        run: mysql -h 127.0.0.1 --port 3306 -u root -psecret < tests/config/travis_init_mysql.sql
+        run: mysql -h 127.0.0.1 --port 3306 -u root -psecret < tests/config/tests_init_mysql.sql
 
       - name: Run Test Suite
         run: ./bin/runtests
