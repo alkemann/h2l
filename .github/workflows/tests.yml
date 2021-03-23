@@ -77,7 +77,7 @@ jobs:
         run: pg_isready -d postgres -h 127.0.0.1 -p ${{ job.services.postgres.ports['5432'] }} -U postgres
 
       - name: Initiate Postgres DB
-        run: export PGPASSWORD='postgres'; psql -d postgres -U postgres -a -f tests/config/tests_init_pgsql.sql
+        run: export PGPASSWORD='postgres'; psql -h 127.0.0.1 -p ${{ job.services.postgres.ports['5432'] }} -d postgres -U postgres -a -f tests/config/tests_init_pgsql.sql
 
       - name: Set MySQL connection
         run: echo "<?php return ['host'=>'127.0.0.1','user'=>'root','db'=>'h2l_tests', 'port' => '3306', 'pass' => 'secret'];" > tests/config/pdo_mysql_connection.php
