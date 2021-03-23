@@ -29,7 +29,9 @@ class PgsqlTest extends \PHPUnit\Framework\TestCase
 
         static::$handler_method = new \ReflectionMethod(PDO::class, 'handler');
         static::$handler_method->setAccessible(true);
-        $host = $c['host'];
+        $port = $c['port'] ?? false;
+
+        $host = $c['host'] . $c['port'] ? ':' . $c['port'] : '';
         $db = $c['db'];
         $user = $c['user'] ?? null;
         $pass = $c['pass'] ?? null;
@@ -37,7 +39,7 @@ class PgsqlTest extends \PHPUnit\Framework\TestCase
             $db = new _PDO("pgsql:host={$host};dbname={$db}", $user, $pass);
             $db->query('TRUNCATE TABLE tests;');
         } catch (\PDOException $e) {
-            self::markTestSkipped("Connection configured, but connection failed!");
+            self::markTestSkipped("Connection configured, but connection failed at [pgsql:host={$host};dbname={$db}][user:{$user}][p:{$pass}]!");
         }
     }
 
