@@ -27,7 +27,6 @@
         "phpstan/phpstan": "^0.12.4"
     },
     "bin": ["bin/skeleton", "bin/testh2l"],
-    "test": "vendor/bin/phpunit",
     "autoload": {
         "psr-4": {
             "alkemann\\h2l\\": "src/",
