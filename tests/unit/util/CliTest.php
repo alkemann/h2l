@@ -12,7 +12,7 @@ class CliTest extends \PHPUnit\Framework\TestCase
     {
         $mock = $this->getMockBuilder(Cli::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getOpt', 'getGlobalArgV'])
+            ->setMethodsExcept()
             ->getMock();
 
         $mock->expects($this->once())

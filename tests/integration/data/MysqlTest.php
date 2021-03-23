@@ -35,9 +35,9 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
         $pass = $c['pass'] ?? null;
         try {
             $db = new _PDO("mysql:host={$host};dbname={$db}", $user, $pass);
-            $db->query('TRUNCATE TABLE tests;');
+            $db->query('SHOW TABLES;');
         } catch (\PDOException $e) {
-            self::markTestSkipped("Connection configured, but connection failed!");
+            self::markTestSkipped("Connection configured, but connection failed! " . $e->getMessage());
         }
     }
 

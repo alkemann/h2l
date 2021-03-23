@@ -58,7 +58,7 @@ class RouterTest extends \PHPUnit\Framework\TestCase
         $ref_class = new \ReflectionClass(Router::class);
         $ref_prop = $ref_class->getProperty('aliases');
         $ref_prop->setAccessible(true);
-        $result = $ref_prop->getValue('aliases');
+        $result = $ref_prop->getValue($result);
         $this->assertTrue(isset($result['/alias/noslash']));
         $this->assertEquals('/real/noslash', $result['/alias/noslash']);
     }

@@ -16,13 +16,14 @@
         "mongodb/mongodb": "A Mongo DB data connection is provided that uses this library",
         "ext-mongo": "For the MongoDb Datasource. ",
         "ext-pdo": "For the MySql, Postgres and Sqlite Datasources.",
+        "ext-curl": "For remote API usage",
         "alkemann/debug": "Convenient var_dump replaces for debug and development, require-dev only"
     },
     "require": {
-        "php": "^7.4"
+        "php": "^8.0"
     },
     "require-dev": {
-        "mongodb/mongodb": "^1.1",
+        "mongodb/mongodb": "^1.8",
         "phpunit/phpunit": "^9",
         "phpstan/phpstan": "^0.12.4"
     },

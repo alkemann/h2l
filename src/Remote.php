@@ -4,6 +4,8 @@ namespace alkemann\h2l;
 
 use alkemann\h2l\exceptions\CurlFailure;
 use alkemann\h2l\util\Http;
+use CurlHandle;
+use Exception;
 
 /**
  * Class Remote
@@ -26,9 +28,9 @@ class Remote
     private array $curl_options = [];
     /**
      * @psalm-suppress PropertyNotSetInConstructor
-     * @var resource
+     * @var CurlHandle
      */
-    private $curl_handler;
+    private CurlHandle $curl_handler;
     /**
      * @var float
      */
@@ -162,12 +164,19 @@ class Remote
 
     /**
      * @param Message $request
+     * @throws Exception if CurlInit fails
      */
     private function createCurlHandlerFromRequest(Message $request): void
     {
         $this->start = microtime(true);
 
-        $this->curl_handler = curl_init();
+        $handle = curl_init();
+
+        if ($handle == false) {
+            throw new Exception("Curl Init failed!");
+        }
+
+        $this->curl_handler = $handle;
 
         $options = $this->curl_options;
         $options += [
@@ -215,7 +224,7 @@ class Remote
                 throw new CurlFailure(curl_error($this->curl_handler), curl_errno($this->curl_handler));
             }
             return $content;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error("CURL exception : " . get_class($e) . " : " . $e->getMessage());
 
             $curl_failure = new CurlFailure($e->getMessage(), (int) $e->getCode(), $e);

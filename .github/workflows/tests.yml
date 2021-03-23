@@ -29,6 +29,7 @@ jobs:
         ports:
           - 5432/tcp
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+
     steps:
       - name: GitHub Actions
         uses: actions/checkout@v2
@@ -61,6 +62,7 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
+
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
 
@@ -90,3 +92,7 @@ jobs:
 
       - name: Run Test Suite
         run: ./bin/runtests
+      # run: ./bin/runtests --coverage-clover tests/clover.xml
+      # NO test coverage in PHP 8
+      # - name: Confirm Test Coverage over 95 percent
+      #   run: ./bin/coverage tests/clover.xml 95
