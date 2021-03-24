@@ -2,7 +2,7 @@
 <h3 align="center">Get started quickly with static pages and small apis</h3>
 
 <p align="center">
-<a href=""><img src="https://github.com/alkemann/h2l/actions/workflows/tests.yml/badge.svg" /></a>
+<a href="https://github.com/alkemann/h2l/actions/workflows/tests.yml?query=branch%3Amaster"><img src="https://github.com/alkemann/h2l/actions/workflows/tests.yml/badge.svg" /></a>
 <a href="https://codecov.io/gh/alkemann/h2l"><img src="https://camo.githubusercontent.com/84df9c42ce79c1b6ad80c3e6784dd08ecc7d814b/68747470733a2f2f636f6465636f762e696f2f67682f616c6b656d616e6e2f68326c2f6272616e63682f6d61737465722f67726170682f62616467652e737667" alt="codecov" data-canonical-src="https://codecov.io/gh/alkemann/h2l/branch/master/graph/badge.svg" style="max-width:100%;"></a>
 <a href="https://packagist.org/packages/alkemann/h2l"><img src="https://camo.githubusercontent.com/e25562f743654efa776cf5e337593191361a2786/68747470733a2f2f696d672e736869656c64732e696f2f7061636b61676973742f6c2f616c6b656d616e6e2f68326c2e737667" alt="Packagist" data-canonical-src="https://img.shields.io/packagist/l/alkemann/h2l.svg" style="max-width:100%;"></a>
 <a href="https://github.com/alkemann/h2l/releases"><img src="https://camo.githubusercontent.com/8c35ac99b3dab86eed3da6a0c175a1f1fb4e5d31/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f7461672f616c6b656d616e6e2f68326c2e737667" alt="Tag" data-canonical-src="https://img.shields.io/github/tag/alkemann/h2l.svg" style="max-width:100%;"></a>
