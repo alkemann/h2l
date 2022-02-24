@@ -38,7 +38,7 @@ abstract class Cli
 
     /**
      * @psalm-suppress MissingClosureParamType
-     * @param array<string, string> $options_map
+     * @param array<string|int, mixed> $options_map
      * @return array
      */
     protected function getConvertedOptions(array $options_map): array

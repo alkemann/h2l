@@ -10,9 +10,6 @@ parameters:
             message: '#Else branch is unreachable because previous condition is always true.#'
             path: src/Log.php
         -
-            message: '#expects array<string>#'
-            path: src/util/ArrayManipulations.php
-        -
             message: '#has no return typehint#'
             path: src/interfaces/Source.php
         -
