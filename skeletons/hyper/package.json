@@ -1,0 +1,13 @@
+{
+  "name": "hyper",
+  "version": "1.0.0",
+  "description": "Everything is about the HTML view files. Comes with HTMX, Apline.js and Tailwind to make it all selfcontained",
+  "dependencies": {},
+  "devDependencies": {
+    "tailwindcss": "^3.0.23"
+  },
+  "scripts": {
+    "build": "npx tailwindcss -i ./resources/css/tailwind.css -o ./webroot/css/tailwind.css",
+    "watch": "npx tailwindcss -i ./resources/css/tailwind.css -o ./webroot/css/tailwind.css --watch"
+  }
+}

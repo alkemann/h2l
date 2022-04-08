@@ -49,13 +49,12 @@ function handleError(\Throwable $e): void
  * @param $line
  * @param $meta
  */
-function handleWarning($errno, $message, $file, $line, $meta): void
+function handleWarning($errno, $message, $file, $line): void
 {
     if (Environment::get('debug')) {
         header("Content-type: text/html");
         echo '<h1 style="color:red;">' . $message . '</h1>';
         echo '<h3>' . $file . ' :: ' . $line . '</h3>';
-        var_dump($meta);
         die();
     } else {
         error_log("WARNING: {$file}::{$line} : $errno : $message : " . preg_replace("|\s+|", " ",

@@ -2,10 +2,10 @@
 
 use alkemann\h2l\{Log, Environment, Router, Request, Response, util\Chain};
 
-$base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR ;
+$base = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR ;
 
 Environment::set([
-    Environment::DEV => [
+    Environment::LOCAL => [
         'debug' => true,
         'logs_path' => $base . 'resources' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR,
         'content_path' => $base . 'pages' . DIRECTORY_SEPARATOR,
@@ -32,6 +32,9 @@ Environment::addMiddle(
     },
     Environment::ALL
 );
+
+// LOCAL or PROD expected
+Environment::setEnvironment(getenv('ENV') ?? Environment::PROD);
 
 Router::alias('/', 'home.html');
 
