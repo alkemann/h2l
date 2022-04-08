@@ -10,9 +10,6 @@ parameters:
             message: '#Else branch is unreachable because previous condition is always true.#'
             path: src/Log.php
         -
-            message: '#expects array<string>#'
-            path: src/util/ArrayManipulations.php
-        -
             message: '#has no return typehint#'
             path: src/interfaces/Source.php
         -
@@ -21,3 +18,6 @@ parameters:
         -
             message: '#BSONDocument, array\|object given#'
             path: src/data/MongoDB.php
+        -
+            message: '#function trim expects string, int\|string#'
+            path: src/util/Cli.php

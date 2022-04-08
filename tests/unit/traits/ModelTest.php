@@ -217,7 +217,6 @@ class ModelTest extends \PHPUnit\Framework\TestCase
     public function testSaveUpdate(): void
     {
         $con = $this->createMock(Source::class);
-        ;
         $con->expects($this->once())->method('update')
             ->with('people', ['pid' => 55], ['name' => 'John the New'], [])
             ->will($this->returnValue(55));
@@ -239,7 +238,6 @@ class ModelTest extends \PHPUnit\Framework\TestCase
 
     public function testDelete(): void
     {
-
         $con = $this->createMock(Source::class);
         $con->expects($this->once())->method('delete')
             ->with('people', ['pid' => 55])
