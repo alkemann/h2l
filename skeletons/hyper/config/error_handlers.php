@@ -57,7 +57,6 @@ function handleWarning($errno, $message, $file, $line): void
         echo '<h3>' . $file . ' :: ' . $line . '</h3>';
         die();
     } else {
-        error_log("WARNING: {$file}::{$line} : $errno : $message : " . preg_replace("|\s+|", " ",
-                print_r($meta, true)));
+        error_log("WARNING: {$file}::{$line} : $errno : $message : " . preg_replace("|\s+|"));
     }
 }
