@@ -14,7 +14,9 @@
   </script>
   <?php else: ?>
     <link href="/css/tailwind.css" rel="stylesheet">
-  <?php endif; ?>
+  <?php endif; ?> 
+  <script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous" defer></script>
+
   <script src="//unpkg.com/alpinejs" defer></script>
 </head>
 <body>
