@@ -3,7 +3,9 @@
 namespace alkemann\h2l;
 
 use alkemann\h2l\util\Http;
+use alkemann\h2l\attributes\Route as RouteAttribute;
 use Closure;
+use ReflectionMethod;
 
 /**
  * Class Router
@@ -45,6 +47,34 @@ class Router implements interfaces\Router
             $real = '/' . $real;
         }
         self::$aliases[$alias] = $real;
+    }
+
+    /**
+     * Look for methods with the #Route[] attribute and add them
+     *
+     * @param string[]|string $classes Namespace class or classes
+     */
+    public static function addViaAttributes(array|string $classes): void
+    {
+        $classes = is_array($classes) ? $classes : [$classes];
+        foreach ($classes as $controller) {
+            /** @var class-string $controller */
+            $methods = (new \ReflectionClass($controller))
+                ->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_STATIC);
+            foreach ($methods as $method) {
+                $method_name = $method->getName();
+                $callback = $controller . '::' . $method_name;
+                list($attribute) = $method->getAttributes(RouteAttribute::class) + [null];
+                if ($attribute) {
+                    list($path, $m) = $attribute->getArguments() + [null, null];
+                    if (is_string($path) === false) {
+                        throw new \InvalidArgumentException(
+                            "Route on [{$callback}] has invalid, string expected");
+                    }
+                    static::add($path, $callback, $m ?? Http::GET);
+                }
+            }
+        }
     }
 
     /**
