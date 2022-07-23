@@ -8,7 +8,9 @@ use alkemann\h2l\util\Http;
 use Attribute;
 
 /**
- * Class Route
+ * Class Get
+ *
+ * Http GET method
  *
  * Attribute type that takes in a string for the url path
  * and one ore more valid http methods for this path.
@@ -18,7 +20,6 @@ use Attribute;
  * @package alkemann\h2l
  */
 #[Attribute(Attribute::TARGET_METHOD|ATTRIBUTE::IS_REPEATABLE)]
-abstract class Route
+class Get extends Route
 {
-    public function __construct(public string $path) {}
 }

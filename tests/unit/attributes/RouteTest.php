@@ -25,11 +25,16 @@ class RouteTest extends TestCase
         $this->assertNull($route);
 
         $route = Router::match('/api/user', Http::POST);
-        $this->assertTrue($route instanceof Route);
+        $this->assertInstanceOf(Route::class, $route);
         $result = $route(new Request());
         $this->assertEquals('{"data":{"id":1337}}', $result->message()->body());
 
         $route = Router::match('/api/user/42' );
+        $this->assertInstanceOf(Route::class, $route);
+        $result = $route((new Request())->withUrlParams(['id' => 42]));
+        $this->assertEquals('{"data":{"id":42}}', $result->message()->body());
+
+        $route = Router::match('/api/user/42', Http::PUT );
         $this->assertTrue($route instanceof Route);
         $result = $route((new Request())->withUrlParams(['id' => 42]));
         $this->assertEquals('{"data":{"id":42}}', $result->message()->body());

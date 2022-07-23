@@ -2,6 +2,10 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\attributes\Delete;
+use alkemann\h2l\attributes\Get;
+use alkemann\h2l\attributes\Post;
+use alkemann\h2l\attributes\Put;
 use alkemann\h2l\util\Http;
 use alkemann\h2l\attributes\Route as RouteAttribute;
 use Closure;
@@ -64,14 +68,31 @@ class Router implements interfaces\Router
             foreach ($methods as $method) {
                 $method_name = $method->getName();
                 $callback = $controller . '::' . $method_name;
-                list($attribute) = $method->getAttributes(RouteAttribute::class) + [null];
-                if ($attribute) {
-                    list($path, $m) = $attribute->getArguments() + [null, null];
+                $attributes = $method->getAttributes(
+                    RouteAttribute::class,
+                    \ReflectionAttribute::IS_INSTANCEOF);
+                foreach ($attributes as $attribute) {
+                    list($path) = $attribute->getArguments() + [null, null];
                     if (is_string($path) === false) {
                         throw new \InvalidArgumentException(
                             "Route on [{$callback}] has invalid, string expected");
                     }
-                    static::add($path, $callback, $m ?? Http::GET);
+                    switch ($attribute->getName()) {
+                        case Get::class:
+                            static::add($path, $callback, Http::GET);
+                            break;
+                        case Post::class:
+                            static::add($path, $callback, Http::POST);
+                            break;
+                        case Put::class:
+                            static::add($path, $callback, Http::PUT);
+                            break;
+                        case Delete::class:
+                            static::add($path, $callback, Http::DELETE);
+                            break;
+                        default:
+                            throw new \Exception("What is this? " . $attribute->getName());
+                    }
                 }
             }
         }
