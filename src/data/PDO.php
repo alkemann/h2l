@@ -29,7 +29,7 @@ class PDO implements Source
 
     /**
      * @param array $config
-     * @param string $pdo_class
+     * @param class-string $pdo_class
      */
     public function __construct(array $config = [], string $pdo_class = _PDO::class)
     {
