@@ -9,8 +9,8 @@ namespace alkemann\h2l\exceptions;
  */
 class CurlFailure extends \Exception
 {
-    /** @var array<mixed> */
-    protected $context = [];
+    /** @var array */
+    protected array $context = [];
 
     /**
      * @return array<mixed>

@@ -10,6 +10,7 @@ use alkemann\h2l\Message;
 use alkemann\h2l\Request;
 use alkemann\h2l\Response;
 use alkemann\h2l\util\Http;
+use Exception;
 
 /**
  * Class Page
@@ -23,27 +24,31 @@ final class Page extends Response
      *
      * @var string
      */
-    public $layout = 'default';
+    public string $layout = 'default';
     /**
      * @var null|Request
      */
-    protected $request = null;
+    protected ?Request $request = null;
     /**
      * @var array<string, mixed>
      */
-    protected $data = [];
+    protected array $data = [];
     /**
      * @var string
      */
-    private $template = 'error.html';
+    private string $template = 'error.html';
     /**
      * @var string
      */
-    private $content_type = Http::CONTENT_HTML;
+    private string $content_type = Http::CONTENT_HTML;
     /**
      * @var int
      */
-    private $code = 200;
+    private int $code = 200;
+    /**
+     * @var array
+     */
+    protected array $config = [];
 
     /**
      * Constructor
@@ -312,6 +317,7 @@ final class Page extends Response
     /**
      * @param string $url
      * @return string
+     * @throws Exception if url has not enough parts
      */
     private function templateFromUrl(string $url): string
     {

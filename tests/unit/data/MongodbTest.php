@@ -36,12 +36,13 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $expected = [
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'default'
+            'db' => 'default',
+            'check_connections' => false,
         ];
         $config = $ref_prop->getValue($mongo);
-        $this->assertEquals($expected, $config);
+        $this->assertEquals($expected, $config, "Missing default");
 
-        $set = ['host' => 'mongo', 'port' => 27007, 'db' => 'bond'];
+        $set = ['host' => 'mongo', 'port' => 27007, 'db' => 'bond', 'check_connections' => false, ];
         $mongo2 = new MongoDB($set);
         $config2 = $ref_prop->getValue($mongo2);
         $this->assertEquals($set, $config2);

@@ -36,7 +36,7 @@ class Log
      * Set handlers here, either a callable or an object that implements Psr\Log\LoggerInterface
      * @var array<mixed>
      */
-    protected static $handlers = [];
+    protected static array $handlers = [];
 
     /**
      * Add handler, it should implement Psr\Log\LoggerInterface

@@ -5,6 +5,8 @@ namespace alkemann\h2l\data;
 use alkemann\h2l\exceptions\ConnectionError;
 use alkemann\h2l\interfaces\Source;
 use alkemann\h2l\Log;
+use Exception;
+use Generator;
 use MongoDB\BSON\ObjectId;
 use MongoDB\Client;
 use MongoDB\Collection;
@@ -21,7 +23,7 @@ class MongoDB implements Source
     /**
      * @var string[]
      */
-    public static $operators = [
+    public static array $operators = [
         '$all',
         '$gt',
         '$gte',
@@ -42,7 +44,7 @@ class MongoDB implements Source
     ];
 
     /** @var array<string, mixed> */
-    protected $config = [];
+    protected array $config = [];
     /** @var null|Client */
     protected $client = null;
 
@@ -54,7 +56,8 @@ class MongoDB implements Source
         $defaults = [
             'host' => 'localhost',
             'port' => 27017,
-            'db' => 'default'
+            'db' => 'default',
+            'check_connections' => false,
         ];
         $this->config = $config + $defaults;
     }
@@ -66,6 +69,7 @@ class MongoDB implements Source
      */
     private function collection(string $collection): Collection
     {
+        $db = $this->config['db'];
         if ($this->client == null) {
             $host = $this->config['host'];
             $port = $this->config['port'];
@@ -74,13 +78,14 @@ class MongoDB implements Source
             unset($options['port']);
             unset($options['db']);
             try {
-                $this->client = new Client("mongodb://{$host}:{$port}", $options);
-                $this->client->listDatabases(); // @TODO skip this extra call to trigger connection error fast?
+                $this->client = new Client("mongodb://{$host}:{$port}/{$db}", $options);
+                if ($this->config['check_connections'] === true) {
+                    $this->client->selectDatabase($this->config['db'])->listCollections();
+                }
             } catch (RuntimeException $e) {
                 throw new ConnectionError("Unable to connect to {$host}:{$port} : " . $e->getMessage());
             }
         }
-        $db = $this->config['db'];
         return $this->client->selectCollection($db, $collection);
     }
 
@@ -96,11 +101,11 @@ class MongoDB implements Source
     /**
      * @param mixed $query
      * @param array $params
-     * @throws \Exception if called as not implemented
+     * @throws Exception if called as not implemented
      */
     public function query($query, array $params = []): void
     {
-        throw new \Exception("Query method is not implemented for MongDB");
+        throw new Exception("Query method is not implemented for MongDB");
     }
 
     /**
@@ -136,11 +141,18 @@ class MongoDB implements Source
 
     /**
      * @TODO keep the BSON object?
-     * @param BSONDocument $document
+     * @param array|BSONDocument $document
      * @return array
      */
-    private function out(BSONDocument $document): array
+    private function out(array|BSONDocument $document): array
     {
+        if (is_array($document)) {
+            if (isset($document['_id'])) {
+                $document['id'] = $document['_id'];
+                unset($document['_id']);
+            }
+            return $document;
+        }
         $a = $document->getArrayCopy();
         if (isset($document->_id)) {
             $a['id'] = "{$document->_id}";
@@ -153,9 +165,9 @@ class MongoDB implements Source
      * @param string $collection_name
      * @param array $conditions
      * @param array $options
-     * @return \Generator
+     * @return Generator
      */
-    public function find(string $collection_name, array $conditions, array $options = []): \Generator
+    public function find(string $collection_name, array $conditions, array $options = []): Generator
     {
         $collection = $this->collection($collection_name);
         $conditions = $this->idReplaceConditions($conditions);

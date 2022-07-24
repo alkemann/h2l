@@ -2,32 +2,36 @@
 
 namespace alkemann\h2l\tests\unit;
 
-use alkemann\h2l\{
-    Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, Route, Router
-};
+use alkemann\h2l\{Dispatch, Environment, exceptions\NoRouteSetError, Request, Response, Route, Router};
 use alkemann\h2l\util\{ Chain, Http };
 use alkemann\h2l\response\{ Error, Json, Text };
-use alkemann\h2l\interfaces\Session as SessionInterface;
 use alkemann\h2l\interfaces\Route as RouteInterface;
+use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
-class DispatchTest extends \PHPUnit\Framework\TestCase
+class DispatchTest extends TestCase
 {
     /**
-     * @var \ReflectionProperty
+     * @var ReflectionProperty
      */
-    private static $ref_request;
+    private static ReflectionProperty $ref_request;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         Environment::setEnvironment(Environment::TEST);
-        self::$ref_request = new \ReflectionProperty(Dispatch::class, 'request');
+        self::$ref_request = new ReflectionProperty(Dispatch::class, 'request');
         self::$ref_request->setAccessible(true);
     }
 
     private static function getRequestFromDispatch(Dispatch $dispatch): Request
     {
         return self::$ref_request->getValue($dispatch);
+    }
+
+    private static function setRequestOnDispatch(Dispatch $dispatch, Request $request): void
+    {
+        self::$ref_request->setValue($dispatch, $request);
     }
 
     public function testGetHtml(): void
@@ -75,7 +79,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
             [ // $_SERVER
                 'HTTP_ACCEPT' => 'text/html,*/*;q=0.8',
                 'HTTP_CONTENT_TYPE' => '',
-                'HTTP_API_KEY' => 'asdf123',
+                'HTTP_API_KEY' => 'AS123',
                 'REQUEST_URI' => '/place?filter=all',
                 'REQUEST_METHOD' => 'GET',
             ],
@@ -86,10 +90,10 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         );
         $r = self::getRequestFromDispatch($dispatch);
         $this->assertInstanceOf(Request::class, $r);
-        $expected = ['Accept' => 'text/html,*/*;q=0.8', 'Content-Type' => '', 'Api-Key' => 'asdf123'];
+        $expected = ['Accept' => 'text/html,*/*;q=0.8', 'Content-Type' => '', 'Api-Key' => 'AS123'];
         $result = $r->headers();
         $this->assertEquals($expected, $result);
-        $this->assertEquals('asdf123', $r->header('Api-Key'));
+        $this->assertEquals('AS123', $r->header('Api-Key'));
     }
 
     public function testPostJson(): void
@@ -143,6 +147,8 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
             ->setMethods(['method'])// mocked methods
             ->getMock();
 
+        static::setRequestOnDispatch($dispatch, new Request());
+
         $dispatch->setRoute($route);
         $request = self::getRequestFromDispatch($dispatch);
         $this->assertEquals("Oslo", $request->param('place'));
@@ -158,7 +164,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
     public function testResponse(): void
     {
         $request = new Dispatch;
-        $cb = function (Request $r): ?Response {
+        $cb = function (): ?Response {
             return new Json('hey');
         };
         $route = new Route('testResponse', $cb);
@@ -170,7 +176,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
     public function testSetRouteFromRouter(): void
     {
         $response = new Json('hey');
-        $cb = function (Request $r) use ($response): ?Response {
+        $cb = function () use ($response): ?Response {
             return $response;
         };
         Router::add('testSetRouteFromRouter', $cb, Http::GET);
@@ -185,7 +191,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
     {
         $events = [];
 
-        $route = new Route('testMiddleWare', function (Request $r) use (&$events): ?Response {
+        $route = new Route('testMiddleWare', function () use (&$events): ?Response {
             $events[] = "Primary Route Called";
             return new Json(['place' => 'Oslo']);
         }, ['place' => 'Oslo']);
@@ -195,7 +201,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
 
         $middle = function (Request $request, Chain $chain) use (&$events): ?Response {
             $events[] = 'Before middleware';
-            $error_route = new Route($request->url(), function (Request $r) use (&$events): ?Response {
+            $error_route = new Route($request->url(), function () use (&$events): ?Response {
                 $events[] = 'Error Route Called';
                 return new Error();
             });
@@ -216,7 +222,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
 
     public function testCallableMiddle(): void
     {
-        $route = new Route('testMiddleWare', function (Request $r): ?Response {
+        $route = new Route('testMiddleWare', function (): ?Response {
             return new Json(['place' => 'Oslo']);
         }, ['place' => 'Oslo']);
 
@@ -231,7 +237,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $result->render());
     }
 
-    public function inTheMiddle(Request $request, Chain $chain): Response
+    public function inTheMiddle(): Response
     {
         return new Text("Override!", 500);
     }
@@ -250,7 +256,23 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
             }
             public static function getPageRoute(string $url): RouteInterface
             {
-                return null;
+                return new class implements RouteInterface {
+
+                    public function url(): string
+                    {
+                        return '';
+                    }
+
+                    public function parameters(): array
+                    {
+                        return [];
+                    }
+
+                    public function __invoke(Request $request): ?Response
+                    {
+                        return null;
+                    }
+                };
             }
         };
         Environment::setEnvironment('testSetFromRouterWithNoMatch');
@@ -261,7 +283,7 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($result);
         $this->assertNull($dispatch->route());
 
-        $this->expectException(\alkemann\h2l\exceptions\NoRouteSetError::class);
+        $this->expectException(NoRouteSetError::class);
         $dispatch->response();
 
         Environment::setEnvironment(Environment::TEST);
@@ -279,13 +301,28 @@ class DispatchTest extends \PHPUnit\Framework\TestCase
             }
             public static function getFallback(): ?RouteInterface
             {
-                $callback = function() { return new \alkemann\h2l\response\Text('content123'); };
-                $route123 = new Route('fallback123', $callback);
-                return $route123;
+                $callback = function() { return new Text('content123'); };
+                return new Route('fallback123', $callback);
             }
             public static function getPageRoute(string $url): RouteInterface
             {
-                return null;
+                return new class implements RouteInterface {
+
+                    public function url(): string
+                    {
+                        return '';
+                    }
+
+                    public function parameters(): array
+                    {
+                        return [];
+                    }
+
+                    public function __invoke(Request $request): ?Response
+                    {
+                        return null;
+                    }
+                };
             }
         };
         $this->assertTrue($dispatch->setRouteFromRouter(get_class($mock_router)));

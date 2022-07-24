@@ -32,7 +32,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
         $port = self::$config['port'] ?? 27017;
         try {
             $mc = new Client("mongodb://{$host}:{$port}");
-            $mc->dropDatabase('test');
+            $mc->dropDatabase(self::$config['db']);
         } catch (\MongoDB\Driver\Exception\ConnectionTimeoutException $e) {
             self::markTestSkipped("Connection configured, but connection failed!");
             return;
@@ -42,7 +42,7 @@ class MongodbTest extends \PHPUnit\Framework\TestCase
     public function testConnectionFail(): void
     {
         $this->expectException(ConnectionError::class);
-        $m = new Mongo(['host' => 'nope']);
+        $m = new Mongo(['host' => 'nope', 'check_connections' => true,]);
         $col = static::$collection_handler->invoke($m, 'tests');
         $this->assertTrue($col instanceof \MongoDB\Collection);
     }

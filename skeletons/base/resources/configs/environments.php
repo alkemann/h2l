@@ -1,7 +1,6 @@
 <?php
 
-use alkemann\h2l\Environment;
-use alkemann\h2l\Log;
+use alkemann\h2l\{Log, Environment, Request, Response, util\Chain};
 
 $base = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR ;
 

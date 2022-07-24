@@ -16,40 +16,40 @@ class Message
     /**
      * @var int
      */
-    protected $code = 0;
+    protected int $code = 0;
     /**
      * @var string
      */
-    protected $url = '';
+    protected string $url = '';
     /**
      * Enum with Http::GET, Http::POST etc
      * @var string
      */
-    protected $method = Http::GET;
+    protected string $method = Http::GET;
     /**
      * @var string
      */
-    protected $body = '';
+    protected string $body = '';
     /**
      * @var array<string, mixed>
      */
-    protected $meta = [];
+    protected array $meta = [];
     /**
      * @var array<string, mixed>
      */
-    protected $headers = [];
+    protected array $headers = [];
     /**
      * @var array<string, mixed>
      */
-    protected $options = [];
+    protected array $options = [];
     /**
      * @var string
      */
-    protected $content_type = Http::CONTENT_HTML;
+    protected string $content_type = Http::CONTENT_HTML;
     /**
      * @var string
      */
-    protected $content_charset = 'utf-8';
+    protected string $content_charset = 'utf-8';
 
     /**
      * @return string

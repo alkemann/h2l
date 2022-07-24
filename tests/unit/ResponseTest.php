@@ -34,8 +34,8 @@ class ResponseTest extends \PHPUnit\Framework\TestCase
         $h = function($s) use (&$headers) { $headers[] = $s; };
         $config = ['header_func' => $h];
         $r = new class($config) extends Response {
-            protected $config;
-            public function __construct($config) { $this->config = $config; }
+            protected array $config;
+            public function __construct(array $config) { $this->config = $config; }
             public function render():string { return "HEY"; }
         };
 

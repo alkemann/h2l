@@ -14,12 +14,12 @@ class Dispatch
     /**
      * @var array<callable>
      */
-    private $middlewares = [];
+    private array $middlewares = [];
 
     /**
      * @var Request
      */
-    protected $request;
+    protected Request $request;
 
     /**
      * Analyze request, provided $_REQUEST, $_SERVER [, $_GET, $_POST] to identify Route
@@ -115,9 +115,6 @@ class Dispatch
      */
     public function setRoute(interfaces\Route $route): void
     {
-        if ($this->request === null) {
-            $this->request = new Request();
-        }
         $this->request = $this->request->withRoute($route);
     }
 

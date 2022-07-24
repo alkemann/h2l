@@ -16,17 +16,17 @@ abstract class Cli
     public const VERSION = "v0.1";
 
     /** @var string */
-    protected $self;
+    protected string $self;
     /** @var string */
-    protected $command;
+    protected string $command;
     /** @var array<string, mixed> */
-    protected $args;
+    protected array $args;
     /** @var bool */
-    protected $echo = true;
+    protected bool $echo = true;
     /** @var string */
-    protected $out = '';
+    protected string $out = '';
     /** @var int */
-    private $last_index = 0;
+    private int $last_index = 0;
 
     /**
      * @param array<string, string> $map
@@ -38,21 +38,30 @@ abstract class Cli
 
     /**
      * @psalm-suppress MissingClosureParamType
-     * @param array<string, string> $options_map
+     * @param array<string|int, mixed> $options_map
      * @return array
      */
     protected function getConvertedOptions(array $options_map): array
     {
         $argv = $this->getGlobalArgV();
-
-        $int_filter = function($k): bool {
-            return is_int($k);
-        };
-        $just_longs = array_filter($options_map, $int_filter, ARRAY_FILTER_USE_KEY);
-        $string_filter = function($k): bool {
-            return is_string($k);
-        };
-        $options_map = array_filter($options_map, $string_filter, ARRAY_FILTER_USE_KEY);
+        $just_longs = array_filter(
+            $options_map,
+            /**
+             * @param mixed $k
+             * @return bool
+             */
+            static fn($k): bool => is_int($k),
+            ARRAY_FILTER_USE_KEY
+        );
+        $options_map = array_filter(
+            $options_map,
+            /**
+             * @param mixed $k
+             * @return bool
+             */
+            static fn($k): bool => is_string($k),
+            ARRAY_FILTER_USE_KEY
+        );
         $short_options = join('', array_keys($options_map));
         $long_options = array_merge(array_values($options_map), $just_longs);
         $args = $this->getOpt($short_options, $long_options);
@@ -78,7 +87,7 @@ abstract class Cli
             if ($value === false) {
                 $args[$key] = true;
             } elseif (is_array($value)) {
-                $args[$key] = count($args[$key]);
+                $args[$key] = count($value);
             }
         }
 
@@ -211,11 +220,15 @@ abstract class Cli
      * @codeCoverageIgnore
      * @param string $short_options
      * @param string[] $long_options
-     * @return array<string, mixed>
+     * @return array<string, array<int, mixed>|string|false>
      */
     protected function getOpt(string $short_options, array $long_options): array
     {
-        return getopt($short_options, $long_options, $this->last_index);
+        $o = getopt($short_options, $long_options, $this->last_index);
+        if ($o === false) {
+            return [];
+        }
+        return $o;
     }
 
     /**

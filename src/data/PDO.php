@@ -17,7 +17,7 @@ class PDO implements Source
     /**
      * @var array
      */
-    protected $config = [];
+    protected array $config = [];
 
     /**
      * @var null|_PDO
@@ -25,7 +25,7 @@ class PDO implements Source
     protected $db = null;
 
     /** @var string */
-    private $pdo_class = _PDO::class;
+    private string $pdo_class = _PDO::class;
 
     /**
      * @param array $config
@@ -279,10 +279,13 @@ class PDO implements Source
 
     private function data(array $data): string
     {
-        $fun = function($o, $v): string {
-            return "{$o}, {$v} = :d_{$v}";
-        };
-        return trim((string) array_reduce(array_keys($data), $fun, ""), ", ");
+        /**
+         * @param string $o
+         * @param mixed $v
+         * @return string
+         */
+        $f = static fn(string $o, $v): string => "{$o}, {$v} = :d_{$v}";
+        return trim((string) array_reduce(array_keys($data), $f, ""), ", ");
     }
 
     /**
