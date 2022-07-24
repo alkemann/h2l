@@ -232,9 +232,7 @@ class CollectionTest extends TestCase
     {
         $col = new Collection(['b', 'c']);
         $col2 = $col->unshift('a');
-        $this->assertNotSame($col, $col2);
-        $expected = ['b', 'c'];
-        $this->assertEquals($expected, $col->all());
+        $this->assertSame($col, $col2);
         $expected = ['a', 'b', 'c'];
         $this->assertEquals($expected, $col2->all());
 
