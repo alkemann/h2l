@@ -70,12 +70,14 @@ class Router implements interfaces\Router
                 $callback = $controller . '::' . $method_name;
                 $attributes = $method->getAttributes(
                     RouteAttribute::class,
-                    \ReflectionAttribute::IS_INSTANCEOF);
+                    \ReflectionAttribute::IS_INSTANCEOF
+                );
                 foreach ($attributes as $attribute) {
                     list($path) = $attribute->getArguments() + [null, null];
                     if (is_string($path) === false) {
                         throw new \InvalidArgumentException(
-                            "Route on [{$callback}] has invalid, string expected");
+                            "Route on [{$callback}] has invalid, string expected"
+                        );
                     }
                     switch ($attribute->getName()) {
                         case Get::class:
