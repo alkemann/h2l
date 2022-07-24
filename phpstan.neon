@@ -16,8 +16,5 @@ parameters:
             message: '# expects string, string\|false given#'
             path: src/response/Page.php
         -
-            message: '#BSONDocument, array\|object given#'
-            path: src/data/MongoDB.php
-        -
             message: '#function trim expects string, int\|string#'
             path: src/util/Cli.php
