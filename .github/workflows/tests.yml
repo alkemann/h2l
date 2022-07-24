@@ -34,13 +34,6 @@ jobs:
       - name: GitHub Actions
         uses: actions/checkout@v2
 
-      - name: Create mongo Docker container
-        id: build_mongo_docker
-        uses: DigiPie/mongo-action@v1.0.1
-        with:
-          image_version: latest
-          port: 27017
-
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
