@@ -44,15 +44,12 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
-          extensions: mongodb-mongodb, mysql, pgsql
+          php-version: '8.1'
+          extensions: mysql, pgsql
           coverage: xdebug
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
-
-      - name: Install MongoDB
-        run: composer require mongodb/mongodb
 
       - name: Cache Composer packages
         id: composer-cache
