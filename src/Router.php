@@ -2,8 +2,14 @@
 
 namespace alkemann\h2l;
 
+use alkemann\h2l\attributes\Delete;
+use alkemann\h2l\attributes\Get;
+use alkemann\h2l\attributes\Post;
+use alkemann\h2l\attributes\Put;
 use alkemann\h2l\util\Http;
+use alkemann\h2l\attributes\Route as RouteAttribute;
 use Closure;
+use ReflectionMethod;
 
 /**
  * Class Router
@@ -45,6 +51,51 @@ class Router implements interfaces\Router
             $real = '/' . $real;
         }
         self::$aliases[$alias] = $real;
+    }
+
+    /**
+     * Look for methods with the #Route[] attribute and add them
+     *
+     * @param string[]|string $classes Namespace class or classes
+     */
+    public static function addViaAttributes(array|string $classes): void
+    {
+        $classes = is_array($classes) ? $classes : [$classes];
+        foreach ($classes as $controller) {
+            /** @var class-string $controller */
+            $methods = (new \ReflectionClass($controller))
+                ->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_STATIC);
+            foreach ($methods as $method) {
+                $method_name = $method->getName();
+                $callback = $controller . '::' . $method_name;
+                $attributes = $method->getAttributes(
+                    RouteAttribute::class,
+                    \ReflectionAttribute::IS_INSTANCEOF);
+                foreach ($attributes as $attribute) {
+                    list($path) = $attribute->getArguments() + [null, null];
+                    if (is_string($path) === false) {
+                        throw new \InvalidArgumentException(
+                            "Route on [{$callback}] has invalid, string expected");
+                    }
+                    switch ($attribute->getName()) {
+                        case Get::class:
+                            static::add($path, $callback, Http::GET);
+                            break;
+                        case Post::class:
+                            static::add($path, $callback, Http::POST);
+                            break;
+                        case Put::class:
+                            static::add($path, $callback, Http::PUT);
+                            break;
+                        case Delete::class:
+                            static::add($path, $callback, Http::DELETE);
+                            break;
+                        default:
+                            throw new \Exception("What is this? " . $attribute->getName());
+                    }
+                }
+            }
+        }
     }
 
     /**
