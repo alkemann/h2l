@@ -24,7 +24,7 @@ class PDO implements Source
      */
     protected $db = null;
 
-    /** @var string */
+    /** @var class-string */
     private string $pdo_class = _PDO::class;
 
     /**

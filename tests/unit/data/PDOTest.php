@@ -4,6 +4,7 @@ namespace alkemann\h2l\tests\unit\data;
 
 use alkemann\h2l\data\PDO;
 use alkemann\h2l\tests\mocks\mysql\Statement as MockStatement;
+use PDOStatement;
 
 class PDOTest extends \PHPUnit\Framework\TestCase
 {
@@ -117,9 +118,16 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $handler = $this->getMockBuilder(\PDO::class)
             ->disableOriginalConstructor()
             ->setMockClassName('PdoHandler') // Mock class name
-            ->setMethods(['query']) // mocked methods
             ->getMock();
-        $handler->expects($this->once())->method('query')->will($this->returnValue(new class() { public function fetchAll() { return "QUERIED"; }}));
+        $statement = $this->getMockBuilder(PDOStatement::class)
+            ->getMock();
+        $statement->expects($this->once())
+            ->method('fetchAll')
+            ->willReturn(["QUERIED"]);
+
+        $handler->expects($this->once())
+            ->method('query')
+            ->will($this->returnValue($statement));
 
         $m = new PDO;
 
@@ -127,7 +135,7 @@ class PDOTest extends \PHPUnit\Framework\TestCase
         $reflection_prop->setAccessible(true);
         $reflection_prop->setValue($m, $handler);
 
-        $expected = 'QUERIED';
+        $expected = ['QUERIED'] ;
         $result = $m->query('SELECT * FROM tests;');
         $this->assertEquals($expected, $result);
     }
