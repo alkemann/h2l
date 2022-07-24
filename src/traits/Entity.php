@@ -102,7 +102,7 @@ trait Entity
     {
         if ($data !== null) {
             $this->relationships[$relation_name] = $data;
-            return;
+            return null;
         }
         $relationship = $this->describeRelationship($relation_name);
         $relation_class = $relationship['class'];
@@ -229,7 +229,7 @@ trait Entity
             case 'array': return $this->data;
             case 'json': return json_encode($this->data);
             default:
-                throw new \InvalidArgumentException("Unkown type $type");
+                throw new \InvalidArgumentException("Unknown type $type");
         }
     }
 
