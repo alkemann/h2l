@@ -27,18 +27,18 @@ class Collection implements \ArrayAccess, \Iterator
      */
     public function contains(mixed $func): bool
     {
-       foreach ($this->data as $key => $value) {
-           if (is_callable($func)) {
-               if ($func($value, $key)) {
-                   return true;
-               }
-           } else {
-               if ($value == $func) {
-                   return true;
-               }
-           }
-       }
-       return false;
+        foreach ($this->data as $key => $value) {
+            if (is_callable($func)) {
+                if ($func($value, $key)) {
+                    return true;
+                }
+            } else {
+                if ($value == $func) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -73,7 +73,9 @@ class Collection implements \ArrayAccess, \Iterator
             return $this->current();
         }
         foreach ($this->data as $key => $value) {
-            if ($func($value, $key)) return $value;
+            if ($func($value, $key)) {
+                return $value;
+            }
         }
         return null; // @TODO or custom exception?
     }
@@ -292,7 +294,8 @@ class Collection implements \ArrayAccess, \Iterator
         $this->iter = 0;
     }
 
-    public function offsetSet(mixed $offset, mixed $value): void {
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
         if (is_null($offset)) {
             $this->data[] = $value;
         } else {
@@ -300,11 +303,13 @@ class Collection implements \ArrayAccess, \Iterator
         }
     }
 
-    public function offsetExists(mixed $offset): bool {
+    public function offsetExists(mixed $offset): bool
+    {
         return isset($this->data[$offset]);
     }
 
-    public function offsetUnset(mixed $offset): void {
+    public function offsetUnset(mixed $offset): void
+    {
         unset($this->data[$offset]);
     }
 
