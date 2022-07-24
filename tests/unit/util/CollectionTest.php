@@ -140,7 +140,7 @@ class CollectionTest extends TestCase
     {
         $collection = new Collection([11, 22, 33]);
         $expected = 11 + 22 + 33;
-        $result = $collection->reduce(fn($ac, $v) => $ac + $v);
+        $result = $collection->reduce(fn($ac, $v) => $ac + $v, 0);
         $this->assertEquals($expected, $result);
     }
 
@@ -232,9 +232,10 @@ class CollectionTest extends TestCase
     {
         $col = new Collection(['b', 'c']);
         $col2 = $col->unshift('a');
-        $this->assertSame($col, $col2);
-        $expected = ['a', 'b', 'c'];
+        $this->assertNotSame($col, $col2);
+        $expected = ['b', 'c'];
         $this->assertEquals($expected, $col->all());
+        $expected = ['a', 'b', 'c'];
         $this->assertEquals($expected, $col2->all());
 
         $result = $col->shift();

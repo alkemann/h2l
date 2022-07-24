@@ -4,8 +4,14 @@ namespace alkemann\h2l\util;
 
 use BadMethodCallException;
 
-// https://laravel.com/docs/9.x/collections#method-contains
-
+/**
+ * Class Collection
+ *
+ * Array wrapper for utilizing indempotent array manipulations ala
+ * https://laravel.com/docs/9.x/collections#method-contains
+ *
+ * @package alkemann\h2l
+ */
 class Collection implements \ArrayAccess, \Iterator
 {
     protected int $iter = 0;
@@ -13,6 +19,12 @@ class Collection implements \ArrayAccess, \Iterator
     /** @var callable[]  */
     protected static array $macros = [];
 
+    /**
+     * Check if the data in the collection matches provided value or eval callable
+     *
+     * @param mixed $func value to compare against or a callable to eval each value
+     * @return bool true if collection contains value or the value that makes callable true
+     */
     public function contains(mixed $func): bool
     {
        foreach ($this->data as $key => $value) {
@@ -29,6 +41,12 @@ class Collection implements \ArrayAccess, \Iterator
        return false;
     }
 
+    /**
+     * Strictly match provided value against all data in collection
+     *
+     * @param mixed $check value to compare against all data in collection
+     * @return bool true if provided value is strictly matched in the collection
+     */
     public function containsStrict(mixed $check): bool
     {
         foreach ($this->data as $value) {
@@ -39,18 +57,37 @@ class Collection implements \ArrayAccess, \Iterator
         return false;
     }
 
+    /**
+     * Returns first value that matches provided callable
+     *
+     * Callable should be `fn(mixed $value, int $key): bool`
+     * If no callable is provided, the first value is returned
+     *
+     * @param callable|null $func callable that choses value to return
+     * @return mixed|null single value from collection
+     */
     public function sole(?callable $func = null): mixed
     {
         if (!$func) {
             $this->rewind();
             return $this->current();
         }
-        foreach ($this->data as $value) {
-            if ($func($value)) return $value;
+        foreach ($this->data as $key => $value) {
+            if ($func($value, $key)) return $value;
         }
         return null; // @TODO or custom exception?
     }
 
+    /**
+     * Call callable on each value,key pair of collection
+     *
+     * No sideeffects, returns self, not a clone
+     *
+     * Callable should be `fn(mixed $value, int $key): bool`
+     *
+     * @param callable $func
+     * @return $this
+     */
     public function tap(callable $func): self
     {
         foreach ($this->data as $key => $value) {
@@ -59,15 +96,37 @@ class Collection implements \ArrayAccess, \Iterator
         return $this;
     }
 
+    /**
+     * Insert value at start of data
+     *
+     * @param mixed $value
+     * @return $this
+     */
     public function unshift(mixed $value): self
     {
         array_unshift($this->data, $value);
         return $this;
     }
 
+    /**
+     * Remove and return the first value in data
+     *
+     * @return mixed
+     */
     public function shift(): mixed
     {
         return array_shift($this->data);
+    }
+
+    /**
+     * Alias for unshift
+     *
+     * @param mixed $value
+     * @return $this
+     */
+    public function prepend(mixed $value): self
+    {
+        return $this->unshift($value);
     }
 
     public function pop(): mixed
@@ -105,9 +164,9 @@ class Collection implements \ArrayAccess, \Iterator
         return !$this->isEmpty();
     }
 
-    public function reduce(callable $func): mixed
+    public function reduce(callable $func, mixed $initial): mixed
     {
-        return array_reduce($this->data, $func);
+        return array_reduce($this->data, $func, $initial);
     }
 
     public function each(callable $func): void
