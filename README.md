@@ -18,7 +18,7 @@ Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.githu
 
 ## Requirements
 
- + PHP 8.0
+ + PHP 8.1
 
 ## Install
 
@@ -36,6 +36,7 @@ Hosted on Github pages: [https://alkemann.github.io/h2l/](https://alkemann.githu
      + `heroku_react` (set up for plug and play heroku app with H2L as backend and an react-redux frontend)
      + `heroku_min` (set up for plug and play heroku app with H2L)
      + `api` (no automagic routing, for pure api apps and specifically routed responses)
+     + `hyper` (start out with Tailwind, alpine.js and HTMX for server side "SPA")
 
 
 ## Usage from skeleton
