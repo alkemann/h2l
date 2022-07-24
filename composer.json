@@ -1,8 +1,8 @@
 {
     "name": "alkemann/h2l",
     "type": "library",
-    "description": "A micro framework for websites and apis. This is a sequel of h.l, made for PHP 7",
-    "keywords": ["framework", "microframework", "router", "routing", "php7"],
+    "description": "A micro framework for websites and apis. This is a sequel of h.l, made for PHP 8",
+    "keywords": ["framework", "microframework", "router", "routing", "php8"],
     "homepage": "https://github.com/alkemann/h2l",
     "license": "MIT",
     "authors": [
@@ -12,18 +12,14 @@
         }
     ],
     "suggest": {
-        "monolog/monolog": "Advanced logging that can be plugged into the logger",
-        "mongodb/mongodb": "A Mongo DB data connection is provided that uses this library",
-        "ext-mongo": "For the MongoDb Datasource. ",
         "ext-pdo": "For the MySql, Postgres and Sqlite Datasources.",
         "ext-curl": "For remote API usage",
         "alkemann/debug": "Convenient var_dump replaces for debug and development, require-dev only"
     },
     "require": {
-        "php": "^8.0"
+        "php": "^8.1"
     },
     "require-dev": {
-        "mongodb/mongodb": "^1.8",
         "phpunit/phpunit": "^9",
         "phpstan/phpstan": "^0.12.4"
     },

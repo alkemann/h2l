@@ -1,6 +1,5 @@
 vendor
 tests/clover.xml
-tests/config/mongo_connection.php
 tests/config/pdo_mysql_connection.php
 tests/config/pdo_pgsql_connection.php
 

@@ -19,7 +19,6 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
     {
         if (extension_loaded('pdo_mysql') === false) {
             self::markTestSkipped("PHP extension 'pdo_mysql' not installed");
-            return;
         }
         $f = dirname(dirname(__DIR__)) . '/config/pdo_mysql_connection.php';
         if (file_exists($f) == false) {
@@ -36,6 +35,7 @@ class MysqlTest extends \PHPUnit\Framework\TestCase
         try {
             $db = new _PDO("mysql:host={$host};dbname={$db}", $user, $pass);
             $db->query('SHOW TABLES;');
+            $db->query('TRUNCATE tests');
         } catch (\PDOException $e) {
             self::markTestSkipped("Connection configured, but connection failed! " . $e->getMessage());
         }

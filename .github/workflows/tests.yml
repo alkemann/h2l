@@ -34,25 +34,15 @@ jobs:
       - name: GitHub Actions
         uses: actions/checkout@v2
 
-      - name: Create mongo Docker container
-        id: build_mongo_docker
-        uses: DigiPie/mongo-action@v1.0.1
-        with:
-          image_version: latest
-          port: 27017
-
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.0'
-          extensions: mongodb-mongodb, mysql, pgsql
+          php-version: '8.1'
+          extensions: mysql, pgsql
           coverage: xdebug
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
-
-      - name: Install MongoDB
-        run: composer require mongodb/mongodb
 
       - name: Cache Composer packages
         id: composer-cache
@@ -68,9 +58,6 @@ jobs:
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan.phar analyse -c phpstan.neon --no-interaction --no-progress
-
-      - name: Set MongoDB connection
-        run: echo "<?php return ['host'=>'127.0.0.1','user'=>'hltest','db'=>'test', 'port' => 27017];" > tests/config/mongo_connection.php
 
       - name: Set Postgres connection
         run: echo "<?php return ['scheme'=>'pgsql','host'=>'127.0.0.1','user'=>'postgres','pass'=>'postgres','db'=>'postgres', 'port' => '${{ job.services.postgres.ports['5432'] }}'];" > tests/config/pdo_pgsql_connection.php

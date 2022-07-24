@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace alkemann\h2l\data;
 
@@ -24,12 +24,12 @@ class PDO implements Source
      */
     protected $db = null;
 
-    /** @var string */
+    /** @var class-string */
     private string $pdo_class = _PDO::class;
 
     /**
      * @param array $config
-     * @param string $pdo_class
+     * @param class-string $pdo_class
      */
     public function __construct(array $config = [], string $pdo_class = _PDO::class)
     {
@@ -292,9 +292,9 @@ class PDO implements Source
      * @param string $table
      * @param array $data
      * @param array $options
-     * @return null|string
+     * @return null|string|int
      */
-    public function insert(string $table, array $data, array $options = []): ?string
+    public function insert(string $table, array $data, array $options = [])
     {
         $keys = implode(', ', array_keys($data));
         $data_phs = ':d_' . implode(', :d_', array_keys($data));
