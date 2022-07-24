@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace alkemann\h2l\attributes;
 
@@ -18,9 +16,9 @@ use Attribute;
  * @package alkemann\h2l
  */
 #[Attribute(Attribute::TARGET_METHOD|ATTRIBUTE::IS_REPEATABLE)]
-abstract class Route
+class Route
 {
-    public function __construct(public string $path)
+    public function __construct(public string $path, public string $method)
     {
     }
 }

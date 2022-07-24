@@ -1,9 +1,8 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace alkemann\h2l\attributes;
 
+use alkemann\h2l\util\Http;
 use Attribute;
 
 /**
@@ -21,4 +20,8 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD|ATTRIBUTE::IS_REPEATABLE)]
 class Patch extends Route
 {
+    public function __construct(public string $path)
+    {
+        parent::__construct($this->path, Http::PATCH);
+    }
 }

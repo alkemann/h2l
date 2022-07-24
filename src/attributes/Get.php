@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace alkemann\h2l\attributes;
 
@@ -22,4 +20,8 @@ use Attribute;
 #[Attribute(Attribute::TARGET_METHOD|ATTRIBUTE::IS_REPEATABLE)]
 class Get extends Route
 {
+    public function __construct(public string $path)
+    {
+        parent::__construct($this->path, Http::GET);
+    }
 }
