@@ -3,21 +3,18 @@
 parameters:
     paths:
         - src
-    level: max
+    level: 1
     checkMissingIterableValueType: false
-    ignoreErrors:
-        -
-            message: '#Else branch is unreachable because previous condition is always true.#'
-            path: src/Log.php
-        -
-            message: '#has no return typehint#'
-            path: src/interfaces/Source.php
-        -
-            message: '# expects string, string\|false given#'
-            path: src/response/Page.php
-        -
-            message: '#BSONDocument, array\|object given#'
-            path: src/data/MongoDB.php
-        -
-            message: '#function trim expects string, int\|string#'
-            path: src/util/Cli.php
+#    ignoreErrors:
+#        -
+#            message: '#Else branch is unreachable because previous condition is always true.#'
+#            path: src/Log.php
+#        -
+#            message: '#has no return typehint#'
+#            path: src/interfaces/Source.php
+#        -
+#            message: '# expects string, string\|false given#'
+#            path: src/response/Page.php
+#        -
+#            message: '#function trim expects string, int\|string#'
+#            path: src/util/Cli.php

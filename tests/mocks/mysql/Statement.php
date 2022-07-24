@@ -11,13 +11,13 @@ class Statement implements \Iterator
         $this->ec = $execute_check;
         $this->result = $result;
     }
-    public function current() { return current($this->result); }
-    public function key() { return key($this->result); }
-    public function next() { next($this->result); }
-    public function rewind() { reset($this->result); }
-    public function valid() { return current($this->result) !== false; }
-    public function execute($v = []) { $ec = $this->ec; return $ec($v); }
-    public function fetch() { return $this->current(); }
-    public function bindValue($key, $value) {}
-    public function rowCount() { return sizeof($this->result); }
+    public function current(): mixed { return current($this->result); }
+    public function key(): mixed { return key($this->result); }
+    public function next(): void { next($this->result); }
+    public function rewind(): void { reset($this->result); }
+    public function valid(): bool { return current($this->result) !== false; }
+    public function execute($v = []): mixed { $ec = $this->ec; return $ec($v); }
+    public function fetch(): mixed { return $this->current(); }
+    public function bindValue($key, $value): void {}
+    public function rowCount(): int { return sizeof($this->result); }
 }
