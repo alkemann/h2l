@@ -292,6 +292,7 @@ final class Page extends Response
      * @return string fully rendered string, ready to be echo'ed
      * @throws InvalidUrl if the view template does not exist
      */
+    #[\Override]
     public function render(): string
     {
         $this->setHeaders();

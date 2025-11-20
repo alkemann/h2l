@@ -38,7 +38,7 @@ class Dispatch
         array $server = [],
         array $get = [],
         array $post = [],
-        interfaces\Session $session = null
+        ?\alkemann\h2l\interfaces\Session $session = null
     ) {
         unset($get['url']); // @TODO Use a less important keyword, as it blocks that _GET param?
 
@@ -103,7 +103,7 @@ class Dispatch
     /**
      * @return interfaces\Route|null Route identified for request if set
      */
-    public function route(): ?interfaces\Route
+    public function route(): interfaces\Route|null
     {
         return $this->request->route();
     }
@@ -126,10 +126,10 @@ class Dispatch
      * @return Response|null
      * @throws NoRouteSetError if a route has not been set prior to calling this, or by a middleware
      */
-    public function response(): ?Response
+    public function response(): Response|null
     {
         $cbs = $this->middlewares;
-        $call_eventual_route_at_end_of_chain = static function(Request $request): ?Response {
+        $call_eventual_route_at_end_of_chain = static function(Request $request): Response|null {
             $route = $request->route();
             if (is_null($route)) {
                 if (Environment::get('debug')) {

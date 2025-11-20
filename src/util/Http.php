@@ -11,67 +11,67 @@ namespace alkemann\h2l\util;
  */
 class Http
 {
-    public const TRACE = 'TRACE';
-    public const HEAD = 'HEAD';
-    public const POST = 'POST';
-    public const CONNECT = 'CONNECT';
-    public const OPTIONS = 'OPTIONS';
-    public const PUT = 'PUT';
-    public const PATCH = 'PATCH';
-    public const DELETE = 'DELETE';
-    public const GET = 'GET';
+    public const string TRACE = 'TRACE';
+    public const string HEAD = 'HEAD';
+    public const string POST = 'POST';
+    public const string CONNECT = 'CONNECT';
+    public const string OPTIONS = 'OPTIONS';
+    public const string PUT = 'PUT';
+    public const string PATCH = 'PATCH';
+    public const string DELETE = 'DELETE';
+    public const string GET = 'GET';
 
-    public const CONTENT_HTML = 'text/html';
-    public const CONTENT_TEXT_XML = 'text/xml';
-    public const CONTENT_XML = 'application/xml';
-    public const CONTENT_TEXT = 'text/plain';
-    public const CONTENT_FORM = 'application/x-www-form-urlencoded';
-    public const CONTENT_JSON = 'application/json';
+    public const string CONTENT_HTML = 'text/html';
+    public const string CONTENT_TEXT_XML = 'text/xml';
+    public const string CONTENT_XML = 'application/xml';
+    public const string CONTENT_TEXT = 'text/plain';
+    public const string CONTENT_FORM = 'application/x-www-form-urlencoded';
+    public const string CONTENT_JSON = 'application/json';
 
-    public const CODE_CONTINUE = 100;
-    public const CODE_SWITCHING_PROTOCOLS = 101;
+    public const int CODE_CONTINUE = 100;
+    public const int CODE_SWITCHING_PROTOCOLS = 101;
 
-    public const CODE_OK = 200;
-    public const CODE_CREATED = 201;
-    public const CODE_ACCEPTED = 202;
-    public const CODE_NON_AUTHORITATIVE_INFORMATION = 203;
-    public const CODE_NO_CONTENT = 204;
-    public const CODE_RESET_CONTENT = 205;
-    public const CODE_PARTIAL_CONTENT = 206;
+    public const int CODE_OK = 200;
+    public const int CODE_CREATED = 201;
+    public const int CODE_ACCEPTED = 202;
+    public const int CODE_NON_AUTHORITATIVE_INFORMATION = 203;
+    public const int CODE_NO_CONTENT = 204;
+    public const int CODE_RESET_CONTENT = 205;
+    public const int CODE_PARTIAL_CONTENT = 206;
 
-    public const CODE_MULTIPLE_CHOICES = 300;
-    public const CODE_MOVED_PERMANENTLY = 301;
-    public const CODE_FOUND = 302;
-    public const CODE_SEE_OTHER = 303;
-    public const CODE_NOT_MODIFIED = 304;
-    public const CODE_USE_PROXY = 305;
-    public const CODE_TEMPORARY_REDIRECT = 307;
+    public const int CODE_MULTIPLE_CHOICES = 300;
+    public const int CODE_MOVED_PERMANENTLY = 301;
+    public const int CODE_FOUND = 302;
+    public const int CODE_SEE_OTHER = 303;
+    public const int CODE_NOT_MODIFIED = 304;
+    public const int CODE_USE_PROXY = 305;
+    public const int CODE_TEMPORARY_REDIRECT = 307;
 
-    public const CODE_BAD_REQUEST = 400;
-    public const CODE_UNAUTHORIZED = 401;
-    public const CODE_PAYMENT_REQUIRED = 402;
-    public const CODE_FORBIDDEN = 403;
-    public const CODE_NOT_FOUND = 404;
-    public const CODE_METHOD_NOT_ALLOWED = 405;
-    public const CODE_NOT_ACCEPTABLE = 406;
-    public const CODE_PROXY_AUTHENTICATION_REQUIRED = 407;
-    public const CODE_REQUEST_TIMEOUT = 408;
-    public const CODE_CONFLICT = 409;
-    public const CODE_GONE = 410;
-    public const CODE_LENGTH_REQUIRED = 411;
-    public const CODE_PRECONDITION_FAILED = 412;
-    public const CODE_REQUEST_ENTITY_TOO_LARGE = 413;
-    public const CODE_REQUEST_URI_TOO_LONG = 414;
-    public const CODE_UNSUPPORTED_MEDIA_TYPE = 415;
-    public const CODE_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
-    public const CODE_EXPECTATION_FAILED = 417;
+    public const int CODE_BAD_REQUEST = 400;
+    public const int CODE_UNAUTHORIZED = 401;
+    public const int CODE_PAYMENT_REQUIRED = 402;
+    public const int CODE_FORBIDDEN = 403;
+    public const int CODE_NOT_FOUND = 404;
+    public const int CODE_METHOD_NOT_ALLOWED = 405;
+    public const int CODE_NOT_ACCEPTABLE = 406;
+    public const int CODE_PROXY_AUTHENTICATION_REQUIRED = 407;
+    public const int CODE_REQUEST_TIMEOUT = 408;
+    public const int CODE_CONFLICT = 409;
+    public const int CODE_GONE = 410;
+    public const int CODE_LENGTH_REQUIRED = 411;
+    public const int CODE_PRECONDITION_FAILED = 412;
+    public const int CODE_REQUEST_ENTITY_TOO_LARGE = 413;
+    public const int CODE_REQUEST_URI_TOO_LONG = 414;
+    public const int CODE_UNSUPPORTED_MEDIA_TYPE = 415;
+    public const int CODE_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+    public const int CODE_EXPECTATION_FAILED = 417;
 
-    public const CODE_INTERNAL_SERVER_ERROR = 500;
-    public const CODE_NOT_IMPLEMENTED = 501;
-    public const CODE_BAD_GATEWAY = 502;
-    public const CODE_SERVICE_UNAVAILABLE = 503;
-    public const CODE_GATEWAY_TIMEOUT = 504;
-    public const CODE_HTTP_VERSION_NOT_SUPPORTED = 505;
+    public const int CODE_INTERNAL_SERVER_ERROR = 500;
+    public const int CODE_NOT_IMPLEMENTED = 501;
+    public const int CODE_BAD_GATEWAY = 502;
+    public const int CODE_SERVICE_UNAVAILABLE = 503;
+    public const int CODE_GATEWAY_TIMEOUT = 504;
+    public const int CODE_HTTP_VERSION_NOT_SUPPORTED = 505;
 
     /**
      * @var array<string, string>
@@ -143,12 +143,7 @@ class Http
      */
     public static function fileEndingFromType(string $type): string
     {
-        foreach (self::$contentTypeToFileEnding as $type_key => $ending) {
-            if ($type === $type_key) {
-                return $ending;
-            }
-        }
-        return 'html';
+        return self::$contentTypeToFileEnding[$type] ?? 'html';
     }
 
     /**

@@ -10,6 +10,9 @@ namespace alkemann\h2l\traits;
  */
 trait Entity
 {
+    public const string BELONGS_TO = 'belongs_to';
+    public const string HAS_ONE = 'has_one';
+    public const string HAS_MANY = 'has_many';
     /**
      * @var array
      */
@@ -107,13 +110,13 @@ trait Entity
         $relationship = $this->describeRelationship($relation_name);
         $relation_class = $relationship['class'];
         $relation_id = $this->{$relationship['local']};
-        if ($relationship['type'] === 'belongs_to') {
+        if ($relationship['type'] === self::BELONGS_TO) {
             $related = $relation_class::get($relation_id);
-        } elseif ($relationship['type'] === 'has_one') {
+        } elseif ($relationship['type'] === self::HAS_ONE) {
             $related_by = $relationship['foreign'];
             $result = $relation_class::findAsArray([$related_by => $relation_id], ['limit' => 1]);
             $related = $result ? current($result) : null;
-        } elseif ($relationship['type'] === 'has_many') { // type must be has_many
+        } elseif ($relationship['type'] === self::HAS_MANY) { // type must be has_many
             $related_by = $relationship['foreign'];
             $related = $relation_class::findAsArray([$related_by => $relation_id]);
         } else {
@@ -142,7 +145,7 @@ trait Entity
             $settings['foreign'] = 'id';
         }
         if (!array_key_exists('type', $settings)) {
-            $settings['type'] = $settings['local'] === 'id' ? 'has_many' : 'belongs_to';
+            $settings['type'] = $settings['local'] === 'id' ? self::HAS_MANY : self::BELONGS_TO;
         }
 
         return $settings;
@@ -160,14 +163,14 @@ trait Entity
         if ($field_is_local) {
             return [
                 'class' => key($settings),
-                'type' => 'belongs_to',
+                'type' => self::BELONGS_TO,
                 'local' => $field,
                 'foreign' => 'id'
             ];
         } else {
             return [
                 'class' => key($settings),
-                'type' => 'has_many',
+                'type' => self::HAS_MANY,
                 'local' => 'id',
                 'foreign' => $field
             ];
@@ -196,7 +199,7 @@ trait Entity
      * @param array|null $data
      * @return array
      */
-    public function data(array $data = null): array
+    public function data(?array $data = null): array
     {
         if (is_null($data)) {
             return $this->data;

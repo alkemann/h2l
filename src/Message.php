@@ -82,6 +82,7 @@ class Message
     {
         switch ($this->contentType()) {
             case Http::CONTENT_JSON:
+                // json_decode will throw JsonException if invalid (JSON_THROW_ON_ERROR flag)
                 return json_decode($this->body, true, 512, JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING);
             case Http::CONTENT_XML:
                 return new \SimpleXMLElement($this->body);
@@ -119,12 +120,8 @@ class Message
      */
     public function header(string $name): ?string
     {
-        foreach ($this->headers as $key => $value) {
-            if (strcasecmp($key, $name) === 0) {
-                return $value;
-            }
-        }
-        return null;
+        $key = array_find_key($this->headers, fn($value, $key) => strcasecmp($key, $name) === 0);
+        return $key !== null ? $this->headers[$key] : null;
     }
 
     /**
@@ -228,7 +225,7 @@ class Message
     {
         $content_header = $this->header('Content-Type');
         if (is_string($content_header)) {
-            if (strpos($content_header, ';') === false) {
+            if (!str_contains($content_header, ';')) {
                 $this->content_type = trim(strtolower($content_header));
             } else {
                 list($type, $other) = explode(';', $content_header, 2);

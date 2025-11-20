@@ -27,18 +27,10 @@ class Collection implements \ArrayAccess, \Iterator
      */
     public function contains(mixed $func): bool
     {
-        foreach ($this->data as $key => $value) {
-            if (is_callable($func)) {
-                if ($func($value, $key)) {
-                    return true;
-                }
-            } else {
-                if ($value == $func) {
-                    return true;
-                }
-            }
+        if (is_callable($func)) {
+            return array_any($this->data, $func);
         }
-        return false;
+        return in_array($func, $this->data, false);
     }
 
     /**
@@ -72,12 +64,7 @@ class Collection implements \ArrayAccess, \Iterator
             $this->rewind();
             return $this->current();
         }
-        foreach ($this->data as $key => $value) {
-            if ($func($value, $key)) {
-                return $value;
-            }
-        }
-        return null; // @TODO or custom exception?
+        return array_find($this->data, $func);
     }
 
     /**
@@ -182,12 +169,7 @@ class Collection implements \ArrayAccess, \Iterator
 
     public function every(callable $func): bool
     {
-        foreach ($this->data as $value) {
-            if ($func($value) === false) {
-                return false;
-            }
-        }
-        return true;
+        return array_all($this->data, $func);
     }
 
     public function collect(): Collection
@@ -269,31 +251,37 @@ class Collection implements \ArrayAccess, \Iterator
         $this->data = array_values($data);
     }
 
+    #[\Override]
     public function current(): mixed
     {
         return $this->data[$this->iter] ?? null;
     }
 
+    #[\Override]
     public function next(): void
     {
         $this->iter++;
     }
 
+    #[\Override]
     public function key(): int
     {
         return $this->iter;
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return isset($this->data[$this->iter]);
     }
 
+    #[\Override]
     public function rewind(): void
     {
         $this->iter = 0;
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (is_null($offset)) {
@@ -303,16 +291,19 @@ class Collection implements \ArrayAccess, \Iterator
         }
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->data[$offset]);
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         unset($this->data[$offset]);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         return $this->data[$offset] ?? null;

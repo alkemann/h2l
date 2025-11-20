@@ -20,7 +20,7 @@ class LogTest extends \PHPUnit\Framework\TestCase
 
     public function tearDown(): void
     {
-        static::$ref_handlers->setValue([]);
+        static::$ref_handlers->setValue(null, []);
     }
 
     public function testSettingHandler(): void

@@ -24,5 +24,5 @@ interface Route
      * @param Request $request
      * @return Response|null
      */
-    public function __invoke(Request $request): ?Response;
+    public function __invoke(Request $request): Response|null;
 }

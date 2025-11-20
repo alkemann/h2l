@@ -40,6 +40,7 @@ class Json extends Response
      *
      * @return string
      */
+    #[\Override]
     public function render(): string
     {
         $this->setHeaders();
@@ -65,6 +66,9 @@ class Json extends Response
             $this->config['encode_options'],
             $this->config['encode_depth']
         );
+        if (is_string($json) && !json_validate($json)) {
+            throw new \JsonException("Failed to create valid JSON");
+        }
         return is_string($json) ? $json : '';
     }
 }

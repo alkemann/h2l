@@ -12,6 +12,7 @@ use alkemann\h2l\util\ArrayManipulations;
  */
 class Session implements interfaces\Session
 {
+    #[\Override]
     public function startIfNotStarted(): void
     {
         if ($this->active() === false) {
@@ -27,13 +28,14 @@ class Session implements interfaces\Session
      * @param string $key
      * @return mixed|null
      */
+    #[\Override]
     public function get(string $key)
     {
         $this->startIfNotStarted();
         if (isset($_SESSION[$key])) {
             return $_SESSION[$key];
         }
-        if (strpos($key, '.') !== false && $_SESSION != null) {
+        if (str_contains($key, '.') && $_SESSION != null) {
             return ArrayManipulations::getFromArrayByKey($key, $_SESSION);
         }
         return null;
@@ -47,10 +49,11 @@ class Session implements interfaces\Session
      * @param string $key
      * @param mixed $value
      */
+    #[\Override]
     public function set(string $key, $value): void
     {
         $this->startIfNotStarted();
-        if (strpos($key, '.') === false) {
+        if (!str_contains($key, '.')) {
             $_SESSION[$key] = $value;
         } else {
             /** @psalm-suppress NullReference */
@@ -66,7 +69,7 @@ class Session implements interfaces\Session
      */
     public function unset(string $key): void
     {
-        if (strpos($key, '.') !== false) {
+        if (str_contains($key, '.')) {
             throw new \InvalidArgumentException(__METHOD__ . ' does not support "dot" notation');
         }
         unset($_SESSION[$key]);
@@ -110,7 +113,7 @@ class Session implements interfaces\Session
      */
     public function check(string $key): bool
     {
-        if (strpos($key, '.') !== false) {
+        if (str_contains($key, '.')) {
             throw new \InvalidArgumentException(__METHOD__ . ' does not support "dot" notation');
         }
         return isset($_SESSION[$key]);

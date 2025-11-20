@@ -83,6 +83,7 @@ class Error extends Response
      *
      * @return string
      */
+    #[\Override]
     public function render(): string
     {
         $response = '';

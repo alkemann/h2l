@@ -139,7 +139,7 @@ class Request extends Message
             Http::CONTENT_TEXT,
         ];
         foreach ($known_content_types as $t) {
-            if (strpos($content_type, $t) !== false) {
+            if (str_contains($content_type, $t)) {
                 $this->content_type = $t;
                 return;
             }
@@ -156,7 +156,7 @@ class Request extends Message
             Http::CONTENT_TEXT,
         ];
         foreach ($known_accept_types as $t) {
-            if (strpos($accept_type, $t) !== false) {
+            if (str_contains($accept_type, $t)) {
                 $this->accept_type = $t;
                 return;
             }

@@ -105,6 +105,7 @@ class Html extends Response
      *
      * @return string
      */
+    #[\Override]
     public function render(): string
     {
         $this->setHeaders();

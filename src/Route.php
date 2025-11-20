@@ -65,7 +65,8 @@ class Route implements interfaces\Route
      * @return Response|null
      * @throws InvalidCallback if callback did not return Response|null
      */
-    public function __invoke(Request $request): ?Response
+    #[\Override]
+    public function __invoke(Request $request): Response|null
     {
         $response = call_user_func_array($this->callback, [$request]);
         if (is_null($response) || $response instanceof Response) {

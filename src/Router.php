@@ -20,9 +20,8 @@ class Router implements interfaces\Router
 {
     /**
      * Defines which character is used by regex dynamic routes
-     * @var string
      */
-    public static string $DELIMITER = '|';
+    public const string DELIMITER = '|';
     /**
      * @var array<string, string>
      */
@@ -44,10 +43,10 @@ class Router implements interfaces\Router
      */
     public static function alias(string $alias, string $real): void
     {
-        if ($alias[0] !== static::$DELIMITER && $alias[0] !== '/') {
+        if ($alias[0] !== static::DELIMITER && $alias[0] !== '/') {
             $alias = '/' . $alias;
         }
-        if ($real[0] !== static::$DELIMITER && $real[0] !== '/') {
+        if ($real[0] !== static::DELIMITER && $real[0] !== '/') {
             $real = '/' . $real;
         }
         self::$aliases[$alias] = $real;
@@ -110,7 +109,7 @@ class Router implements interfaces\Router
      */
     public static function add(string $url, callable $callable, $methods = [Http::GET]): void
     {
-        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') {
+        if ($url[0] !== static::DELIMITER && $url[0] !== '/') {
             $url = '/' . $url;
         }
         if ($callable instanceof Closure) {
@@ -141,9 +140,9 @@ class Router implements interfaces\Router
     /**
      * Returns the 404/fallback route, if it is configured
      *
-     * @return null|interfaces\Route
+     * @return interfaces\Route|null
      */
-    public static function getFallback(): ?interfaces\Route
+    public static function getFallback(): interfaces\Route|null
     {
         if (isset(self::$fallback)) {
             return static::createRoute('FALLBACK', self::$fallback);
@@ -156,11 +155,11 @@ class Router implements interfaces\Router
      *
      * @param string $url Request url, i.e. '/api/user/32'
      * @param string $method Http::<GET/POST/PATCH/PUT/DELETE>
-     * @return null|interfaces\Route
+     * @return interfaces\Route|null
      */
-    public static function match(string $url, string $method = Http::GET): ?interfaces\Route
+    public static function match(string $url, string $method = Http::GET): interfaces\Route|null
     {
-        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') {
+        if ($url[0] !== static::DELIMITER && $url[0] !== '/') {
             $url = '/' . $url;
         }
         $url = self::$aliases[$url] ?? $url;
@@ -176,10 +175,10 @@ class Router implements interfaces\Router
         return null;
     }
 
-    private static function matchDynamicRoute(string $url, string $method = Http::GET): ?interfaces\Route
+    private static function matchDynamicRoute(string $url, string $method = Http::GET): interfaces\Route|null
     {
         foreach (self::$routes[$method] as $route => $cb) {
-            if ($route[0] !== substr($route, -1) || $route[0] !== static::$DELIMITER) {
+            if ($route[0] !== substr($route, -1) || $route[0] !== static::DELIMITER) {
                 continue;
             }
             $result = preg_match($route, $url, $matches);
@@ -211,7 +210,7 @@ class Router implements interfaces\Router
      */
     public static function getPageRoute(string $url): interfaces\Route
     {
-        if ($url[0] !== static::$DELIMITER && $url[0] !== '/') {
+        if ($url[0] !== static::DELIMITER && $url[0] !== '/') {
             $url = '/' . $url;
         }
         $url = self::$aliases[$url] ?? $url;
