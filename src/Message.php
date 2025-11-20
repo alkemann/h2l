@@ -82,9 +82,7 @@ class Message
     {
         switch ($this->contentType()) {
             case Http::CONTENT_JSON:
-                if (!json_validate($this->body)) {
-                    return null;
-                }
+                // json_decode will throw JsonException if invalid (JSON_THROW_ON_ERROR flag)
                 return json_decode($this->body, true, 512, JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING);
             case Http::CONTENT_XML:
                 return new \SimpleXMLElement($this->body);

@@ -55,15 +55,13 @@ class Request extends Message
             return $this->post[$name];
         }
         if ($this->contentType() == Http::CONTENT_JSON) {
-            if (empty($this->post) && json_validate($this->body())) {
-                $data = $this->content();
-                if (is_array($data)) {
-                    // Cache the json body in the post array
-                    $this->post = $data;
-                }
+            $data = $this->content();
+            if (empty($this->post) && is_array($data)) {
+                // Cache the json body in the post array
+                $this->post = $data;
             }
-            if (is_array($this->post) && isset($this->post[$name])) {
-                return $this->post[$name];
+            if (is_array($data) && isset($data[$name])) {
+                return $data[$name];
             }
         }
         return null;
