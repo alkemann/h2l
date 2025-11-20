@@ -87,6 +87,9 @@ class Remote
         $headers['Accept'] = 'application/json';
         $data_string = json_encode($data);
         $json = is_string($data_string) ? $data_string : "";
+        if ($json && !json_validate($json)) {
+            throw new \JsonException("Failed to create valid JSON");
+        }
         $headers['Content-Length'] = strlen($json);
         $request = (new Message())
             ->withUrl($url)
@@ -253,7 +256,7 @@ class Remote
                 continue;
             }
 
-            if (strpos($part, ': ') !== false) {
+            if (str_contains($part, ': ')) {
                 list($key, $value) = explode(": ", $part);
                 $result[$key] = trim($value);
                 continue;

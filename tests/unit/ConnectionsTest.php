@@ -27,9 +27,9 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
-        static::$ref_connections->setValue([]);
-        static::$ref_open->setValue([]);
-        static::$ref_close->setValue([]);
+        static::$ref_connections->setValue(null, []);
+        static::$ref_open->setValue(null, []);
+        static::$ref_close->setValue(null, []);
     }
 
     public function testAdd(): void
@@ -99,16 +99,16 @@ class ConnectionsTest extends \PHPUnit\Framework\TestCase
     public function testExceptionOnCloseForAlreadyClosed(): void
     {
         $this->expectException(Exception::class);
-        static::$ref_connections->setValue(['tested' => false]);
-        static::$ref_open->setValue(['tested' => function() {}]);
-        static::$ref_close->setValue(['tested' => function() {}]);
+        static::$ref_connections->setValue(null, ['tested' => false]);
+        static::$ref_open->setValue(null, ['tested' => function() {}]);
+        static::$ref_close->setValue(null, ['tested' => function() {}]);
         Connections::close('tested');
     }
 
     public function testOkToCallCloseWithoutCloseConfigured(): void
     {
-        static::$ref_connections->setValue(['tested' => true]);
-        static::$ref_open->setValue(['tested' => function() {}]);
+        static::$ref_connections->setValue(null, ['tested' => true]);
+        static::$ref_open->setValue(null, ['tested' => function() {}]);
         Connections::close('tested');
         $this->assertTrue(true);
     }

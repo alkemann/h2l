@@ -9,11 +9,11 @@ namespace alkemann\h2l;
  */
 final class Environment
 {
-    public const ALL = "ALL";
-    public const LOCAL = "LOCAL";
-    public const DEV = "DEV";
-    public const TEST = "TEST";
-    public const PROD = "PROD";
+    public const string ALL = "ALL";
+    public const string LOCAL = "LOCAL";
+    public const string DEV = "DEV";
+    public const string TEST = "TEST";
+    public const string PROD = "PROD";
 
     /**
      * @var array<string, array<string, mixed>>
@@ -45,7 +45,6 @@ final class Environment
 
     /**
      * Defaults to DEV
-     * @var string
      */
     private static string $current_env = Environment::DEV;
 

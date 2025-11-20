@@ -64,6 +64,7 @@ class Text extends Response
      *
      * @return string
      */
+    #[\Override]
     public function render(): string
     {
         $this->setHeaders();

@@ -22,7 +22,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             public function __construct(array $data = []){ $this->data = $data; }
             public function with(string ...$relation_names): object {}
             public function reset(): void {}
-            public function data(array $data = null): array { return $this->data + $data; }
+            public function data(?array $data = null): array { return $this->data + $data; }
         };
         $this->assertTrue(method_exists($p, 'exists'));
     }
@@ -40,7 +40,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             public function __construct(array $data = []) {}
             public function with(string ...$relation_names): object {}
             public function reset(): void {}
-            public function data(array $data = null): array {}
+            public function data(?array $data = null): array {}
         };
         $p->save(['something' => 'here']);
     }
@@ -62,7 +62,7 @@ class ModelTest extends \PHPUnit\Framework\TestCase
             public function __construct(array $data = []) {}
             public function with(string ...$relation_names): object {}
             public function reset(): void {}
-            public function data(array $data = null): array {}
+            public function data(?array $data = null): array {}
         };
 
         $this->expectException(ConfigMissing::class);

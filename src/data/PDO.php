@@ -31,7 +31,7 @@ class PDO implements Source
      * @param array $config
      * @param class-string $pdo_class
      */
-    public function __construct(array $config = [], string $pdo_class = _PDO::class)
+    public function __construct(#[\SensitiveParameter] array $config = [], string $pdo_class = _PDO::class)
     {
         $this->pdo_class = $pdo_class;
 
@@ -104,6 +104,7 @@ class PDO implements Source
      * @param array $params
      * @return array|false false on error
      */
+    #[\Override]
     public function query($query, array $params = [])
     {
         Log::debug("PDO:QUERY [$query]");
@@ -118,6 +119,7 @@ class PDO implements Source
      * @return null|array
      * @throws \Error on finding more than 1 match
      */
+    #[\Override]
     public function one(string $table, array $conditions, array $options = []): ?array
     {
         $result = $this->find($table, $conditions, $options);
@@ -141,6 +143,7 @@ class PDO implements Source
      * @param array $options
      * @return iterable
      */
+    #[\Override]
     public function find(string $table, array $conditions, array $options = []): iterable
     {
         $where = $this->where($conditions);
@@ -253,6 +256,7 @@ class PDO implements Source
      * @param array $options
      * @return int
      */
+    #[\Override]
     public function update(string $table, array $conditions, array $data, array $options = []): int
     {
         if (empty($conditions) || empty($data)) {
@@ -294,6 +298,7 @@ class PDO implements Source
      * @param array $options
      * @return null|string|int
      */
+    #[\Override]
     public function insert(string $table, array $data, array $options = [])
     {
         $keys = implode(', ', array_keys($data));
@@ -316,6 +321,7 @@ class PDO implements Source
      * @param array $options
      * @return int
      */
+    #[\Override]
     public function delete(string $table, array $conditions, array $options = []): int
     {
         $where = $this->where($conditions);

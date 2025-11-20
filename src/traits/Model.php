@@ -24,18 +24,20 @@ use Generator;
  */
 trait Model
 {
+    public const string DEFAULT_CONNECTION = 'default';
+    public const string DEFAULT_PK = 'id';
     /**
      * @throws ConfigMissing
      */
     public static function db(): Source
     {
-        $name = isset(static::$connection) ? static::$connection : 'default';
+        $name = isset(static::$connection) ? static::$connection : self::DEFAULT_CONNECTION;
         return Connections::get($name);
     }
 
     private static function pk(): string
     {
-        return isset(static::$pk) ? static::$pk : 'id';
+        return isset(static::$pk) ? static::$pk : self::DEFAULT_PK;
     }
 
     public function exists(): bool
@@ -119,7 +121,7 @@ trait Model
      * @param array|null $data
      * @return array
      */
-    abstract public function data(array $data = null): array;
+    abstract public function data(?array $data = null): array;
 
     /**
      * Find all records matching `$conditions`, returns an array with key being the pk value

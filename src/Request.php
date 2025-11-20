@@ -55,13 +55,15 @@ class Request extends Message
             return $this->post[$name];
         }
         if ($this->contentType() == Http::CONTENT_JSON) {
-            $data = $this->content();
-            if (empty($this->post) && is_array($data)) {
-                // Cache the json body in the post array
-                $this->post = $data;
+            if (empty($this->post) && json_validate($this->body())) {
+                $data = $this->content();
+                if (is_array($data)) {
+                    // Cache the json body in the post array
+                    $this->post = $data;
+                }
             }
-            if (is_array($data) && isset($data[$name])) {
-                return $data[$name];
+            if (is_array($this->post) && isset($this->post[$name])) {
+                return $this->post[$name];
             }
         }
         return null;
@@ -139,7 +141,7 @@ class Request extends Message
             Http::CONTENT_TEXT,
         ];
         foreach ($known_content_types as $t) {
-            if (strpos($content_type, $t) !== false) {
+            if (str_contains($content_type, $t)) {
                 $this->content_type = $t;
                 return;
             }
@@ -156,7 +158,7 @@ class Request extends Message
             Http::CONTENT_TEXT,
         ];
         foreach ($known_accept_types as $t) {
-            if (strpos($accept_type, $t) !== false) {
+            if (str_contains($accept_type, $t)) {
                 $this->accept_type = $t;
                 return;
             }

@@ -34,9 +34,9 @@ class Chain
      * Take the first callable in the chain, remove it from que and call it, returning it's result
      *
      * @param Request $request
-     * @return null|Response
+     * @return Response|null
      */
-    public function next(Request $request): ?Response
+    public function next(Request $request): Response|null
     {
         if (empty($this->chain)) {
             throw new exceptions\EmptyChainError();
