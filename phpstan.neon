@@ -4,7 +4,6 @@ parameters:
     paths:
         - src
     level: 1
-    checkMissingIterableValueType: false
 #    ignoreErrors:
 #        -
 #            message: '#Else branch is unreachable because previous condition is always true.#'
